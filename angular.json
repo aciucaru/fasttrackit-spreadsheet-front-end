@@ -6,8 +6,12 @@
     "tema-finala-front-end": {
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
+        "@schematics/angular:component":
+        {
+            "inlineStyle": true,
+            "inlineTemplate": true,
+            "skipTests": true,
+            "style": "scss"
         }
       },
       "root": "",
