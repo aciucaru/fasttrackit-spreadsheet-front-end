@@ -15,7 +15,7 @@ import { ColumnType } from '../model/column-type';
 @Component({
   selector: 'app-sheet-table',
   template: `
-    <button (click)="showSpreadsheetValues()">Spreadsheet values</button>
+    <button (click)="logSpreadsheetValues()">Spreadsheet values</button>
     <button (click)="deleteRow()">Delete row</button>
     <mat-table #mainSpreadsheet 
     [dataSource]="dataSource" class="mat-elevation-z8">
@@ -99,23 +99,16 @@ export class SpreadsheetComponent implements OnInit
     editableCellCol: number = -1;
     editableCellRow: number = -1;
 
-    constructor(private dataService: SpreadsheetService)
-    {
-        this.dataService.currentSpreadsheet?
-                        .subscribe(spreadsheet => this.spreadsheet = spreadsheet);
-    }
+    constructor(private spreadsheetService: SpreadsheetService, private route: ActivatedRoute) { }
 
-    ngOnInit(): void
-    {
-        this.getTable();
-    }
+    ngOnInit(): void { this.getTable(); }
 
-    getSpreadsheet(): void
+    getTable(): void
     {
-        this.dataService.currentSpreadsheet
+        this.spreadsheetService.getOneTable()
                         .subscribe(spreadsheet =>
                             {
-                                this.spreadsheet = table;
+                                this.spreadsheet = spreadsheet;
                                 this.dataSource = new MatTableDataSource(this.spreadsheet.rows);
                                 this.displayedColumns = this.spreadsheet.columnInfos
                                                         .map( columnInfo =>{ return columnInfo.name; });
@@ -188,7 +181,7 @@ export class SpreadsheetComponent implements OnInit
         console.log('delete row');
     }
 
-    showTableValues(): void
+    logSpreadsheetValues(): void
     {
         console.table(this.spreadsheetToStringMatrix());
     }

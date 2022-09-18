@@ -19,13 +19,13 @@ export class SpreadsheetService
 
     constructor(private httpClient: HttpClient) { }
 
-    getOneSpreadsheet(): Observable<Spreadsheet>
+    getOneTable(): Observable<Spreadsheet>
     {
         return this.httpClient.get<Spreadsheet>(this.oneSpreadsheetUrl)
-        .pipe(
-            tap(_ => console.log(`tabel luat de pe server`)),
-            catchError(this.handleError<Spreadsheet>(`getOneTable()`))
-        );
+                                .pipe(
+                                    tap(_ => console.log(`tabel luat de pe server`)),
+                                    catchError(this.handleError<Spreadsheet>(`getOneTable()`))
+                                );
     }
 
     private handleError<T>(operation = 'operation', result?: T)
