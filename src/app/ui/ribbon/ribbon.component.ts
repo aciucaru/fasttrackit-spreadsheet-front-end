@@ -7,25 +7,33 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 @Component({
   selector: 'app-ribbon',
   template: `
-  <div><p>Ribbon</p></div>
-    <!-- <button (click)="this.spreadsheetService.logSpreadsheetValues()">Log spreadsheet values</button>
-    <button (click)="this.spreadsheetService.deleteRow()">Delete row</button> -->
+    <ng-container *ngFor="let currentCol of displayedColumns; let colIndex = index;">
+        <p>{{currentCol}}</p>
+    </ng-container>
   `,
-  styles: []
+  styles: [
+  ]
 })
 export class RibbonComponent implements OnInit
 {
     spreadsheet?: Spreadsheet;
+    displayedColumns: string[] = [];
 
-    constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute) { }
+    constructor(private spreadsheetService: SpreadsheetService, private route: ActivatedRoute) { }
 
-    ngOnInit(): void
+    ngOnInit(): void { this.getTable(); }
+
+    getTable(): void
     {
         this.spreadsheetService.getCurrentSpreadsheet()
-        .subscribe(spreadsheet =>
-            {
-                this.spreadsheet = spreadsheet;
-            });
+                        .subscribe(spreadsheet =>
+                            {
+                                this.spreadsheet = spreadsheet;
+                                this.displayedColumns = this.spreadsheet?.columnInfos
+                                                        .map( columnInfo =>{ return columnInfo.name; });
+                            });
+        // this.displayedColumns = this.table.columnNames;
+        // this.dataSource = new MatTableDataSource(this.table.rows);
+        // this.mainTable?.renderRows();
     }
-
 }

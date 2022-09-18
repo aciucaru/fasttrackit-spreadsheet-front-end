@@ -66,7 +66,7 @@ export class SpreadsheetComponent implements OnInit
 
     @ViewChild(MatTable) mainSpreadsheet?: MatTable<Row>;
 
-    displayedColumns?: string[] = [];
+    displayedColumns: string[] = [];
     dataSource: MatTableDataSource<Row> = new MatTableDataSource<Row>(this.spreadsheet?.rows);
 
     editableCellCol: number = -1;
@@ -76,14 +76,7 @@ export class SpreadsheetComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.spreadsheetService.getCurrentSpreadsheet()
-        .subscribe(spreadsheet =>
-            {
-                this.spreadsheet = spreadsheet;
-                this.dataSource = new MatTableDataSource(this.spreadsheet?.rows);
-                this.displayedColumns = this.spreadsheet?.columnInfos
-                                        .map( columnInfo =>{ return columnInfo.name; });
-            });
+        this.getTable();
     }
 
     getTable(): void
