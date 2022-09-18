@@ -15,8 +15,6 @@ import { ColumnType } from '../model/column-type';
 @Component({
   selector: 'app-spreadsheet',
   template: `
-    <button (click)="logSpreadsheetValues()">Log spreadsheet values</button>
-    <button (click)="deleteRow()">Delete row</button>
     <mat-table #mainSpreadsheet 
     [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container *ngFor="let currentCol of displayedColumns; let colIndex = index;" [matColumnDef]="currentCol">
@@ -64,75 +62,43 @@ export class SpreadsheetComponent implements OnInit
         borderThickness: 1
     };
 
-    spreadsheet: Spreadsheet =
-    {
-        name: "spreadsheet",
-        columnInfos:
-        [
-            { name: 'Numbers', cellType: ColumnType.NUMBER, varName: 'number_col' },
-            { name: 'Strings', cellType: ColumnType.STRING, varName: 'string_col' }
-        ],
-        rows:
-        [
-            {
-                cells:
-                    [
-                        {value: "100", style: this.defaultCellStyle},
-                        {value: "abc", style: this.defaultCellStyle}
-                    ]
-            },
-            {
-                cells:
-                    [
-                        {value: "200", style: this.defaultCellStyle},
-                        {value: "def", style: this.defaultCellStyle}
-                    ]
-            }
-        ]
-    };
+    spreadsheet?: Spreadsheet;
 
     @ViewChild(MatTable) mainSpreadsheet?: MatTable<Row>;
 
-    displayedColumns: string[] = [];
-    dataSource: MatTableDataSource<Row> = new MatTableDataSource<Row>(this.spreadsheet.rows);
+    displayedColumns?: string[] = [];
+    dataSource: MatTableDataSource<Row> = new MatTableDataSource<Row>(this.spreadsheet?.rows);
 
     editableCellCol: number = -1;
     editableCellRow: number = -1;
 
     constructor(private spreadsheetService: SpreadsheetService, private route: ActivatedRoute) { }
 
-    ngOnInit(): void { this.getTable(); }
+    ngOnInit(): void
+    {
+        this.spreadsheetService.getCurrentSpreadsheet()
+        .subscribe(spreadsheet =>
+            {
+                this.spreadsheet = spreadsheet;
+                this.dataSource = new MatTableDataSource(this.spreadsheet?.rows);
+                this.displayedColumns = this.spreadsheet?.columnInfos
+                                        .map( columnInfo =>{ return columnInfo.name; });
+            });
+    }
 
     getTable(): void
     {
-        this.spreadsheetService.getOneTable()
+        this.spreadsheetService.getCurrentSpreadsheet()
                         .subscribe(spreadsheet =>
                             {
                                 this.spreadsheet = spreadsheet;
-                                this.dataSource = new MatTableDataSource(this.spreadsheet.rows);
-                                this.displayedColumns = this.spreadsheet.columnInfos
+                                this.dataSource = new MatTableDataSource(this.spreadsheet?.rows);
+                                this.displayedColumns = this.spreadsheet?.columnInfos
                                                         .map( columnInfo =>{ return columnInfo.name; });
                             });
         // this.displayedColumns = this.table.columnNames;
         // this.dataSource = new MatTableDataSource(this.table.rows);
         // this.mainTable?.renderRows();
-    }
-
-    spreadsheetToStringMatrix(): string[][]
-    {
-        let cellMatrix: string[][] = [[]];
-
-        for(let row of this.spreadsheet.rows)
-        {
-            let currentRow: string[] = [];
-            for(let cell of row.cells)
-            {
-                currentRow.push(cell.value);
-            }
-            cellMatrix.push(currentRow);
-        }
-
-        return cellMatrix;
     }
 
     setInputCell(rowIndex: number, colIndex: number): void
@@ -147,42 +113,5 @@ export class SpreadsheetComponent implements OnInit
         return this.editableCellCol === colIndex && this.editableCellRow === rowIndex;
     }
 
-    addRow(): void
-    {
-        let newRow: Row = {cells: []};
-        let currentNewCell: Cell;
-        for(let columnInfo of this.spreadsheet.columnInfos)
-        {
-            switch(columnInfo.cellType)
-            {
-                case ColumnType.STRING:
-                    currentNewCell = { value: '', style: this.defaultCellStyle };
-                    newRow.cells.push(currentNewCell);
-                    break;
-                case ColumnType.NUMBER:
-                    currentNewCell = { value: '0', style: this.defaultCellStyle };
-                    newRow.cells.push(currentNewCell);
-                    break;
-                case ColumnType.BOOL:
-                    currentNewCell = { value: 'false', style: this.defaultCellStyle };
-                    newRow.cells.push(currentNewCell);
-                    break;
-            }
-        }
-        this.mainSpreadsheet?.renderRows();
-        console.log('add row');
-    }
 
-    deleteRow(): void
-    {
-        this.spreadsheet.rows.splice(this.editableCellRow, 1);
-        // this.dataSource = new MatTableDataSource(this.table.rows); // merge si fara
-        this.mainSpreadsheet?.renderRows();
-        console.log('delete row');
-    }
-
-    logSpreadsheetValues(): void
-    {
-        console.table(this.spreadsheetToStringMatrix());
-    }
 }

@@ -16,12 +16,14 @@ import { MatInputModule } from '@angular/material/input';
 
 import { CellComponent } from './ui/cell.component';
 import { SpreadsheetComponent } from './ui/spreadsheet.component';
+import { RibbonComponent } from './ui/ribbon/ribbon.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CellComponent,
-    SpreadsheetComponent
+    SpreadsheetComponent,
+    RibbonComponent
   ],
   imports:
   [
