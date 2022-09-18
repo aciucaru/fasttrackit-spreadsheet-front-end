@@ -13,9 +13,9 @@ import { SpreadsheetService } from '../service/spreadsheet.service';
 import { ColumnType } from '../model/column-type';
 
 @Component({
-  selector: 'app-sheet-table',
+  selector: 'app-spreadsheet',
   template: `
-    <button (click)="logSpreadsheetValues()">Spreadsheet values</button>
+    <button (click)="logSpreadsheetValues()">Log spreadsheet values</button>
     <button (click)="deleteRow()">Delete row</button>
     <mat-table #mainSpreadsheet 
     [dataSource]="dataSource" class="mat-elevation-z8">
