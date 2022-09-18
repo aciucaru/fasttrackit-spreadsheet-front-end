@@ -7,12 +7,11 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 @Component({
   selector: 'app-ribbon',
   template: `
-    <ng-container *ngFor="let currentCol of displayedColumns; let colIndex = index;">
+    <div *ngFor="let currentCol of displayedColumns; let colIndex = index;">
         <p>{{currentCol}}</p>
-    </ng-container>
+    </div>
   `,
-  styles: [
-  ]
+  styles: []
 })
 export class RibbonComponent implements OnInit
 {
