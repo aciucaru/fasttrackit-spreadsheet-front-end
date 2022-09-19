@@ -12,18 +12,21 @@ import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatTabsModule } from '@angular/material/tabs';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { CellComponent } from './ui/cell.component';
 import { SpreadsheetComponent } from './ui/spreadsheet.component';
 import { RibbonComponent } from './ui/ribbon/ribbon.component';
+import { MainTabComponent } from './ui/ribbon/main-tab.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CellComponent,
     SpreadsheetComponent,
-    RibbonComponent
+    RibbonComponent,
+    MainTabComponent
   ],
   imports:
   [
@@ -38,7 +41,8 @@ import { RibbonComponent } from './ui/ribbon/ribbon.component';
     // CdkTableModule,
     MatFormFieldModule,
     MatInputModule,
-    MatTableModule
+    MatTableModule,
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

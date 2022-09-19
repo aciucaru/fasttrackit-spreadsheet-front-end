@@ -11,6 +11,7 @@ import { Row } from '../model/row';
 import { CellStyle } from '../model/cell-style'; 
 import { SpreadsheetService } from '../service/spreadsheet.service';
 import { ColumnType } from '../model/column-type';
+import { EditableSpreadsheet } from '../model/editable-spreadsheet';
 
 @Component({
   selector: 'app-spreadsheet',
@@ -62,33 +63,38 @@ export class SpreadsheetComponent implements OnInit
         borderThickness: 1
     };
 
-    spreadsheet?: Spreadsheet;
-
     @ViewChild(MatTable) mainSpreadsheet?: MatTable<Row>;
 
+    spreadsheet?: EditableSpreadsheet;
     displayedColumns: string[] = [];
-    dataSource: MatTableDataSource<Row> = new MatTableDataSource<Row>(this.spreadsheet?.rows);
+    dataSource: MatTableDataSource<Row>
+        = new MatTableDataSource<Row>(this.spreadsheet!.spreadsheet!.rows);
 
     editableCellCol: number = -1;
     editableCellRow: number = -1;
 
-    constructor(private spreadsheetService: SpreadsheetService, private route: ActivatedRoute) { }
+    constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute)
+    {
+        this.getSpreadsheet();
+    }
 
     ngOnInit(): void
     {
-        this.getTable();
+        // this.getSpreadsheet();
     }
 
-    getTable(): void
+    getSpreadsheet(): void
     {
-        this.spreadsheetService.getCurrentSpreadsheet()
-                        .subscribe(spreadsheet =>
-                            {
-                                this.spreadsheet = spreadsheet;
-                                this.dataSource = new MatTableDataSource(this.spreadsheet?.rows);
-                                this.displayedColumns = this.spreadsheet?.columnInfos
-                                                        .map( columnInfo =>{ return columnInfo.name; });
-                            });
+        this.spreadsheetService
+            .getCurrentSpreadsheetSource()
+            .subscribe((spreadsheet: EditableSpreadsheet) =>
+                {
+                    this.spreadsheet = spreadsheet;
+                    this.dataSource = new MatTableDataSource(this.spreadsheet!.spreadsheet!.rows);
+                    this.displayedColumns = this.spreadsheet?.spreadsheet!.columnInfos
+                                            .map( columnInfo =>{ return columnInfo.name; });
+                    this.mainSpreadsheet?.renderRows();
+                });
         // this.displayedColumns = this.table.columnNames;
         // this.dataSource = new MatTableDataSource(this.table.rows);
         // this.mainTable?.renderRows();
@@ -96,6 +102,7 @@ export class SpreadsheetComponent implements OnInit
 
     setInputCell(rowIndex: number, colIndex: number): void
     {
+        this.spreadsheetService.setInputCell(rowIndex, colIndex);
         this.editableCellRow = rowIndex;
         this.editableCellCol = colIndex;
         console.log(`celula apasata: linie: ${this.editableCellRow}, col: ${this.editableCellCol}`);

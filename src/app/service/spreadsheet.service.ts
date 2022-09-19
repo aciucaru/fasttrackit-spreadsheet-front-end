@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable, Subject, BehaviorSubject, of, shareReplay, share } from 'rxjs';
-import { catchError, map, tap } from 'rxjs';
+import { catchError, tap } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Cell } from '../model/cell';
 import { CellStyle } from '../model/cell-style'; 
@@ -22,36 +23,72 @@ export class SpreadsheetService
 
     private oneSpreadsheetUrl = 'http://localhost:8080/sheets/one';
     // httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
-    private editableSpreadsheetSource$: BehaviorSubject<Spreadsheet>
-            = new BehaviorSubject<Spreadsheet>(this.getDummySpreadsheet());
-    private editableSpreadsheet$?:Observable<Spreadsheet>
-            = this.editableSpreadsheetSource$.asObservable();
+    private editableSpreadsheetSource$?: BehaviorSubject<EditableSpreadsheet>
+            = new BehaviorSubject<EditableSpreadsheet>(this.getDummySpreadsheet());
+    // private editableSpreadsheet$?:Observable<EditableSpreadsheet>
+    //         = this.editableSpreadsheetSource$.asObservable();
+    private spreadsheet?: EditableSpreadsheet
+        = new EditableSpreadsheet(this.getDummySpreadsheet().spreadsheet!);
 
     constructor(private httpClient: HttpClient)
     {
         // aceasta metoda ar trebui apelata la comanda unui component UI
         // dar momentan este apelata din constructor, pt. a avea un spreadsheet cu care se poate lucra
         this.getCurrentSpreadsheetFromServer(''); // se ia un spreadsheet de pe server
+        // console.log(this.spreadsheetToStringMatrix());
     }
 
     // metoda ce ia un spreadsheet de pe server, temporar argumentul nu este folosit
-    getCurrentSpreadsheetFromServer(spreadsheetName: string): void
+    // public getCurrentSpreadsheetFromServer(spreadsheetName: string): void
+    // {
+    //     this.editableSpreadsheet$ =
+    //         this.httpClient.get<Spreadsheet>(this.oneSpreadsheetUrl)
+    //                         .pipe(shareReplay(1));
+    // }
+
+    public getCurrentSpreadsheetFromServer(spreadsheetName: string): void
     {
-        this.editableSpreadsheet$ =
-            this.httpClient.get<Spreadsheet>(this.oneSpreadsheetUrl)
-                            .pipe(shareReplay(1));
+        this.httpClient.get<Spreadsheet>(this.oneSpreadsheetUrl)
+                        .pipe(
+                            map(
+                                (spreadsheet: Spreadsheet) =>
+                                    // {
+                                        // this.spreadsheet = new EditableSpreadsheet(spreadsheet);
+                                        // this.editableSpreadsheetSource$!.next(this.spreadsheet!);
+                                        // console.log('httpClient get 100')
+                                        // console.log(this.spreadsheetToStringMatrix());
+                                        // return this.spreadsheet;
+                                        new EditableSpreadsheet(spreadsheet)
+                                    // }
+                                )
+                        )
+                        .subscribe( spreadsheet =>
+                            {
+                                this.spreadsheet = spreadsheet;
+                                this.editableSpreadsheetSource$!.next(this.spreadsheet!);
+                                console.log('httpClient get 123');
+                                console.log(spreadsheet);
+                                console.log(this.spreadsheetToStringMatrix());
+                                // this.editableSpreadsheetSource$!.next(spreadsheet);
+                            }
+                        );
     }
+ 
+    // metoda ce returneaza spreadsheet-ul luat de pe server
+    // este metoda principala pe care ar trebui sa o foloseasca componentele UI ce au acces la acest service
+    public getCurrentSpreadsheetSource(): BehaviorSubject<EditableSpreadsheet>
+    { return this.editableSpreadsheetSource$!; }
 
     // metoda ce returneaza spreadsheet-ul luat de pe server
     // este metoda principala pe care ar trebui sa o foloseasca componentele UI ce au acces la acest service
-    getCurrentSpreadsheet(): Observable<Spreadsheet>
-    { return this.editableSpreadsheet$!; }
+    // public getCurrentSpreadsheet(): Observable<EditableSpreadsheet>
+    // { return this.editableSpreadsheet$!; }
 
-    addRow(): void
+    public addRow(): void
     {
         let newRow: Row = {cells: []};
         let currentNewCell: Cell;
-        for(let columnInfo of this.editableSpreadsheetSource$.getValue().columnInfos)
+        for(let columnInfo of this.editableSpreadsheetSource$!.getValue().spreadsheet!.columnInfos)
         {
             switch(columnInfo.cellType)
             {
@@ -72,23 +109,24 @@ export class SpreadsheetService
         console.log('add row');
     }
 
-    deleteRow(rowIndex: number): void
+    public deleteRow(): void
     {
-        this.editableSpreadsheetSource$.getValue().rows.splice(rowIndex, 1);
+        this.editableSpreadsheetSource$!.getValue().spreadsheet!.rows.splice(this.editableCellRow, 1);
         // this.dataSource = new MatTableDataSource(this.table.rows); // merge si fara
+        this.editableSpreadsheetSource$!.next(this.spreadsheet!);
         console.log('delete row');
     }
 
-    logSpreadsheetValues(): void
+    public logSpreadsheetValues(): void
     {
         console.table(this.spreadsheetToStringMatrix());
     }
 
-    spreadsheetToStringMatrix(): string[][]
+    public spreadsheetToStringMatrix(): string[][]
     {
         let cellMatrix: string[][] = [[]];
 
-        for(let row of this.editableSpreadsheetSource$.getValue().rows)
+        for(let row of this.editableSpreadsheetSource$!.getValue().spreadsheet!.rows)
         {
             let currentRow: string[] = [];
             for(let cell of row.cells)
@@ -101,12 +139,12 @@ export class SpreadsheetService
         return cellMatrix;
     }
 
-    private getDummySpreadsheet(): Spreadsheet
+    private getDummySpreadsheet(): EditableSpreadsheet
     {
-        let spreadsheet: Spreadsheet = 
+        let spreadsheet: EditableSpreadsheet = 
         {
-            // spreadsheet:
-            // {
+            spreadsheet:
+            {
                 name: "dummy spreadsheet",
                 columnInfos:
                 [
@@ -121,9 +159,9 @@ export class SpreadsheetService
                 [
                     { cells: [ {value: "100", style: this.getDummyCellStyle()}, ] },
                 ]
-            // },
-            // editableCellCol:-1,
-            // editableCellRow: -1
+            },
+            editableCellCol:-1,
+            editableCellRow: -1
         };
         return spreadsheet;
     }
@@ -152,5 +190,12 @@ export class SpreadsheetService
         };
 
         return cellStyle;
+    }
+
+    setInputCell(rowIndex: number, colIndex: number): void
+    {
+        this.editableCellRow = rowIndex;
+        this.editableCellCol = colIndex;
+        console.log(`celula apasata: linie: ${this.editableCellRow}, col: ${this.editableCellCol}`);
     }
 }
