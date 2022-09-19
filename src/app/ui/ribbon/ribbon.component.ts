@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Observer } from 'rxjs';
 import { EditableSpreadsheet } from 'src/app/model/editable-spreadsheet';
 
 import { Spreadsheet } from 'src/app/model/spreadsheet';
@@ -19,6 +20,12 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 export class RibbonComponent implements OnInit
 {
     spreadsheet?: EditableSpreadsheet;
+    spreadsheetObserver: Observer<EditableSpreadsheet> =
+        {
+            next: spreadsheet => this.spreadsheet = spreadsheet,
+            error: err => console.error('Observer got an error: ' + err),
+            complete: () => console.log('Observer got a complete notification'),
+        };
     displayedColumns: string[] = [];
 
     constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute) { }
@@ -28,7 +35,7 @@ export class RibbonComponent implements OnInit
     getTable(): void
     {
         this.spreadsheetService
-            .getCurrentSpreadsheetSource()
+            .getSpreadsheetSubject()
             .subscribe(spreadsheet =>
                 {
                     this.spreadsheet = spreadsheet;

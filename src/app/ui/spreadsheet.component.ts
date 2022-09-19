@@ -12,6 +12,7 @@ import { CellStyle } from '../model/cell-style';
 import { SpreadsheetService } from '../service/spreadsheet.service';
 import { ColumnType } from '../model/column-type';
 import { EditableSpreadsheet } from '../model/editable-spreadsheet';
+import { Observer } from 'rxjs';
 
 @Component({
   selector: 'app-spreadsheet',
@@ -66,6 +67,13 @@ export class SpreadsheetComponent implements OnInit
     @ViewChild(MatTable) mainSpreadsheet?: MatTable<Row>;
 
     spreadsheet?: EditableSpreadsheet;
+    spreadsheetObserver: Observer<EditableSpreadsheet> =
+        {
+            next: spreadsheet => this.spreadsheet = spreadsheet,
+            error: err => console.error('Observer got an error: ' + err),
+            complete: () => console.log('Observer got a complete notification'),
+        };
+        
     displayedColumns: string[] = [];
     dataSource: MatTableDataSource<Row>
         = new MatTableDataSource<Row>(this.spreadsheet!.spreadsheet!.rows);
@@ -75,18 +83,18 @@ export class SpreadsheetComponent implements OnInit
 
     constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute)
     {
-        this.getSpreadsheet();
+        // this.getSpreadsheet();
     }
 
     ngOnInit(): void
     {
-        // this.getSpreadsheet();
+        this.getSpreadsheet();
     }
 
     getSpreadsheet(): void
     {
         this.spreadsheetService
-            .getCurrentSpreadsheetSource()
+            .getSpreadsheetSubject()
             .subscribe((spreadsheet: EditableSpreadsheet) =>
                 {
                     this.spreadsheet = spreadsheet;
