@@ -20,11 +20,8 @@ import { Observer } from 'rxjs';
             </th>
         </tr>
         <tr *ngFor="let currentRow of spreadsheet?.rows; let rowIndex = index">
-            <td *ngFor="let currentCell of currentRow.cells; let colIndex = index"
-            (click)="spreadsheetService.setInputCell(rowIndex, colIndex)">
-                <a *ngIf="!spreadsheetService.isCellAnInput(rowIndex, colIndex)">{{currentCell.value}}</a>
-                <input matInput *ngIf="spreadsheetService.isCellAnInput(rowIndex, colIndex)"
-                [(ngModel)]="currentCell.value" #value="ngModel" name="value">
+            <td *ngFor="let currentCell of currentRow.cells; let colIndex = index">
+                <app-cell [currentRowIndex] = "rowIndex" [currentColIndex] = "colIndex"></app-cell>
             </td>
         </tr>
     </table>

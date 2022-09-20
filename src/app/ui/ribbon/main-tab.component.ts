@@ -8,11 +8,12 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 @Component({
     selector: 'app-main-tab',
     template: `
-    <div>
-        <button (click)="spreadsheetService.addRowBellow()">Add row bellow</button>
-        <button (click)="spreadsheetService.deleteSelectedRow()">Delete row</button>
-        <button (click)="spreadsheetService.logSpreadsheetValues()">Log table values</button>
-    </div>
+        <div>
+            <button (click)="spreadsheetService.addRowAbove()">Add row above</button>
+            <button (click)="spreadsheetService.addRowBellow()">Add row bellow</button>
+            <button (click)="spreadsheetService.deleteSelectedRow()">Delete row</button>
+            <button (click)="spreadsheetService.logSpreadsheetValues()">Log table values</button>
+        </div>
     `,
     styles: []
 })

@@ -57,6 +57,105 @@ export class SpreadsheetService
     public getSpreadsheetSubject(): BehaviorSubject<EditableSpreadsheet>
     { return this.spreadsheetSubject!; }
 
+    // metoda ce seteaza celula selectata curent
+    // aceasta celula este singura ce va fi de tip html 'input', restul celulelor vor fi 'read-only'
+    setSelectedCell(rowIndex: number, colIndex: number): void
+    {
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+        spreadsheet.editableCellRow = rowIndex;
+        spreadsheet.editableCellCol = colIndex;
+        this.spreadsheetSubject.next(spreadsheet);
+        console.log(`celula apasata: linie: ${rowIndex}, col: ${colIndex}`);
+    }
+
+    // metoda ce spune daca o celula oarecare de indexi 'rowIndex' si 'colIndex' este celula selectata
+    // celula selectata va fi randata ca 'input', restul celulelor vor fi de tip 'read-only'
+    isThisCellSelected(rowIndex: number, colIndex: number): boolean
+    {
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        return spreadsheet.editableCellCol === colIndex
+                && spreadsheet.editableCellRow === rowIndex;
+    }
+
+    public addRowAbove(): void
+    {
+        let newRow: Row = {cells: []};
+        let currentNewCell: Cell;
+        for(let columnInfo of this.spreadsheetSubject!.getValue().columnInfos)
+        {
+            switch(columnInfo.cellType)
+            {
+                case ColumnType.STRING:
+                    currentNewCell = { value: 'abc', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+                case ColumnType.NUMBER:
+                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+                case ColumnType.BOOL:
+                    currentNewCell = { value: 'false', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+                default:
+                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+            }
+        }
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        // aici splice() se foloseste pt. a adauga elementul 'newRow' la sir (nu se sterge nimic)
+        spreadsheet.rows.splice(spreadsheet.editableCellRow, 0, newRow);
+        this.spreadsheetSubject.next(spreadsheet);
+        console.log('add row');
+    }
+
+    public addRowBellow(): void
+    {
+        let newRow: Row = {cells: []};
+        let currentNewCell: Cell;
+        for(let columnInfo of this.spreadsheetSubject!.getValue().columnInfos)
+        {
+            switch(columnInfo.cellType)
+            {
+                case ColumnType.STRING:
+                    currentNewCell = { value: 'abc', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+                case ColumnType.NUMBER:
+                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+                case ColumnType.BOOL:
+                    currentNewCell = { value: 'false', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+                default:
+                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+            }
+        }
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        // aici splice() se foloseste pt. a adauga elementul 'newRow' la sir (nu se sterge nimic)
+        spreadsheet.rows.splice(spreadsheet.editableCellRow + 1, 0, newRow);
+        this.spreadsheetSubject.next(spreadsheet);
+        console.log('add row');
+    }
+
+    public deleteSelectedRow(): void
+    {
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+        spreadsheet.rows.splice(spreadsheet.editableCellRow, 1);
+        this.spreadsheetSubject!.next(spreadsheet);
+        console.log('delete row');
+    }
+
+    // ****************** metode auxiliare sau de debugging ***************************
+
     // metoda folosita pt. logging
     public logSpreadsheetValues(): void
     { console.table(this.spreadsheetToStringMatrix()); }
@@ -125,98 +224,4 @@ export class SpreadsheetService
 
         return cellStyle;
     }
-
-    setInputCell(rowIndex: number, colIndex: number): void
-    {
-        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
-        spreadsheet.editableCellRow = rowIndex;
-        spreadsheet.editableCellCol = colIndex;
-        this.spreadsheetSubject.next(spreadsheet);
-        console.log(`celula apasata: linie: ${rowIndex}, col: ${colIndex}`);
-    }
-
-    isCellAnInput(rowIndex: number, colIndex: number): boolean
-    {
-        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
-
-        return spreadsheet.editableCellCol === colIndex
-                && spreadsheet.editableCellRow === rowIndex;
-    }
-
-    public addRowBellow(): void
-    {
-        let newRow: Row = {cells: []};
-        let currentNewCell: Cell;
-        for(let columnInfo of this.spreadsheetSubject!.getValue().columnInfos)
-        {
-            switch(columnInfo.cellType)
-            {
-                case ColumnType.STRING:
-                    currentNewCell = { value: 'abc', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
-                    break;
-                case ColumnType.NUMBER:
-                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
-                    break;
-                case ColumnType.BOOL:
-                    currentNewCell = { value: 'false', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
-                    break;
-                default:
-                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
-                    break;
-            }
-        }
-        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
-
-        // aici splice() se foloseste pt. a adauga elementul 'newRow' la sir (nu se sterge nimic)
-        spreadsheet.rows.splice(spreadsheet.editableCellRow + 1, 0, newRow);
-        this.spreadsheetSubject.next(spreadsheet);
-        console.log('add row');
-    }
-
-    public addRowAbove(): void
-    {
-        let newRow: Row = {cells: []};
-        let currentNewCell: Cell;
-        for(let columnInfo of this.spreadsheetSubject!.getValue().columnInfos)
-        {
-            switch(columnInfo.cellType)
-            {
-                case ColumnType.STRING:
-                    currentNewCell = { value: 'abc', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
-                    break;
-                case ColumnType.NUMBER:
-                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
-                    break;
-                case ColumnType.BOOL:
-                    currentNewCell = { value: 'false', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
-                    break;
-                default:
-                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
-                    break;
-            }
-        }
-        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
-
-        // aici splice() se foloseste pt. a adauga elementul 'newRow' la sir (nu se sterge nimic)
-        spreadsheet.rows.splice(spreadsheet.editableCellRow, 0, newRow);
-        this.spreadsheetSubject.next(spreadsheet);
-        console.log('add row');
-    }
-
-    public deleteSelectedRow(): void
-    {
-        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
-        spreadsheet.rows.splice(spreadsheet.editableCellRow, 1);
-        this.spreadsheetSubject!.next(spreadsheet);
-        console.log('delete row');
-    }
-
 }

@@ -21,30 +21,31 @@ import { RibbonComponent } from './ui/ribbon/ribbon.component';
 import { MainTabComponent } from './ui/ribbon/main-tab.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    CellComponent,
-    SpreadsheetComponent,
-    RibbonComponent,
-    MainTabComponent
-  ],
-  imports:
-  [
-    // NgModule,
-    BrowserModule,
-    HttpClientModule,
-    AppRoutingModule,
-    CommonModule,
+    declarations:
+    [
+        AppComponent,
+        CellComponent,
+        SpreadsheetComponent,
+        RibbonComponent,
+        MainTabComponent
+    ],
+    imports:
+    [
+        // NgModule,
+        BrowserModule,
+        HttpClientModule,
+        AppRoutingModule,
+        CommonModule,
 
-    NoopAnimationsModule,
-    FormsModule,
-    // CdkTableModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTableModule,
-    MatTabsModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+        NoopAnimationsModule,
+        FormsModule,
+        // CdkTableModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatTableModule,
+        MatTabsModule
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
