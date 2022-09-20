@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLinkWithHref } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
-import { ViewChild } from '@angular/core';
 import { MatTable } from '@angular/material/table';
+import { ViewChild } from '@angular/core';
 // import { MatFormField } from '@angular/material/form-field';
 
 import { Spreadsheet } from '../model/spreadsheet';
@@ -18,26 +18,38 @@ import { Observer } from 'rxjs';
   selector: 'app-spreadsheet',
   template: `
     <mat-table #mainSpreadsheet 
-    [dataSource]="dataSource" class="mat-elevation-z8">
+        [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container *ngFor="let currentCol of displayedColumns; let colIndex = index;" [matColumnDef]="currentCol">
             <th mat-header-cell *matHeaderCellDef>{{currentCol}}</th>
             <td mat-cell *matCellDef="let currentRow; let rowIndex = index;"
-            (click)="setInputCell(rowIndex, colIndex)"
-            [ngClass]="{'activeCell': editableCellCol === colIndex && editableCellRow === rowIndex}">
-                <a *ngIf="!isCellAnInput(rowIndex, colIndex)" class="cell-value">
+            (click)="spreadsheetService.setInputCell(rowIndex, colIndex)">
+                <a *ngIf="!spreadsheetService.isCellAnInput(rowIndex, colIndex)" class="cell-value">
                     {{currentRow.cells[colIndex].value}}
                 </a>
                 <!-- <mat-form-field> -->
-                    <input matInput *ngIf="isCellAnInput(rowIndex, colIndex)"
+                    <input matInput *ngIf="spreadsheetService.isCellAnInput(rowIndex, colIndex)"
                     [(ngModel)]="currentRow.cells[colIndex].value" #value="ngModel" name="value">
                 <!-- </mat-form-field> -->
-
             </td>
-        </ng-container>
-
+    </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </mat-table>
+    <table>
+        <tr>
+            <th *ngFor="let currentCol of spreadsheet!.spreadsheet.columnInfos">
+                {{currentCol.name}}
+            </th>
+        </tr>
+        <tr *ngFor="let currentRow of spreadsheet!.spreadsheet.rows; let rowIndex = index">
+            <td *ngFor="let currentCell of currentRow.cells; let colIndex = index"
+            (click)="spreadsheetService.setInputCell(rowIndex, colIndex)">
+                <a *ngIf="!spreadsheetService.isCellAnInput(rowIndex, colIndex)">{{currentCell.value}}</a>
+                <input matInput *ngIf="spreadsheetService.isCellAnInput(rowIndex, colIndex)"
+                [(ngModel)]="currentCell.value" #value="ngModel" name="value">
+            </td>
+        </tr>
+    </table>
   `,
     styles: []
 })
@@ -64,27 +76,21 @@ export class SpreadsheetComponent implements OnInit
         borderThickness: 1
     };
 
-    @ViewChild(MatTable) mainSpreadsheet?: MatTable<Row>;
-
     spreadsheet?: EditableSpreadsheet;
-    spreadsheetObserver: Observer<EditableSpreadsheet> =
-        {
-            next: spreadsheet => this.spreadsheet = spreadsheet,
-            error: err => console.error('Observer got an error: ' + err),
-            complete: () => console.log('Observer got a complete notification'),
-        };
+    // spreadsheetObserver: Observer<EditableSpreadsheet> =
+    //     {
+    //         next: spreadsheet => this.spreadsheet = spreadsheet,
+    //         error: err => console.error('Observer got an error: ' + err),
+    //         complete: () => console.log('Observer got a complete notification'),
+    //     };
         
+    @ViewChild(MatTable) mainSpreadsheet?: MatTable<Row>;
     displayedColumns: string[] = [];
     dataSource: MatTableDataSource<Row>
-        = new MatTableDataSource<Row>(this.spreadsheet!.spreadsheet!.rows);
-
-    editableCellCol: number = -1;
-    editableCellRow: number = -1;
+        = new MatTableDataSource<Row>(this.spreadsheet?.spreadsheet?.rows);
 
     constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute)
-    {
-        // this.getSpreadsheet();
-    }
+    { }
 
     ngOnInit(): void
     {
@@ -98,28 +104,16 @@ export class SpreadsheetComponent implements OnInit
             .subscribe((spreadsheet: EditableSpreadsheet) =>
                 {
                     this.spreadsheet = spreadsheet;
-                    this.dataSource = new MatTableDataSource(this.spreadsheet!.spreadsheet!.rows);
-                    this.displayedColumns = this.spreadsheet?.spreadsheet!.columnInfos
+                    this.dataSource = new MatTableDataSource<Row>(this.spreadsheet.spreadsheet?.rows);
+                    this.displayedColumns = this.spreadsheet.spreadsheet!.columnInfos
                                             .map( columnInfo =>{ return columnInfo.name; });
                     this.mainSpreadsheet?.renderRows();
                 });
-        // this.displayedColumns = this.table.columnNames;
-        // this.dataSource = new MatTableDataSource(this.table.rows);
-        // this.mainTable?.renderRows();
     }
 
-    setInputCell(rowIndex: number, colIndex: number): void
-    {
-        this.spreadsheetService.setInputCell(rowIndex, colIndex);
-        this.editableCellRow = rowIndex;
-        this.editableCellCol = colIndex;
-        console.log(`celula apasata: linie: ${this.editableCellRow}, col: ${this.editableCellCol}`);
-    }
-
-    isCellAnInput(rowIndex: number, colIndex: number): boolean
-    {
-        return this.editableCellCol === colIndex && this.editableCellRow === rowIndex;
-    }
-
-
+    // isCellAnInput(rowIndex: number, colIndex: number): boolean
+    // {
+    //     return this.spreadsheet?.editableCellCol === colIndex
+    //             && this.spreadsheet.editableCellRow === rowIndex;
+    // }
 }

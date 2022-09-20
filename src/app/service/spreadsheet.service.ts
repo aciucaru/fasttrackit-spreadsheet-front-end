@@ -18,24 +18,15 @@ import { GeneratingMethod } from '../model/generating-method';
 })
 export class SpreadsheetService
 {
-    editableCellCol: number = -1;
-    editableCellRow: number = -1;
-
     private oneSpreadsheetUrl = 'http://localhost:8080/sheets/one';
-    // httpOptions = { headers: new HttpHeaders({ 'Content-Type': 'application/json' }) };
     private spreadsheetSubject: BehaviorSubject<EditableSpreadsheet>
             = new BehaviorSubject<EditableSpreadsheet>(this.getDummySpreadsheet());
-    // private editableSpreadsheet$?:Observable<EditableSpreadsheet>
-    //         = this.editableSpreadsheetSource$.asObservable();
-    // private spreadsheet?: EditableSpreadsheet
-    //     = new EditableSpreadsheet(this.getDummySpreadsheet().spreadsheet!);
 
     constructor(private httpClient: HttpClient)
     {
         // aceasta metoda ar trebui apelata la comanda unui component UI
         // dar momentan este apelata din constructor, pt. a avea un spreadsheet cu care se poate lucra
         this.getCurrentSpreadsheetFromServer(''); // se ia un spreadsheet de pe server
-        // console.log(this.spreadsheetToStringMatrix());
     }
 
     // metoda ce ia un spreadsheet de pe server, temporar argumentul nu este folosit
@@ -52,28 +43,18 @@ export class SpreadsheetService
                         .pipe(
                             map(
                                 (spreadsheet: Spreadsheet) =>
-                                    // {
-                                        // this.spreadsheet = new EditableSpreadsheet(spreadsheet);
-                                        // this.editableSpreadsheetSource$!.next(this.spreadsheet!);
-                                        // console.log('httpClient get 100')
-                                        // console.log(this.spreadsheetToStringMatrix());
-                                        // return this.spreadsheet;
                                         <EditableSpreadsheet>{
                                             spreadsheet: spreadsheet,
                                             editableCellCol: -1,
                                             editableCellRow: -1,
                                         }
-                                    // }
                                 )
                         )
                         .subscribe( (editableSpreadsheet: EditableSpreadsheet) =>
                             {
-                                // this.spreadsheet = spreadsheet;
                                 this.spreadsheetSubject.next(editableSpreadsheet);
-                                console.log('httpClient get 123');
-                                console.log(editableSpreadsheet);
-                                // console.log(this.spreadsheetToStringMatrix());
-                                // this.editableSpreadsheetSource$!.next(spreadsheet);
+                                console.log('got spreadsheet from httpClient');
+                                // console.log(editableSpreadsheet);
                             }
                         );
     }
@@ -82,44 +63,6 @@ export class SpreadsheetService
     // este metoda principala pe care ar trebui sa o foloseasca componentele UI ce au acces la acest service
     public getSpreadsheetSubject(): BehaviorSubject<EditableSpreadsheet>
     { return this.spreadsheetSubject!; }
-
-    // metoda ce returneaza spreadsheet-ul luat de pe server
-    // este metoda principala pe care ar trebui sa o foloseasca componentele UI ce au acces la acest service
-    // public getCurrentSpreadsheet(): Observable<EditableSpreadsheet>
-    // { return this.editableSpreadsheet$!; }
-
-    // public addRow(): void
-    // {
-    //     let newRow: Row = {cells: []};
-    //     let currentNewCell: Cell;
-    //     for(let columnInfo of this.spreadsheetSubject!.getValue().spreadsheet!.columnInfos)
-    //     {
-    //         switch(columnInfo.cellType)
-    //         {
-    //             case ColumnType.STRING:
-    //                 currentNewCell = { value: '', style: this.getDummyCellStyle() };
-    //                 newRow.cells.push(currentNewCell);
-    //                 break;
-    //             case ColumnType.NUMBER:
-    //                 currentNewCell = { value: '0', style: this.getDummyCellStyle() };
-    //                 newRow.cells.push(currentNewCell);
-    //                 break;
-    //             case ColumnType.BOOL:
-    //                 currentNewCell = { value: 'false', style: this.getDummyCellStyle() };
-    //                 newRow.cells.push(currentNewCell);
-    //                 break;
-    //         }
-    //     }
-    //     console.log('add row');
-    // }
-
-    // public deleteRow(): void
-    // {
-    //     this.spreadsheetSubject!.getValue().spreadsheet!.rows.splice(this.editableCellRow, 1);
-    //     // this.dataSource = new MatTableDataSource(this.table.rows); // merge si fara
-    //     this.spreadsheetSubject!.next(this.spreadsheet!);
-    //     console.log('delete row');
-    // }
 
     public logSpreadsheetValues(): void
     {
@@ -198,8 +141,59 @@ export class SpreadsheetService
 
     setInputCell(rowIndex: number, colIndex: number): void
     {
-        this.editableCellRow = rowIndex;
-        this.editableCellCol = colIndex;
-        console.log(`celula apasata: linie: ${this.editableCellRow}, col: ${this.editableCellCol}`);
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+        spreadsheet.editableCellRow = rowIndex;
+        spreadsheet.editableCellCol = colIndex;
+        this.spreadsheetSubject.next(spreadsheet);
+        console.log(`celula apasata: linie: ${rowIndex}, col: ${colIndex}`);
     }
+
+    isCellAnInput(rowIndex: number, colIndex: number): boolean
+    {
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+        
+        return spreadsheet.editableCellCol === colIndex
+                && spreadsheet.editableCellRow === rowIndex;
+    }
+
+    public addRow(): void
+    {
+        let newRow: Row = {cells: []};
+        let currentNewCell: Cell;
+        for(let columnInfo of this.spreadsheetSubject!.getValue().spreadsheet!.columnInfos)
+        {
+            switch(columnInfo.cellType)
+            {
+                case ColumnType.STRING:
+                    currentNewCell = { value: 'abc', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+                case ColumnType.NUMBER:
+                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+                case ColumnType.BOOL:
+                    currentNewCell = { value: 'false', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+                default:
+                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+            }
+        }
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+        spreadsheet.spreadsheet.rows.push(newRow);
+        this.spreadsheetSubject.next(spreadsheet);
+        console.log('add row');
+    }
+
+    public deleteRow(): void
+    {
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+        spreadsheet.spreadsheet?.rows.splice(spreadsheet.editableCellRow, 1);
+        this.spreadsheetSubject!.next(spreadsheet);
+        console.log('delete row');
+    }
+
 }

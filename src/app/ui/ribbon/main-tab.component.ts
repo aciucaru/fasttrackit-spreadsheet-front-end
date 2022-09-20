@@ -9,8 +9,8 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     selector: 'app-main-tab',
     template: `
     <div>
-        <button>Add row</button>
-        <button>Delete row</button>
+        <button (click)="spreadsheetService.addRow()">Add row</button>
+        <button (click)="spreadsheetService.deleteRow()">Delete row</button>
     </div>
     `,
     styles: []
@@ -19,12 +19,12 @@ export class MainTabComponent implements OnInit
 {
 
     spreadsheet?: EditableSpreadsheet;
-    spreadsheetObserver: Observer<EditableSpreadsheet> =
-    {
-        next: spreadsheet => this.spreadsheet = spreadsheet,
-        error: err => console.error('Observer got an error: ' + err),
-        complete: () => console.log('Observer got a complete notification'),
-    };
+    // spreadsheetObserver: Observer<EditableSpreadsheet> =
+    // {
+    //     next: spreadsheet => this.spreadsheet = spreadsheet,
+    //     error: err => console.error('Observer got an error: ' + err),
+    //     complete: () => console.log('Observer got a complete notification'),
+    // };
     
     constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute) { }
 
@@ -34,13 +34,10 @@ export class MainTabComponent implements OnInit
     {
         this.spreadsheetService
             .getSpreadsheetSubject()
-            .subscribe(spreadsheet =>
+            .subscribe( (spreadsheet: EditableSpreadsheet) =>
                 {
                     this.spreadsheet = spreadsheet;
                 });
-        // this.displayedColumns = this.table.columnNames;
-        // this.dataSource = new MatTableDataSource(this.table.rows);
-        // this.mainTable?.renderRows();
     }
 
 }

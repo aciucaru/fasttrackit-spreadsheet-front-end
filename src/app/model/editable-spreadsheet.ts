@@ -5,7 +5,7 @@ import { Spreadsheet } from './spreadsheet';
    ci oar temporar pe front-end. */
 export interface EditableSpreadsheet
 {
-    spreadsheet?: Spreadsheet;
+    spreadsheet: Spreadsheet;
     editableCellCol: number;
     editableCellRow: number;
 }
