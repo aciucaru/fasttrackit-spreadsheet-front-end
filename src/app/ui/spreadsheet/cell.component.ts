@@ -9,22 +9,28 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
   selector: 'app-cell',
   template:`
     <!-- <div [ngStyle]="{backgroundColor: cell?.style?.rgbBGColor}"> -->
-    <div (click)="spreadsheetService.setSelectedCell(rowIndex, colIndex)"
+    <div (click)="spreadsheetService.setSelectedCell(currentRowIndex, currentColIndex)"
         [style.background-color]="cell?.style?.rgbBGColor"
         [style.color]="cell?.style?.rgbFGColor"
         [style.font-family]="cell?.style?.font">
-            <a *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">{{currentCell.value}}</a>
+            <a *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">{{cell?.value}}</a>
             <input matInput *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
-            [(ngModel)]="currentCell.value" #value="ngModel" name="value">
+            [(ngModel)]="cell!.value" #value="ngModel" name="value">
     </div>
   `,
   styles: []
 })
 export class CellComponent implements OnInit
 {
-    @Input() protected cell?: Cell;
-    @Input() protected currentRowIndex: number = -1;
-    @Input() protected currentColIndex: number = -1;
+    // datele celulei curente, primita ca input de la parine
+    // trebuie  sa fie 'public' ca sa poate fi accesata din template-ul HTML
+    @Input() public cell?: Cell;
+
+    // indexul randului si coloanei curente din buclele for ale parintelui
+    // trebuie  sa fie 'public' ca sa poate fi accesate din template-ul HTML
+    @Input() public currentRowIndex: number = -1;
+    @Input() public currentColIndex: number = -1;
+    
     private spreadsheet?: EditableSpreadsheet;
     // displayedColumns: string[] = [];
 

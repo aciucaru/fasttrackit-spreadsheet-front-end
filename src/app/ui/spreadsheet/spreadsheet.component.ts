@@ -21,7 +21,7 @@ import { Observer } from 'rxjs';
         </tr>
         <tr *ngFor="let currentRow of spreadsheet?.rows; let rowIndex = index">
             <td *ngFor="let currentCell of currentRow.cells; let colIndex = index">
-                <app-cell [currentRowIndex] = "rowIndex" [currentColIndex] = "colIndex"></app-cell>
+                <app-cell [cell]="currentCell" [currentRowIndex] = "rowIndex" [currentColIndex] = "colIndex"></app-cell>
             </td>
         </tr>
     </table>
