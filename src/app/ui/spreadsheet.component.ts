@@ -17,24 +17,6 @@ import { Observer } from 'rxjs';
 @Component({
   selector: 'app-spreadsheet',
   template: `
-    <mat-table #mainSpreadsheet 
-        [dataSource]="dataSource" class="mat-elevation-z8">
-        <ng-container *ngFor="let currentCol of displayedColumns; let colIndex = index;" [matColumnDef]="currentCol">
-            <th mat-header-cell *matHeaderCellDef>{{currentCol}}</th>
-            <td mat-cell *matCellDef="let currentRow; let rowIndex = index;"
-            (click)="spreadsheetService.setInputCell(rowIndex, colIndex)">
-                <a *ngIf="!spreadsheetService.isCellAnInput(rowIndex, colIndex)" class="cell-value">
-                    {{currentRow.cells[colIndex].value}}
-                </a>
-                <!-- <mat-form-field> -->
-                    <input matInput *ngIf="spreadsheetService.isCellAnInput(rowIndex, colIndex)"
-                    [(ngModel)]="currentRow.cells[colIndex].value" #value="ngModel" name="value">
-                <!-- </mat-form-field> -->
-            </td>
-    </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </mat-table>
     <table>
         <tr>
             <th *ngFor="let currentCol of spreadsheet!.spreadsheet.columnInfos">
@@ -77,17 +59,7 @@ export class SpreadsheetComponent implements OnInit
     };
 
     spreadsheet?: EditableSpreadsheet;
-    // spreadsheetObserver: Observer<EditableSpreadsheet> =
-    //     {
-    //         next: spreadsheet => this.spreadsheet = spreadsheet,
-    //         error: err => console.error('Observer got an error: ' + err),
-    //         complete: () => console.log('Observer got a complete notification'),
-    //     };
-        
-    @ViewChild(MatTable) mainSpreadsheet?: MatTable<Row>;
     displayedColumns: string[] = [];
-    dataSource: MatTableDataSource<Row>
-        = new MatTableDataSource<Row>(this.spreadsheet?.spreadsheet?.rows);
 
     constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute)
     { }
@@ -104,10 +76,8 @@ export class SpreadsheetComponent implements OnInit
             .subscribe((spreadsheet: EditableSpreadsheet) =>
                 {
                     this.spreadsheet = spreadsheet;
-                    this.dataSource = new MatTableDataSource<Row>(this.spreadsheet.spreadsheet?.rows);
                     this.displayedColumns = this.spreadsheet.spreadsheet!.columnInfos
                                             .map( columnInfo =>{ return columnInfo.name; });
-                    this.mainSpreadsheet?.renderRows();
                 });
     }
 
