@@ -26,7 +26,7 @@ export class CellComponent implements OnInit
     // trebuie  sa fie 'public' ca sa poate fi accesata din template-ul HTML
     @Input() public cell?: Cell;
 
-    // indexul randului si coloanei curente din buclele for ale parintelui
+    // indexii randului si coloanei curente primite de la 'buclele for' ale parintelui
     // trebuie  sa fie 'public' ca sa poate fi accesate din template-ul HTML
     @Input() public currentRowIndex: number = -1;
     @Input() public currentColIndex: number = -1;
