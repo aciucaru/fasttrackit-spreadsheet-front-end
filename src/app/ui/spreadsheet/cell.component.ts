@@ -9,16 +9,24 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
   selector: 'app-cell',
   template:`
     <!-- <div [ngStyle]="{backgroundColor: cell?.style?.rgbBGColor}"> -->
-    <div (click)="spreadsheetService.setSelectedCell(currentRowIndex, currentColIndex)"
-        [style.background-color]="cell?.style?.rgbBGColor"
-        [style.color]="cell?.style?.rgbFGColor"
-        [style.font-family]="cell?.style?.font">
-            <a *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">{{cell?.value}}</a>
-            <input matInput *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
-            [(ngModel)]="cell!.value" #value="ngModel" name="value">
-    </div>
+    <div class="main_cell_container">
+        <div class="secondary_container">
+            <div class="cell_content"
+                (click)="spreadsheetService.setSelectedCell(currentRowIndex, currentColIndex)"
+                [style.background-color]="cell?.style?.rgbBGColor"
+                [style.color]="cell?.style?.rgbFGColor"
+                [style.font-family]="cell?.style?.font">
+                    <a *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">{{cell?.value}}</a>
+                    <input matInput *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
+                    [(ngModel)]="cell!.value" #value="ngModel" name="value">
+            </div>
+            <div class="right_vertical_delimiter"></div>
+        <div>
+        <div class="bottom_horizontal_delimiter"></div>
+    <div>
   `,
-  styles: []
+  styles: ['.main_cell_container { position: relative; }',
+            '']
 })
 export class CellComponent implements OnInit
 {

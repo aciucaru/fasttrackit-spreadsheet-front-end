@@ -13,20 +13,21 @@ import { Observer } from 'rxjs';
 @Component({
   selector: 'app-spreadsheet',
   template: `
-    <table>
+    <table class="spreadsheet">
         <tr>
-            <th *ngFor="let currentCol of spreadsheet?.columnInfos">
+            <th *ngFor="let currentCol of spreadsheet?.columnInfos" class="spreadsheet_cell">
                 {{currentCol.name}}
             </th>
         </tr>
         <tr *ngFor="let currentRow of spreadsheet?.rows; let rowIndex = index">
-            <td *ngFor="let currentCell of currentRow.cells; let colIndex = index">
+            <td *ngFor="let currentCell of currentRow.cells; let colIndex = index" class="spreadsheet_cell">
                 <app-cell [cell]="currentCell" [currentRowIndex] = "rowIndex" [currentColIndex] = "colIndex"></app-cell>
             </td>
         </tr>
     </table>
   `,
-    styles: []
+    styles: [ 'table { border-collapse: collapse; } td { border-collapse: collapse; } th { border-collapse: collapse; }',
+        '.spreadsheet_cell { border-style: solid; border-width: 1px; border-color: rgb(100, 100, 100); }' ]
 })
 export class SpreadsheetComponent implements OnInit
 {

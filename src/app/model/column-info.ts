@@ -7,4 +7,5 @@ export interface ColumnInfo
     cellType: ColumnType;
     genMethod: GeneratingMethod
     varName: string;
+    widthPx: number
 }

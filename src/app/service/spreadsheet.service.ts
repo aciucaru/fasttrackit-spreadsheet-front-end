@@ -80,7 +80,7 @@ export class SpreadsheetService
 
     public addRowAbove(): void
     {
-        let newRow: Row = {cells: []};
+        let newRow: Row = {cells: [], heigthPx: 20};
         let currentNewCell: Cell;
         for(let columnInfo of this.spreadsheetSubject!.getValue().columnInfos)
         {
@@ -114,7 +114,7 @@ export class SpreadsheetService
 
     public addRowBellow(): void
     {
-        let newRow: Row = {cells: []};
+        let newRow: Row = {cells: [], heigthPx: 20};
         let currentNewCell: Cell;
         for(let columnInfo of this.spreadsheetSubject!.getValue().columnInfos)
         {
@@ -189,10 +189,11 @@ export class SpreadsheetService
                     name: 'Numbers',
                     cellType: ColumnType.NUMBER,
                     genMethod:GeneratingMethod.FROM_USER_INPUT,
-                    varName: 'number_col'
+                    varName: 'number_col',
+                    widthPx: 70
                 }
             ],
-            rows: [ { cells: [ {value: "100", style: this.getDummyCellStyle()}, ] }, ],
+            rows: [ { cells: [ {value: "100", style: this.getDummyCellStyle()} ], heigthPx: 20 }, ],
             editableCellCol:-1,
             editableCellRow: -1
         };
