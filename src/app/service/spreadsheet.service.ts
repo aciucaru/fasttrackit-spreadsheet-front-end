@@ -44,7 +44,9 @@ export class SpreadsheetService
                             map(
                                 (spreadsheet: Spreadsheet) =>
                                         <EditableSpreadsheet>{
-                                            spreadsheet: spreadsheet,
+                                            name: spreadsheet.name,
+                                            columnInfos: spreadsheet.columnInfos,
+                                            rows: spreadsheet.rows,
                                             editableCellCol: -1,
                                             editableCellRow: -1,
                                         }
@@ -73,7 +75,7 @@ export class SpreadsheetService
     {
         let cellMatrix: string[][] = [[]];
 
-        for(let row of this.spreadsheetSubject!.getValue().spreadsheet!.rows)
+        for(let row of this.spreadsheetSubject!.getValue().rows)
         {
             let currentRow: string[] = [];
             for(let cell of row.cells)
@@ -90,23 +92,17 @@ export class SpreadsheetService
     {
         let spreadsheet: EditableSpreadsheet = 
         {
-            spreadsheet:
-            {
-                name: "dummy spreadsheet",
-                columnInfos:
-                [
-                    {
-                        name: 'Numbers',
-                        cellType: ColumnType.NUMBER,
-                        genMethod:GeneratingMethod.FROM_USER_INPUT,
-                        varName: 'number_col'
-                    }
-                ],
-                rows:
-                [
-                    { cells: [ {value: "100", style: this.getDummyCellStyle()}, ] },
-                ]
-            },
+            name: "dummy spreadsheet",
+            columnInfos:
+            [
+                {
+                    name: 'Numbers',
+                    cellType: ColumnType.NUMBER,
+                    genMethod:GeneratingMethod.FROM_USER_INPUT,
+                    varName: 'number_col'
+                }
+            ],
+            rows: [ { cells: [ {value: "100", style: this.getDummyCellStyle()}, ] }, ],
             editableCellCol:-1,
             editableCellRow: -1
         };
@@ -151,7 +147,7 @@ export class SpreadsheetService
     isCellAnInput(rowIndex: number, colIndex: number): boolean
     {
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
-        
+
         return spreadsheet.editableCellCol === colIndex
                 && spreadsheet.editableCellRow === rowIndex;
     }
@@ -160,7 +156,7 @@ export class SpreadsheetService
     {
         let newRow: Row = {cells: []};
         let currentNewCell: Cell;
-        for(let columnInfo of this.spreadsheetSubject!.getValue().spreadsheet!.columnInfos)
+        for(let columnInfo of this.spreadsheetSubject!.getValue().columnInfos)
         {
             switch(columnInfo.cellType)
             {
@@ -183,7 +179,7 @@ export class SpreadsheetService
             }
         }
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
-        spreadsheet.spreadsheet.rows.push(newRow);
+        spreadsheet.rows.push(newRow);
         this.spreadsheetSubject.next(spreadsheet);
         console.log('add row');
     }
@@ -191,7 +187,7 @@ export class SpreadsheetService
     public deleteRow(): void
     {
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
-        spreadsheet.spreadsheet?.rows.splice(spreadsheet.editableCellRow, 1);
+        spreadsheet.rows.splice(spreadsheet.editableCellRow, 1);
         this.spreadsheetSubject!.next(spreadsheet);
         console.log('delete row');
     }

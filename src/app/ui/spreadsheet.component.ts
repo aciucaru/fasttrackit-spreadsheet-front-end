@@ -19,11 +19,11 @@ import { Observer } from 'rxjs';
   template: `
     <table>
         <tr>
-            <th *ngFor="let currentCol of spreadsheet!.spreadsheet.columnInfos">
+            <th *ngFor="let currentCol of spreadsheet?.columnInfos">
                 {{currentCol.name}}
             </th>
         </tr>
-        <tr *ngFor="let currentRow of spreadsheet!.spreadsheet.rows; let rowIndex = index">
+        <tr *ngFor="let currentRow of spreadsheet?.rows; let rowIndex = index">
             <td *ngFor="let currentCell of currentRow.cells; let colIndex = index"
             (click)="spreadsheetService.setInputCell(rowIndex, colIndex)">
                 <a *ngIf="!spreadsheetService.isCellAnInput(rowIndex, colIndex)">{{currentCell.value}}</a>
@@ -76,14 +76,8 @@ export class SpreadsheetComponent implements OnInit
             .subscribe((spreadsheet: EditableSpreadsheet) =>
                 {
                     this.spreadsheet = spreadsheet;
-                    this.displayedColumns = this.spreadsheet.spreadsheet!.columnInfos
+                    this.displayedColumns = this.spreadsheet.columnInfos
                                             .map( columnInfo =>{ return columnInfo.name; });
                 });
     }
-
-    // isCellAnInput(rowIndex: number, colIndex: number): boolean
-    // {
-    //     return this.spreadsheet?.editableCellCol === colIndex
-    //             && this.spreadsheet.editableCellRow === rowIndex;
-    // }
 }

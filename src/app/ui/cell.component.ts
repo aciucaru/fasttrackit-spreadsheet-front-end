@@ -24,15 +24,4 @@ export class CellComponent implements OnInit
 
     ngOnInit(): void {  }
 
-    onKeypressEvent(event: any)
-    {
-        const pattern = /[0-9]/;
-        const inputChar = String.fromCharCode(event.charCode);
-        if (!pattern.test(inputChar))
-        {
-            // invalid character, prevent input
-            event.preventDefault();
-        }
-        console.log(event.target.value);
-    }
 }

@@ -19,12 +19,6 @@ export class MainTabComponent implements OnInit
 {
 
     spreadsheet?: EditableSpreadsheet;
-    // spreadsheetObserver: Observer<EditableSpreadsheet> =
-    // {
-    //     next: spreadsheet => this.spreadsheet = spreadsheet,
-    //     error: err => console.error('Observer got an error: ' + err),
-    //     complete: () => console.log('Observer got a complete notification'),
-    // };
     
     constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute) { }
 

@@ -20,13 +20,6 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 export class RibbonComponent implements OnInit
 {
     spreadsheet?: EditableSpreadsheet;
-    // spreadsheetObserver: Observer<EditableSpreadsheet> =
-    //     {
-    //         next: spreadsheet => this.spreadsheet = spreadsheet,
-    //         error: err => console.error('Observer got an error: ' + err),
-    //         complete: () => console.log('Observer got a complete notification'),
-    //     };
-    displayedColumns: string[] = [];
 
     constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute) { }
 
@@ -37,10 +30,7 @@ export class RibbonComponent implements OnInit
         this.spreadsheetService
             .getSpreadsheetSubject()
             .subscribe( (spreadsheet: EditableSpreadsheet) =>
-                {
-                    this.spreadsheet = spreadsheet;
-                    this.displayedColumns = this.spreadsheet.spreadsheet!.columnInfos
-                                            .map( columnInfo =>{ return columnInfo.name; });
-                });
+                            { this.spreadsheet = spreadsheet; }
+                        );
     }
 }
