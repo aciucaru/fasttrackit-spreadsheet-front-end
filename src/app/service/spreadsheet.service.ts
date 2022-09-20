@@ -29,14 +29,6 @@ export class SpreadsheetService
         this.getCurrentSpreadsheetFromServer(''); // se ia un spreadsheet de pe server
     }
 
-    // metoda ce ia un spreadsheet de pe server, temporar argumentul nu este folosit
-    // public getCurrentSpreadsheetFromServer(spreadsheetName: string): void
-    // {
-    //     this.editableSpreadsheet$ =
-    //         this.httpClient.get<Spreadsheet>(this.oneSpreadsheetUrl)
-    //                         .pipe(shareReplay(1));
-    // }
-
     public getCurrentSpreadsheetFromServer(spreadsheetName: string): void
     {
         this.httpClient.get<Spreadsheet>(this.oneSpreadsheetUrl)
@@ -56,7 +48,6 @@ export class SpreadsheetService
                             {
                                 this.spreadsheetSubject.next(editableSpreadsheet);
                                 console.log('got spreadsheet from httpClient');
-                                // console.log(editableSpreadsheet);
                             }
                         );
     }
@@ -66,11 +57,11 @@ export class SpreadsheetService
     public getSpreadsheetSubject(): BehaviorSubject<EditableSpreadsheet>
     { return this.spreadsheetSubject!; }
 
+    // metoda folosita pt. logging
     public logSpreadsheetValues(): void
-    {
-        console.table(this.spreadsheetToStringMatrix());
-    }
+    { console.table(this.spreadsheetToStringMatrix()); }
 
+    // metoda ce transforma 
     public spreadsheetToStringMatrix(): string[][]
     {
         let cellMatrix: string[][] = [[]];
@@ -152,7 +143,7 @@ export class SpreadsheetService
                 && spreadsheet.editableCellRow === rowIndex;
     }
 
-    public addRow(): void
+    public addRowBellow(): void
     {
         let newRow: Row = {cells: []};
         let currentNewCell: Cell;
@@ -179,12 +170,48 @@ export class SpreadsheetService
             }
         }
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
-        spreadsheet.rows.push(newRow);
+
+        // aici splice() se foloseste pt. a adauga elementul 'newRow' la sir (nu se sterge nimic)
+        spreadsheet.rows.splice(spreadsheet.editableCellRow + 1, 0, newRow);
         this.spreadsheetSubject.next(spreadsheet);
         console.log('add row');
     }
 
-    public deleteRow(): void
+    public addRowAbove(): void
+    {
+        let newRow: Row = {cells: []};
+        let currentNewCell: Cell;
+        for(let columnInfo of this.spreadsheetSubject!.getValue().columnInfos)
+        {
+            switch(columnInfo.cellType)
+            {
+                case ColumnType.STRING:
+                    currentNewCell = { value: 'abc', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+                case ColumnType.NUMBER:
+                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+                case ColumnType.BOOL:
+                    currentNewCell = { value: 'false', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+                default:
+                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
+                    newRow.cells.push(currentNewCell);
+                    break;
+            }
+        }
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        // aici splice() se foloseste pt. a adauga elementul 'newRow' la sir (nu se sterge nimic)
+        spreadsheet.rows.splice(spreadsheet.editableCellRow, 0, newRow);
+        this.spreadsheetSubject.next(spreadsheet);
+        console.log('add row');
+    }
+
+    public deleteSelectedRow(): void
     {
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
         spreadsheet.rows.splice(spreadsheet.editableCellRow, 1);

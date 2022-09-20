@@ -3,15 +3,11 @@ import { ActivatedRoute, RouterLinkWithHref } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatTable } from '@angular/material/table';
 import { ViewChild } from '@angular/core';
-// import { MatFormField } from '@angular/material/form-field';
 
-import { Spreadsheet } from '../model/spreadsheet';
-import { Cell } from '../model/cell';
-import { Row } from '../model/row';
-import { CellStyle } from '../model/cell-style'; 
-import { SpreadsheetService } from '../service/spreadsheet.service';
-import { ColumnType } from '../model/column-type';
-import { EditableSpreadsheet } from '../model/editable-spreadsheet';
+import { CellStyle } from 'src/app/model/cell-style'; 
+import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
+import { ColumnType } from 'src/app/model/column-type';
+import { EditableSpreadsheet } from 'src/app/model/editable-spreadsheet';
 import { Observer } from 'rxjs';
 
 @Component({

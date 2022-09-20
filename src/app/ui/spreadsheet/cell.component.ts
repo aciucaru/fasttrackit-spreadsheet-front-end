@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Cell } from '../model/cell';
+import { Cell } from 'src/app/model/cell';
 
 @Component({
   selector: 'app-cell',

@@ -15,8 +15,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { CellComponent } from './ui/cell.component';
-import { SpreadsheetComponent } from './ui/spreadsheet.component';
+import { CellComponent } from './ui/spreadsheet/cell.component';
+import { SpreadsheetComponent } from './ui/spreadsheet/spreadsheet.component';
 import { RibbonComponent } from './ui/ribbon/ribbon.component';
 import { MainTabComponent } from './ui/ribbon/main-tab.component';
 

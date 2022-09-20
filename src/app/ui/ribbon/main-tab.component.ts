@@ -9,8 +9,9 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     selector: 'app-main-tab',
     template: `
     <div>
-        <button (click)="spreadsheetService.addRow()">Add row</button>
-        <button (click)="spreadsheetService.deleteRow()">Delete row</button>
+        <button (click)="spreadsheetService.addRowBellow()">Add row bellow</button>
+        <button (click)="spreadsheetService.deleteSelectedRow()">Delete row</button>
+        <button (click)="spreadsheetService.logSpreadsheetValues()">Log table values</button>
     </div>
     `,
     styles: []
