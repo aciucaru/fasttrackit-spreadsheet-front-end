@@ -5,12 +5,10 @@ import { Observable, Subject, BehaviorSubject, of, shareReplay, share } from 'rx
 import { catchError, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Cell } from '../model/cell';
-import { CellStyle } from '../model/cell-style'; 
-import { ColumnType } from '../model/column-type';
-import { Spreadsheet, EditableSpreadsheet} from '../model/spreadsheet';
+import { Cell, CellStyle } from '../model/cell';
 import { Row } from '../model/row';
-import { GeneratingMethod } from '../model/generating-method';
+import { ColumnType, GeneratingMethod } from '../model/column';
+import { Spreadsheet, EditableSpreadsheet} from '../model/spreadsheet';
 
 @Injectable({
   providedIn: 'root'
@@ -38,8 +36,8 @@ export class SpreadsheetService
                                             name: spreadsheet.name,
                                             columnInfos: spreadsheet.columnInfos,
                                             rows: spreadsheet.rows,
-                                            editableCellCol: -1,
-                                            editableCellRow: -1,
+                                            selectedCellCol: -1,
+                                            selectedCellRow: -1,
                                         }
                                 )
                         )
@@ -61,8 +59,8 @@ export class SpreadsheetService
     setSelectedCell(rowIndex: number, colIndex: number): void
     {
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
-        spreadsheet.editableCellRow = rowIndex;
-        spreadsheet.editableCellCol = colIndex;
+        spreadsheet.selectedCellRow = rowIndex;
+        spreadsheet.selectedCellCol = colIndex;
         this.spreadsheetSubject.next(spreadsheet);
         console.log(`celula apasata: linie: ${rowIndex}, col: ${colIndex}`);
     }
@@ -73,15 +71,18 @@ export class SpreadsheetService
     {
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
 
-        return spreadsheet.editableCellCol === colIndex
-                && spreadsheet.editableCellRow === rowIndex;
+        return spreadsheet.selectedCellCol === colIndex
+                && spreadsheet.selectedCellRow === rowIndex;
     }
 
     public addRowAbove(): void
     {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
         let newRow: Row = {cells: [], heigthPx: 20};
         let currentNewCell: Cell;
-        for(let columnInfo of this.spreadsheetSubject!.getValue().columnInfos)
+        for(let columnInfo of spreadsheet.columnInfos)
         {
             switch(columnInfo.cellType)
             {
@@ -103,19 +104,21 @@ export class SpreadsheetService
                     break;
             }
         }
-        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
 
         // aici splice() se foloseste pt. a adauga elementul 'newRow' la sir (nu se sterge nimic)
-        spreadsheet.rows.splice(spreadsheet.editableCellRow, 0, newRow);
+        spreadsheet.rows.splice(spreadsheet.selectedCellRow, 0, newRow);
         this.spreadsheetSubject.next(spreadsheet);
         console.log('add row');
     }
 
     public addRowBelow(): void
     {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
         let newRow: Row = {cells: [], heigthPx: 20};
         let currentNewCell: Cell;
-        for(let columnInfo of this.spreadsheetSubject!.getValue().columnInfos)
+        for(let columnInfo of spreadsheet.columnInfos)
         {
             switch(columnInfo.cellType)
             {
@@ -137,10 +140,9 @@ export class SpreadsheetService
                     break;
             }
         }
-        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
 
         // aici splice() se foloseste pt. a adauga elementul 'newRow' la sir (nu se sterge nimic)
-        spreadsheet.rows.splice(spreadsheet.editableCellRow + 1, 0, newRow);
+        spreadsheet.rows.splice(spreadsheet.selectedCellRow + 1, 0, newRow);
         this.spreadsheetSubject.next(spreadsheet);
         console.log('add row');
     }
@@ -148,9 +150,37 @@ export class SpreadsheetService
     public deleteSelectedRow(): void
     {
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
-        spreadsheet.rows.splice(spreadsheet.editableCellRow, 1);
+        spreadsheet.rows.splice(spreadsheet.selectedCellRow, 1);
         this.spreadsheetSubject!.next(spreadsheet);
         console.log('delete row');
+    }
+
+    public addColToRight(): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+    }
+
+    public deleteSelectedCol(): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        // prima data se sterge cate o celula din coloana curenta, din fiecare rand (linie)
+        for(let currentRow of spreadsheet.rows) // pentru fiecare rand
+        {
+            // sterge celula din coloana curenta
+            currentRow.cells.splice(spreadsheet.selectedCellCol, 1);
+        }
+
+        // apoi se sterge si 'headerul', adica un element al sirului 'columnInfos', unde sunt
+        // stocate informatiile despre fiecare coloana
+        spreadsheet.columnInfos.splice(spreadsheet.selectedCellCol, 1);
+
+        // apoi se trimite noul spreadsheet catre toti observatorii sai
+        this.spreadsheetSubject!.next(spreadsheet);
+        console.log('delete col');
     }
 
     // ****************** metode auxiliare sau de debugging ***************************
@@ -193,8 +223,8 @@ export class SpreadsheetService
                 }
             ],
             rows: [ { cells: [ {value: "100", style: this.getDummyCellStyle()} ], heigthPx: 20 }, ],
-            editableCellCol:-1,
-            editableCellRow: -1
+            selectedCellCol: -1,
+            selectedCellRow: -1
         };
         return spreadsheet;
     }

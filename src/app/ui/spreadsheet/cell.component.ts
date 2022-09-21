@@ -19,10 +19,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
                 [(ngModel)]="cell!.value" #value="ngModel" name="value">
     <div>
   `,
-  styles: ['.main-cell-container { display: grid; row-gap: 0px; column-gap: 0px;}',
-            '.cell-content { grid-row: 1 / 2 ; grid-column: 1 / 2; }',
-            '.right-vertical-delimiter { grid-row: 1 / 3 ; grid-column: 2 / 3; width: 10px; background-color: rgb(0, 100, 200); }',
-            '.bottom-horizontal-delimiter { grid-row: 2 / 3 ; grid-column: 1 / 2; height:10px; background-color: rgb(100, 250, 50); }']
+  styles: ['.main-cell-container { }']
 })
 export class CellComponent implements OnInit
 {

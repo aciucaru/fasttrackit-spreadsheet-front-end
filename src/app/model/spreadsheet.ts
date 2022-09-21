@@ -1,6 +1,6 @@
 import { Cell } from './cell';
 import { Row } from './row';
-import { ColumnInfo } from './column-info';
+import { ColumnInfo } from './column';
 
 /* Interfata ce copiaza clasa 'Spreadsheet" de pe back-end.
    Scopul acestei interfete este luarea datelor corect de pe server, adica sa aiba o structura identica
@@ -24,6 +24,6 @@ export interface Spreadsheet
    
        // valori suplimentare necesare pt. editorul de spreadsheet-uri
        // aceste valori nu se trimit inapoi catre server
-       editableCellCol: number;
-       editableCellRow: number;
+       selectedCellCol: number;
+       selectedCellRow: number;
    }

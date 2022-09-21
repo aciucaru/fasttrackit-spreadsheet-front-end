@@ -4,9 +4,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatTable } from '@angular/material/table';
 import { ViewChild } from '@angular/core';
 
-import { CellStyle } from 'src/app/model/cell-style'; 
+import { CellStyle } from 'src/app/model/cell'; 
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
-import { ColumnType } from 'src/app/model/column-type';
+import { ColumnType } from 'src/app/model/column';
 import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { Observer } from 'rxjs';
 

@@ -15,7 +15,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
                 <button id="delete-row" (click)="spreadsheetService.deleteSelectedRow()">Delete row</button>
                 <button id="add-col-right" >Add col right</button><br>
                 <button id="add-col-left" >Add col left</button><br>
-                <button id="delete-col" >Delete col</button>
+                <button id="delete-col" (click)="spreadsheetService.deleteSelectedCol()">Delete col</button>
             <div>
             <button (click)="spreadsheetService.logSpreadsheetValues()">Log table values</button>
         </div>
