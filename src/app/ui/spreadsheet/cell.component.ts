@@ -2,31 +2,27 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { Cell } from 'src/app/model/cell';
-import { EditableSpreadsheet } from 'src/app/model/editable-spreadsheet';
+import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
 @Component({
   selector: 'app-cell',
   template:`
     <!-- <div [ngStyle]="{backgroundColor: cell?.style?.rgbBGColor}"> -->
-    <div class="main_cell_container">
-        <div class="secondary_container">
-            <div class="cell_content"
-                (click)="spreadsheetService.setSelectedCell(currentRowIndex, currentColIndex)"
-                [style.background-color]="cell?.style?.rgbBGColor"
-                [style.color]="cell?.style?.rgbFGColor"
-                [style.font-family]="cell?.style?.font">
-                    <a *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">{{cell?.value}}</a>
-                    <input matInput *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
-                    [(ngModel)]="cell!.value" #value="ngModel" name="value">
-            </div>
-            <div class="right_vertical_delimiter"></div>
-        <div>
-        <div class="bottom_horizontal_delimiter"></div>
+    <div class="main-cell-container"
+            (click)="spreadsheetService.setSelectedCell(currentRowIndex, currentColIndex)"
+            [style.background-color]="cell?.style?.rgbBGColor"
+            [style.color]="cell?.style?.rgbFGColor"
+            [style.font-family]="cell?.style?.font">
+                <a *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">{{cell?.value}}</a>
+                <input matInput *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
+                [(ngModel)]="cell!.value" #value="ngModel" name="value">
     <div>
   `,
-  styles: ['.main_cell_container { position: relative; }',
-            '']
+  styles: ['.main-cell-container { display: grid; row-gap: 0px; column-gap: 0px;}',
+            '.cell-content { grid-row: 1 / 2 ; grid-column: 1 / 2; }',
+            '.right-vertical-delimiter { grid-row: 1 / 3 ; grid-column: 2 / 3; width: 10px; background-color: rgb(0, 100, 200); }',
+            '.bottom-horizontal-delimiter { grid-row: 2 / 3 ; grid-column: 1 / 2; height:10px; background-color: rgb(100, 250, 50); }']
 })
 export class CellComponent implements OnInit
 {
@@ -47,10 +43,10 @@ export class CellComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.getSpreadsheet();
+        this.subscribeAsSpreadsheetObserver();
     }
 
-    getSpreadsheet(): void
+    subscribeAsSpreadsheetObserver(): void
     {
         this.spreadsheetService
             .getSpreadsheetSubject()

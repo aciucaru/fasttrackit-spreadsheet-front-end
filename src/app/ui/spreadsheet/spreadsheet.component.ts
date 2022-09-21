@@ -7,7 +7,7 @@ import { ViewChild } from '@angular/core';
 import { CellStyle } from 'src/app/model/cell-style'; 
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 import { ColumnType } from 'src/app/model/column-type';
-import { EditableSpreadsheet } from 'src/app/model/editable-spreadsheet';
+import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { Observer } from 'rxjs';
 
 @Component({
@@ -15,11 +15,13 @@ import { Observer } from 'rxjs';
   template: `
     <table class="spreadsheet">
         <tr>
+            <th></th>
             <th *ngFor="let currentCol of spreadsheet?.columnInfos" class="spreadsheet_cell">
-                {{currentCol.name}}
+                <div class="resizable-col">{{currentCol.name}}</div>
             </th>
         </tr>
         <tr *ngFor="let currentRow of spreadsheet?.rows; let rowIndex = index">
+            <td> <div class="resizable-row"></div> </td>
             <td *ngFor="let currentCell of currentRow.cells; let colIndex = index" class="spreadsheet_cell">
                 <app-cell [cell]="currentCell" [currentRowIndex] = "rowIndex" [currentColIndex] = "colIndex"></app-cell>
             </td>
@@ -27,7 +29,9 @@ import { Observer } from 'rxjs';
     </table>
   `,
     styles: [ 'table { border-collapse: collapse; } td { border-collapse: collapse; } th { border-collapse: collapse; }',
-        '.spreadsheet_cell { border-style: solid; border-width: 1px; border-color: rgb(100, 100, 100); }' ]
+        '.spreadsheet_cell { border-style: solid; border-width: 1px; border-color: rgb(150, 150, 150); }',
+        '.resizable-col { display:block;  resize: horizontal; overflow: auto; width: auto; height: auto; min-height: 20px; min-width: 20px; }',
+        '.resizable-row { display:block;  resize: vertical; overflow: auto; width: auto; height: auto; min-height: 20px; min-width: 20px; }' ],
 })
 export class SpreadsheetComponent implements OnInit
 {
@@ -60,10 +64,10 @@ export class SpreadsheetComponent implements OnInit
 
     ngOnInit(): void
     {
-        this.getSpreadsheet();
+        this.subscribeAsSpreadsheetObserver();
     }
 
-    getSpreadsheet(): void
+    subscribeAsSpreadsheetObserver(): void
     {
         this.spreadsheetService
             .getSpreadsheetSubject()

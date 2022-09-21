@@ -8,8 +8,7 @@ import { map } from 'rxjs/operators';
 import { Cell } from '../model/cell';
 import { CellStyle } from '../model/cell-style'; 
 import { ColumnType } from '../model/column-type';
-import { Spreadsheet} from '../model/spreadsheet';
-import { EditableSpreadsheet} from '../model/editable-spreadsheet';
+import { Spreadsheet, EditableSpreadsheet} from '../model/spreadsheet';
 import { Row } from '../model/row';
 import { GeneratingMethod } from '../model/generating-method';
 
@@ -112,7 +111,7 @@ export class SpreadsheetService
         console.log('add row');
     }
 
-    public addRowBellow(): void
+    public addRowBelow(): void
     {
         let newRow: Row = {cells: [], heigthPx: 20};
         let currentNewCell: Cell;
@@ -208,7 +207,7 @@ export class SpreadsheetService
             rgbBGColor: '#ffffff',
     
             hasFGColor: false,
-            rgbFGColor: '#dd0000',
+            rgbFGColor: '#000000',
     
             hasFont: false,
             font: "Arial, sans-serif",

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observer } from 'rxjs';
-import { EditableSpreadsheet } from 'src/app/model/editable-spreadsheet';
+import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 
 import { Spreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
@@ -23,9 +23,9 @@ export class RibbonComponent implements OnInit
 
     constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute) { }
 
-    ngOnInit(): void { this.getTable(); }
+    ngOnInit(): void { this.subscribeAsSpreadsheetObserver(); }
 
-    getTable(): void
+    subscribeAsSpreadsheetObserver(): void
     {
         this.spreadsheetService
             .getSpreadsheetSubject()
