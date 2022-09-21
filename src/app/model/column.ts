@@ -12,9 +12,9 @@ export interface ColumnInfo
 
 export enum ColumnType
 {
-    STRING = 'STRING',
-    NUMBER = 'NUMBER',
-    BOOL = 'BOOL'
+    STRING = "STRING",
+    NUMBER = "NUMBER",
+    BOOL = "BOOL"
 }
 
 export enum GeneratingMethod

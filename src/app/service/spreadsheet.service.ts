@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 
 import { Cell, CellStyle } from '../model/cell';
 import { Row } from '../model/row';
-import { ColumnType, GeneratingMethod } from '../model/column';
+import { ColumnInfo, ColumnType, GeneratingMethod } from '../model/column';
 import { Spreadsheet, EditableSpreadsheet} from '../model/spreadsheet';
 
 @Injectable({
@@ -82,29 +82,33 @@ export class SpreadsheetService
 
         let newRow: Row = {cells: [], heigthPx: 20};
         let currentNewCell: Cell;
+
+        // pentru fiecare coloana
         for(let columnInfo of spreadsheet.columnInfos)
         {
+            // se creeaza o celula specifica tipului acelei coloane (STRING, NUMBER, etc.)
             switch(columnInfo.cellType)
             {
                 case ColumnType.STRING:
                     currentNewCell = { value: 'abc', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
                     break;
                 case ColumnType.NUMBER:
                     currentNewCell = { value: '0', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
                     break;
                 case ColumnType.BOOL:
                     currentNewCell = { value: 'false', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
                     break;
                 default:
-                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
+                    currentNewCell = { value: '100', style: this.getDummyCellStyle() };
                     break;
             }
+
+            // celula respectiva se adauga la linia (randul) initial goala
+            // in felul acesta, linia se umple treptat cu celule si se formeaza o linie completa
+            newRow.cells.push(currentNewCell);
         }
 
+        // la sfarsit se dauga intreaga linie noua ce tocmai s-a populat cu celule
         // aici splice() se foloseste pt. a adauga elementul 'newRow' la sir (nu se sterge nimic)
         spreadsheet.rows.splice(spreadsheet.selectedCellRow, 0, newRow);
         this.spreadsheetSubject.next(spreadsheet);
@@ -118,29 +122,32 @@ export class SpreadsheetService
 
         let newRow: Row = {cells: [], heigthPx: 20};
         let currentNewCell: Cell;
+        
+        // pentru fiecare coloana
         for(let columnInfo of spreadsheet.columnInfos)
         {
+            // se creeaza o celula specifica tipului acelei coloane (STRING, NUMBER, etc.)
             switch(columnInfo.cellType)
             {
                 case ColumnType.STRING:
                     currentNewCell = { value: 'abc', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
                     break;
                 case ColumnType.NUMBER:
                     currentNewCell = { value: '0', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
                     break;
                 case ColumnType.BOOL:
                     currentNewCell = { value: 'false', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
                     break;
                 default:
-                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
-                    newRow.cells.push(currentNewCell);
+                    currentNewCell = { value: '100', style: this.getDummyCellStyle() };
                     break;
             }
+            // celula respectiva se adauga la linia (randul) initial goala
+            // in felul acesta, linia se umple treptat cu celule si se formeaza o linie completa
+            newRow.cells.push(currentNewCell);
         }
 
+        // la sfarsit se dauga intreaga linie noua ce tocmai s-a populat cu celule
         // aici splice() se foloseste pt. a adauga elementul 'newRow' la sir (nu se sterge nimic)
         spreadsheet.rows.splice(spreadsheet.selectedCellRow + 1, 0, newRow);
         this.spreadsheetSubject.next(spreadsheet);
@@ -160,6 +167,24 @@ export class SpreadsheetService
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
+        let currentNewCell: Cell;
+        let currentRow: Row;
+        let selectedColInfo: ColumnInfo = spreadsheet.columnInfos[spreadsheet.selectedCellCol];
+        switch(selectedColInfo.cellType)
+        {
+            case ColumnType.STRING:
+                currentNewCell = { value: 'abc', style: this.getDummyCellStyle() };
+                break;
+            case ColumnType.NUMBER:
+                currentNewCell = { value: '0', style: this.getDummyCellStyle() };
+                break;
+            case ColumnType.BOOL:
+                currentNewCell = { value: 'false', style: this.getDummyCellStyle() };
+                break;
+            default:
+                currentNewCell = { value: '0', style: this.getDummyCellStyle() };
+                break;
+        }
     }
 
     public deleteSelectedCol(): void
