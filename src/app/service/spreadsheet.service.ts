@@ -38,6 +38,7 @@ export class SpreadsheetService
                                             rows: spreadsheet.rows,
                                             selectedCellCol: -1,
                                             selectedCellRow: -1,
+                                            generatedNewColumns: 0
                                         }
                                 )
                         )
@@ -86,23 +87,9 @@ export class SpreadsheetService
         // pentru fiecare coloana
         for(let columnInfo of spreadsheet.columnInfos)
         {
-            // se creeaza o celula specifica tipului acelei coloane (STRING, NUMBER, etc.)
-            switch(columnInfo.cellType)
-            {
-                case ColumnType.STRING:
-                    currentNewCell = { value: 'abc', style: this.getDummyCellStyle() };
-                    break;
-                case ColumnType.NUMBER:
-                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
-                    break;
-                case ColumnType.BOOL:
-                    currentNewCell = { value: 'false', style: this.getDummyCellStyle() };
-                    break;
-                default:
-                    currentNewCell = { value: '100', style: this.getDummyCellStyle() };
-                    break;
-            }
-
+            // se creeaza o noua celula
+            currentNewCell = { stringValue: 'abc', numberValue: 0, boolValue: false, style: this.getDummyCellStyle() };
+ 
             // celula respectiva se adauga la linia (randul) initial goala
             // in felul acesta, linia se umple treptat cu celule si se formeaza o linie completa
             newRow.cells.push(currentNewCell);
@@ -111,8 +98,14 @@ export class SpreadsheetService
         // la sfarsit se dauga intreaga linie noua ce tocmai s-a populat cu celule
         // aici splice() se foloseste pt. a adauga elementul 'newRow' la sir (nu se sterge nimic)
         spreadsheet.rows.splice(spreadsheet.selectedCellRow, 0, newRow);
+
+        /* daca s-a adaugat o linie deasupra (adica inainte de linia curenta din sirul de linii),
+        atunci inseamna ca indexul liniei curente ('selectedCellRow') se schimba si el, adica
+        se incrementeaza cu 1 */
+        spreadsheet.selectedCellRow += 1;
+
         this.spreadsheetSubject.next(spreadsheet);
-        console.log('add row');
+        console.log('add row above');
     }
 
     public addRowBelow(): void
@@ -126,22 +119,9 @@ export class SpreadsheetService
         // pentru fiecare coloana
         for(let columnInfo of spreadsheet.columnInfos)
         {
-            // se creeaza o celula specifica tipului acelei coloane (STRING, NUMBER, etc.)
-            switch(columnInfo.cellType)
-            {
-                case ColumnType.STRING:
-                    currentNewCell = { value: 'abc', style: this.getDummyCellStyle() };
-                    break;
-                case ColumnType.NUMBER:
-                    currentNewCell = { value: '0', style: this.getDummyCellStyle() };
-                    break;
-                case ColumnType.BOOL:
-                    currentNewCell = { value: 'false', style: this.getDummyCellStyle() };
-                    break;
-                default:
-                    currentNewCell = { value: '100', style: this.getDummyCellStyle() };
-                    break;
-            }
+            // se creeaza o noua celula
+            currentNewCell = { stringValue: 'abc', numberValue:0, boolValue: false, style: this.getDummyCellStyle() };
+
             // celula respectiva se adauga la linia (randul) initial goala
             // in felul acesta, linia se umple treptat cu celule si se formeaza o linie completa
             newRow.cells.push(currentNewCell);
@@ -150,8 +130,14 @@ export class SpreadsheetService
         // la sfarsit se dauga intreaga linie noua ce tocmai s-a populat cu celule
         // aici splice() se foloseste pt. a adauga elementul 'newRow' la sir (nu se sterge nimic)
         spreadsheet.rows.splice(spreadsheet.selectedCellRow + 1, 0, newRow);
+
+        /* daca s-a adaugat o linie dedesupt (adica dupa linia curenta din sirul de linii),
+        atunci inseamna ca indexul liniei curente ('selectedCellRow') NU se schimba si el,
+        adica nu mai trebuie modificat nimic */
+
+        // se trimite noul spreadsheet catre toti observatorii sai
         this.spreadsheetSubject.next(spreadsheet);
-        console.log('add row');
+        console.log('add row below');
     }
 
     public deleteSelectedRow(): void
@@ -168,23 +154,85 @@ export class SpreadsheetService
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
         let currentNewCell: Cell;
-        let currentRow: Row;
-        let selectedColInfo: ColumnInfo = spreadsheet.columnInfos[spreadsheet.selectedCellCol];
-        switch(selectedColInfo.cellType)
+        // pentru fiecare linia (rand) a spreadsheet-ului
+        for(let currentRow of spreadsheet.rows)
         {
-            case ColumnType.STRING:
-                currentNewCell = { value: 'abc', style: this.getDummyCellStyle() };
-                break;
-            case ColumnType.NUMBER:
-                currentNewCell = { value: '0', style: this.getDummyCellStyle() };
-                break;
-            case ColumnType.BOOL:
-                currentNewCell = { value: 'false', style: this.getDummyCellStyle() };
-                break;
-            default:
-                currentNewCell = { value: '0', style: this.getDummyCellStyle() };
-                break;
+            // se creeaza o noua celula de tip STRING (acesta este tipul default al spreadsheet-ului)
+            currentNewCell = { stringValue: 'abc', numberValue: 0, boolValue: false, style: this.getDummyCellStyle() };
+
+            // se dauga noua celula la linia curenta
+            // aici splice() se foloseste pt. a adauga la sir (nu pentru a sterge)
+            currentRow.cells.splice(spreadsheet.selectedCellCol + 1, 0, currentNewCell);
         }
+
+        // se incrementeza numarul de coloane noi generate
+        spreadsheet.generatedNewColumns += 1;
+
+        // dupa aceea, se adauga un nou 'ColumnInfo' la sirul cu informatii despre coloane
+        // adica la sirul 'columnInfos', care poate fi vazut ca sirul de coloane
+        let newColumnInfo: ColumnInfo =
+                                        {
+                                            name: 'New Column' + spreadsheet.generatedNewColumns,
+                                            cellType: ColumnType.STRING,
+                                            genMethod: GeneratingMethod.FROM_USER_INPUT,
+                                            varName: 'newCol' + spreadsheet.generatedNewColumns,
+                                            widthPx: 70
+                                        };
+        // se adauga noul 'ColumnInfo' la sirul cu informatii desprte coloane
+        // aici splice() este folosit pt. a adauga, nu se sterge nimic
+        spreadsheet.columnInfos.splice(spreadsheet.selectedCellCol + 1, 0, newColumnInfo);
+
+        /* daca s-a adaugat o coloana spre dreapta (adica dupa coloana curenta din sirul 'columnInofs'),
+        atunci inseamna ca indexul coloanei curente ('selectedCellCol') NU se schimba si el, adica
+        nu mai trebui modificat nimic */
+
+        // se trimite noul spreadsheet catre toti observatorii sai
+        this.spreadsheetSubject.next(spreadsheet);
+        console.log('add col to right');
+    }
+
+    public addColToLeft(): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let currentNewCell: Cell;
+        // pentru fiecare linia (rand) a spreadsheet-ului
+        for(let currentRow of spreadsheet.rows)
+        {
+            // se creeaza o noua celula de tip STRING (acesta este tipul default al spreadsheet-ului)
+            currentNewCell = { stringValue: 'abc', numberValue: 0, boolValue: false, style: this.getDummyCellStyle() };
+
+            // se dauga noua celula la linia curenta
+            // aici splice() se foloseste pt. a adauga la sir (nu pentru a sterge)
+            currentRow.cells.splice(spreadsheet.selectedCellCol, 0, currentNewCell);
+        }
+
+        // se incrementeza numarul de coloane noi generate
+        spreadsheet.generatedNewColumns += 1;
+
+        // dupa aceea, se adauga un nou 'ColumnInfo' la sirul cu informatii despre coloane
+        // adica la sirul 'columnInfos', care poate fi vazut ca sirul de coloane
+        let newColumnInfo: ColumnInfo =
+                                        {
+                                            name: "New Column" + spreadsheet.generatedNewColumns,
+                                            cellType: ColumnType.STRING,
+                                            genMethod: GeneratingMethod.FROM_USER_INPUT,
+                                            varName: "newCol" + spreadsheet.generatedNewColumns,
+                                            widthPx: 70
+                                        };
+        // se adauga noul 'ColumnInfo' la sirul cu informatii desprte coloane
+        // aici splice() este folosit pt. a adauga, nu se sterge nimic
+        spreadsheet.columnInfos.splice(spreadsheet.selectedCellCol, 0, newColumnInfo);
+
+        /* daca s-a adaugat o coloana spre stanga (adica inainte de coloana curenta din sirul 'columnInofs'),
+        atunci inseamna ca indexul coloanei curente ('selectedCellCol') se schimba si el, adica
+        trebuie incrementat cu 1 */
+        spreadsheet.selectedCellCol += 1;
+
+        // se trimite noul spreadsheet catre toti observatorii sai
+        this.spreadsheetSubject.next(spreadsheet);
+        console.log('add col to left');
     }
 
     public deleteSelectedCol(): void
@@ -217,16 +265,50 @@ export class SpreadsheetService
     // metoda ce transforma 
     public spreadsheetToStringMatrix(): string[][]
     {
-        let cellMatrix: string[][] = [[]];
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
-        for(let row of this.spreadsheetSubject!.getValue().rows)
+        let cellMatrix: string[][] = [[]];
+        let currentStringRow: string[] = [];
+        let currentCellString: string = '';
+        for(let currentRow of spreadsheet.rows)
         {
-            let currentRow: string[] = [];
-            for(let cell of row.cells)
+            currentStringRow = []; // se reseteaza la fiecare iteratie
+            for(let i = 0; i<currentRow.cells.length; i++)
             {
-                currentRow.push(cell.value);
+                /* Indexul 'i' reprezinta indexul celulei curente, dar si al coloanei curente,
+                din care face parte celula curenta.
+                O celula stocheaza cate o valoare pt. fiecare tip posibil al ei (STRING, NUMBER, etc.)
+                dar se doreste logarea doar a valorii efective a celulei, adica cea corespunzatoare
+                tipului coloanei din care face parte celula curenta. */
+                
+                switch(spreadsheet.columnInfos[i].cellType)
+                {
+                    // daca celula face parte dintr-o coloana de tip STRING
+                    case ColumnType.STRING:
+                        // atunci se foloseste valoare 'stringValue' a celulei
+                        currentCellString = currentRow.cells[i].stringValue;
+                        break;
+
+                    // daca celula face parte dintr-o coloana de tip NUMBER
+                    case ColumnType.NUMBER:
+                        // atunci se foloseste valoare 'numberValue' a celulei
+                        // ce trebuie covertita in 'string'
+                        currentCellString = currentRow.cells[i].stringValue.toString();
+                        break;
+
+                    // daca celula face parte dintr-o coloana de tip BOOL
+                    case ColumnType.BOOL:
+                        // atunci se foloseste valoare 'boolValue' a celulei
+                        // ce trebuie covertita in 'string'
+                        currentCellString = currentRow.cells[i].boolValue.toString();
+                        break;
+
+                    default:
+                        break;
+                }
+                currentStringRow.push(currentCellString);
             }
-            cellMatrix.push(currentRow);
+            cellMatrix.push(currentStringRow);
         }
 
         return cellMatrix;
@@ -247,9 +329,10 @@ export class SpreadsheetService
                     widthPx: 70
                 }
             ],
-            rows: [ { cells: [ {value: "100", style: this.getDummyCellStyle()} ], heigthPx: 20 }, ],
+            rows: [ { cells: [ {stringValue: "xyz", numberValue: 100, boolValue: false, style: this.getDummyCellStyle()} ], heigthPx: 20 }, ],
             selectedCellCol: -1,
-            selectedCellRow: -1
+            selectedCellRow: -1,
+            generatedNewColumns: 0
         };
         return spreadsheet;
     }

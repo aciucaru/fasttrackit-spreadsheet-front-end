@@ -14,9 +14,9 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
             [style.background-color]="cell?.style?.rgbBGColor"
             [style.color]="cell?.style?.rgbFGColor"
             [style.font-family]="cell?.style?.font">
-                <a *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">{{cell?.value}}</a>
+                <a *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">{{cell?.stringValue}}</a>
                 <input matInput *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
-                [(ngModel)]="cell!.value" #value="ngModel" name="value">
+                [(ngModel)]="cell!.stringValue" #value="ngModel" name="value">
     <div>
   `,
   styles: ['.main-cell-container { }']

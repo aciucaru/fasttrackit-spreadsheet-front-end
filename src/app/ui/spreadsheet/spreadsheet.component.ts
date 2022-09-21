@@ -23,15 +23,13 @@ import { Observer } from 'rxjs';
         <tr *ngFor="let currentRow of spreadsheet?.rows; let rowIndex = index">
             <td> <div class="resizable-row"></div> </td>
             <td *ngFor="let currentCell of currentRow.cells; let colIndex = index" class="spreadsheet_cell">
-                <app-cell [cell]="currentCell" [currentRowIndex] = "rowIndex" [currentColIndex] = "colIndex"></app-cell>
+                <app-cell [cell]="currentCell" [currentRowIndex] = "rowIndex" [currentColIndex] = "colIndex" class="spreadsheet-cell"></app-cell>
             </td>
         </tr>
     </table>
   `,
-    styles: [ 'table { border-collapse: collapse; } td { border-collapse: collapse; } th { border-collapse: collapse; }',
-        '.spreadsheet_cell { border-style: solid; border-width: 1px; border-color: rgb(150, 150, 150); }',
-        '.resizable-col { display:block;  resize: horizontal; overflow: auto; width: auto; height: auto; min-height: 20px; min-width: 20px; }',
-        '.resizable-row { display:block;  resize: vertical; overflow: auto; width: auto; height: auto; min-height: 20px; min-width: 20px; }' ],
+    styles: [],
+    styleUrls: ['./spreadsheet.component.scss']
 })
 export class SpreadsheetComponent implements OnInit
 {

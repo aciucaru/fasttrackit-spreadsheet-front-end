@@ -1,6 +1,8 @@
 export interface Cell
 {
-    value: string;
+    stringValue: string;
+    numberValue: number;
+    boolValue: boolean;
     style: CellStyle;
 }
 
