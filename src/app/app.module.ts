@@ -19,6 +19,7 @@ import { CellComponent } from './ui/spreadsheet/cell.component';
 import { SpreadsheetComponent } from './ui/spreadsheet/spreadsheet.component';
 import { RibbonComponent } from './ui/ribbon/ribbon.component';
 import { MainTabComponent } from './ui/ribbon/main-tab.component';
+import { DebugTabComponent } from './ui/ribbon/debug-tab.component';
 
 @NgModule({
     declarations:
@@ -27,7 +28,8 @@ import { MainTabComponent } from './ui/ribbon/main-tab.component';
         CellComponent,
         SpreadsheetComponent,
         RibbonComponent,
-        MainTabComponent
+        MainTabComponent,
+        DebugTabComponent
     ],
     imports:
     [
