@@ -8,7 +8,9 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 @Component({
   selector: 'app-cell',
   template:`<!-- <div [ngStyle]="{backgroundColor: cell?.style?.rgbBGColor}"> -->
-    <div class="main-cell-container"
+    <div class="cell-container"
+        [style.width.px]="spreadsheetService.getCellWitdh(mainCellColIndex)"
+        [style.height.px]="spreadsheetService.getCellHeight(mainCellRowIndex)"
         [style.background-color]="mainCell?.style?.rgbBGColor"
         [style.color]="mainCell?.style?.rgbFGColor"
         [style.font-family]="mainCell?.style?.font">
@@ -29,7 +31,8 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
         <!-- <input *ngSwitchDefault style="color:black;"
         matInput [(ngModel)]="cell!.stringValue" #value="ngModel" name="value"> -->
     <div>`,
-  styles: ['.main-cell-container { }']
+  styles: ['.main-cell-container { }'],
+  styleUrls: ['./spreadsheet.component.scss']
 })
 export class CellComponent implements OnInit
 {
@@ -43,7 +46,6 @@ export class CellComponent implements OnInit
     @Input() public mainCellColIndex: number = -1;
     
     private spreadsheet?: EditableSpreadsheet;
-    // protected ColumnTypeEnumRef = ColumnType;
 
     constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute)
     { }

@@ -8,18 +8,25 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 @Component({
   selector: 'app-string-cell',
   template: `
-    <div class="string-cell-container"
+    <div class="cell-container"
+    [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
+    [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
     (click)="spreadsheetService.setSelectedCell(currentRowIndex, currentColIndex)">
 
-        <a style="color:purple;" *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">
+        <a *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
+        style="color:purple;" >
         {{cell?.stringValue}} </a>
 
-        <input *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
+        <textarea class="cell-textarea"
+        *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
         type="text" style="color:purple;" autofocus
-        [(ngModel)]="cell!.stringValue" #value="ngModel" name="value">
+        [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
+        [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
+        [(ngModel)]="cell!.stringValue" #value="ngModel" name="value"></textarea>
 
     <div>`,
-  styles: []
+  styles: [],
+  styleUrls: ['./spreadsheet.component.scss']
 })
 export class StringCellComponent implements OnInit
 {
@@ -33,7 +40,6 @@ export class StringCellComponent implements OnInit
     @Input() public currentColIndex: number = -1;
     
     private spreadsheet?: EditableSpreadsheet;
-    // protected ColumnTypeEnumRef = ColumnType;
 
     constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute)
     { }

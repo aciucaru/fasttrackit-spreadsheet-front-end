@@ -15,7 +15,7 @@ import { Observer } from 'rxjs';
   template: `
     <table class="spreadsheet">
         <tr>
-            <th></th>
+            <th></th> <!-- celula header goala pt. celulele de redimensionare a inaltimii liniilor -->
             <th *ngFor="let currentCol of spreadsheet?.columnInfos" class="spreadsheet_cell">
                 <div class="resizable-col">{{currentCol.name}}</div>
             </th>

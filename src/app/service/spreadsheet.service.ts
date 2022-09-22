@@ -262,9 +262,27 @@ export class SpreadsheetService
     {
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
-        let typeAsString: string = String(spreadsheet.columnInfos[cellColIndex].colType);
+        return String(spreadsheet.columnInfos[cellColIndex].colType);
+    }
 
-        return typeAsString;
+    getCellWitdh(cellColIndex: number): number
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let width: number = spreadsheet.columnInfos[cellColIndex].widthPx;
+
+        return width;
+    }
+
+    getCellHeight(cellRowIndex: number): number
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let height: number = spreadsheet.rows[cellRowIndex].heigthPx;
+
+        return height;
     }
 
     // ****************** metode auxiliare sau de debugging ***************************

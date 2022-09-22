@@ -8,16 +8,21 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 @Component({
     selector: 'app-numeric-cell',
     template: `
-    <div class="numeric-cell-container"
-        (click)="spreadsheetService.setSelectedCell(currentRowIndex, currentColIndex)">
+    <div class="cell-container"
+    [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
+    [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
+    (click)="spreadsheetService.setSelectedCell(currentRowIndex, currentColIndex)">
 
         <a style="color:blue;" *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">
         {{cell?.numberValue}} </a>
 
         <input *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
+        [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
+        [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
         type="number" style="color:blue;" [(ngModel)]="cell!.numberValue" #value="ngModel" name="value">
     <div>`,
-    styles: []
+    styles: [],
+    styleUrls: ['./spreadsheet.component.scss']
 })
 export class NumericCellComponent implements OnInit
 {
@@ -31,7 +36,6 @@ export class NumericCellComponent implements OnInit
     @Input() public currentColIndex: number = -1;
     
     private spreadsheet?: EditableSpreadsheet;
-    // protected ColumnTypeEnumRef = ColumnType;
 
     constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute)
     { }

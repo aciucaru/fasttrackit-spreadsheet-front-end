@@ -8,7 +8,9 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 @Component({
   selector: 'app-bool-cell',
   template: `
-    <div class="bool-cell-container"
+    <div class="cell-container"
+    [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
+    [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
     (click)="spreadsheetService.setSelectedCell(currentRowIndex, currentColIndex)">
 
         <input type ="checkbox" style="color:green;"
@@ -21,7 +23,8 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
         type ="checkbox" style="color:green;" [(ngModel)]="cell!.boolValue" #value="ngModel" name="value"> -->
 
     <div>`,
-  styles: []
+  styles: [],
+  styleUrls: ['./spreadsheet.component.scss']
 })
 export class BoolCellComponent implements OnInit 
 {
@@ -35,7 +38,6 @@ export class BoolCellComponent implements OnInit
     @Input() public currentColIndex: number = -1;
     
     private spreadsheet?: EditableSpreadsheet;
-    // protected ColumnTypeEnumRef = ColumnType;
 
     constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute)
     { }

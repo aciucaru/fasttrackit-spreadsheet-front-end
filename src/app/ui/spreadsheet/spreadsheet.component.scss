@@ -22,6 +22,22 @@ th
     border-collapse: collapse;
 }
 
+table.fixed
+{
+    table-layout: fixed;
+    width: 1000px;
+}
+
+table.fixed tr
+{
+    overflow: hidden;
+}
+
+table.fixed td
+{
+    overflow: hidden;
+}
+
 .activeCell
 {
     background-color:  skyblue;
@@ -49,7 +65,8 @@ th
 {
     display:block;
     resize: horizontal;
-    overflow: auto;
+    // overflow: auto;
+    overflow:hidden;
     width: auto;
     height: auto;
     min-height: 20px;
@@ -60,14 +77,20 @@ th
 {
     display:block;
     resize: vertical;
-    overflow: auto;
+    // overflow: auto;
+    overflow:hidden;
     width: auto;
     height: auto;
     min-height: 20px;
     min-width: 20px;
 }
 
-// 'table { border-collapse: collapse; } td { border-collapse: collapse; } th { border-collapse: collapse; }',
-//         '.spreadsheet_cell { border-style: solid; border-width: 1px; border-color: rgb(150, 150, 150); }',
-//         '.resizable-col { display:block;  resize: horizontal; overflow: auto; width: auto; height: auto; min-height: 20px; min-width: 20px; }',
-//         '.resizable-row { display:block;  resize: vertical; overflow: auto; width: auto; height: auto; min-height: 20px; min-width: 20px; }' ],
+.cell-textarea
+{
+    resize: none;
+}
+
+.cell-container
+{
+    display: inline-block;
+}

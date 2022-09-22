@@ -1,3 +1,4 @@
+// interfata identica cu varianta de pe back-end
 export interface Cell
 {
     stringValue: string;
@@ -6,6 +7,7 @@ export interface Cell
     style: CellStyle;
 }
 
+// interfata identica cu varianta de pe back-end
 export interface CellStyle
 {
     hasBGColor: boolean;
@@ -26,3 +28,13 @@ export interface CellStyle
     hasBorderThickness: boolean;
     borderThickness: number;
 }
+
+// varianta a interfetei 'Cell' folosita pe front-end
+// contine cateva proprietati in plus fata de varianta de pe back-end
+// export interface EditorCell
+// {
+//     stringValue: string;
+//     numberValue: number;
+//     boolValue: boolean;
+//     style: CellStyle;
+// }
