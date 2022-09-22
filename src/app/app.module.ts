@@ -21,6 +21,8 @@ import { RibbonComponent } from './ui/ribbon/ribbon.component';
 import { MainTabComponent } from './ui/ribbon/main-tab.component';
 import { DebugTabComponent } from './ui/ribbon/debug-tab.component';
 import { NumericCellComponent } from './ui/spreadsheet/numeric-cell.component';
+import { StringCellComponent } from './ui/spreadsheet/string-cell.component';
+import { BoolCellComponent } from './ui/spreadsheet/bool-cell.component';
 
 @NgModule({
     declarations:
@@ -31,7 +33,9 @@ import { NumericCellComponent } from './ui/spreadsheet/numeric-cell.component';
         RibbonComponent,
         MainTabComponent,
         DebugTabComponent,
-        NumericCellComponent
+        NumericCellComponent,
+        StringCellComponent,
+        BoolCellComponent
     ],
     imports:
     [

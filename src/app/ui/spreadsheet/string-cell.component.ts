@@ -6,20 +6,22 @@ import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
 @Component({
-    selector: 'app-numeric-cell',
-    template: `
-    <div class="numeric-cell-container"
-        (click)="spreadsheetService.setSelectedCell(currentRowIndex, currentColIndex)">
+  selector: 'app-string-cell',
+  template: `
+    <div class="string-cell-container"
+    (click)="spreadsheetService.setSelectedCell(currentRowIndex, currentColIndex)">
 
-        <a style="color:blue;" *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">
-        {{cell?.numberValue}} </a>
+        <a style="color:purple;" *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">
+        {{cell?.stringValue}} </a>
 
         <input *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
-        type="number" style="color:blue;" [(ngModel)]="cell!.numberValue" #value="ngModel" name="value">
+        type="text" style="color:purple;" autofocus
+        [(ngModel)]="cell!.stringValue" #value="ngModel" name="value">
+
     <div>`,
-    styles: []
+  styles: []
 })
-export class NumericCellComponent implements OnInit
+export class StringCellComponent implements OnInit
 {
     // datele celulei curente, primita ca input de la parine
     // trebuie  sa fie 'public' ca sa poate fi accesata din template-ul HTML

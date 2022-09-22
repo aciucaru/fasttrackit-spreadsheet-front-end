@@ -23,7 +23,7 @@ import { Observer } from 'rxjs';
         <tr *ngFor="let currentRow of spreadsheet?.rows; let rowIndex = index">
             <td> <div class="resizable-row"></div> </td>
             <td *ngFor="let currentCell of currentRow.cells; let colIndex = index" class="spreadsheet_cell">
-                <app-cell [cell]="currentCell" [currentRowIndex] = "rowIndex" [currentColIndex] = "colIndex" class="spreadsheet-cell"></app-cell>
+                <app-cell [mainCell]="currentCell" [mainCellRowIndex] = "rowIndex" [mainCellColIndex] = "colIndex" class="spreadsheet-cell"></app-cell>
             </td>
         </tr>
     </table>

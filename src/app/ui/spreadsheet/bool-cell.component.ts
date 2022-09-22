@@ -6,20 +6,24 @@ import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
 @Component({
-    selector: 'app-numeric-cell',
-    template: `
-    <div class="numeric-cell-container"
-        (click)="spreadsheetService.setSelectedCell(currentRowIndex, currentColIndex)">
+  selector: 'app-bool-cell',
+  template: `
+    <div class="bool-cell-container"
+    (click)="spreadsheetService.setSelectedCell(currentRowIndex, currentColIndex)">
 
-        <a style="color:blue;" *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">
-        {{cell?.numberValue}} </a>
+        <input type ="checkbox" style="color:green;"
+        [(ngModel)]="cell!.boolValue" #value="ngModel" name="value">
 
-        <input *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
-        type="number" style="color:blue;" [(ngModel)]="cell!.numberValue" #value="ngModel" name="value">
+        <!-- <a *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
+        style="color:green;"> {{cell?.boolValue}} </a> -->
+
+        <!-- <input *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
+        type ="checkbox" style="color:green;" [(ngModel)]="cell!.boolValue" #value="ngModel" name="value"> -->
+
     <div>`,
-    styles: []
+  styles: []
 })
-export class NumericCellComponent implements OnInit
+export class BoolCellComponent implements OnInit 
 {
     // datele celulei curente, primita ca input de la parine
     // trebuie  sa fie 'public' ca sa poate fi accesata din template-ul HTML
