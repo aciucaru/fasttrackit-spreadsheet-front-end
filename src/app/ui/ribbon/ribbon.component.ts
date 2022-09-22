@@ -13,7 +13,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
         <mat-tab label="Main"> <app-main-tab></app-main-tab> </mat-tab>
         <mat-tab label="Styles">  </mat-tab>
         <mat-tab label="Formula">  </mat-tab>
-        <mat-tab label="Debug">  </mat-tab>
+        <mat-tab label="Debug"> <app-debug-tab></app-debug-tab> </mat-tab>
     </mat-tab-group>
   `,
   styles: []

@@ -35,23 +35,13 @@ export class SpreadsheetComponent implements OnInit
 {
     defaultCellStyle: CellStyle =
     {
-        hasBGColor: false,
-        rgbBGColor: '#ffffff',
-
-        hasFGColor: false,
-        rgbFGColor: '#dd0000',
-
-        hasFont: false,
-        font: "Arial, sans-serif",
-
+        hasBGColor: false, rgbBGColor: '#ffffff',
+        hasFGColor: false, rgbFGColor: '#dd0000',
+        hasFont: false, font: "Arial, sans-serif",
         isBold: false,
         isItalic: false,
-
-        hasBorderColor: false,
-        borderColor: '#000000',
-
-        hasBorderThickness: false,
-        borderThickness: 1
+        hasBorderColor: false, borderColor: '#000000',
+        hasBorderThickness: false, borderThickness: 1
     };
 
     spreadsheet?: EditableSpreadsheet;

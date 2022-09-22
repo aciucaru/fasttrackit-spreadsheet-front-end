@@ -26,8 +26,8 @@ export interface EditableSpreadsheet
     // aceste valori NU se trimit inapoi catre server
 
     /* variabile ce stocheaza indexii celulei selectate */
-    selectedCellCol: number;
     selectedCellRow: number;
+    selectedCellCol: number;
 
     /* variabila ce stocheaza cate coloane noi au fost create, ca fiecare coloana noua
        sa aiba un nume diferit de cele adaugata pana atunci si, mai ales, sa aiba un nume de

@@ -3,18 +3,18 @@
 
 export interface ColumnInfo
 {
-    name: string;
-    cellType: ColumnType;
-    genMethod: GeneratingMethod
-    varName: string;
-    widthPx: number
+    name: string; // numele afisat al coloanei (un fel de "header" sau "caption")
+    colType: ColumnType; // tipul tuturor celulelor coloanei
+    genMethod: GeneratingMethod; // modul in care se genereaza valoarea celulelor coloanei
+    varName: string; // numele coloanei folosit in formule
+    widthPx: number; // latimea in pixeli a coloanei (si a tuturor celuleor din ea)
 }
 
 export enum ColumnType
 {
-    STRING = "STRING",
-    NUMBER = "NUMBER",
-    BOOL = "BOOL"
+    STRING = 'STRING',
+    NUMBER = 'NUMBER',
+    BOOL = 'BOOL'
 }
 
 export enum GeneratingMethod

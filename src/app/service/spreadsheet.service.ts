@@ -9,6 +9,7 @@ import { Cell, CellStyle } from '../model/cell';
 import { Row } from '../model/row';
 import { ColumnInfo, ColumnType, GeneratingMethod } from '../model/column';
 import { Spreadsheet, EditableSpreadsheet} from '../model/spreadsheet';
+import { EventListenerFocusTrapInertStrategy } from '@angular/cdk/a11y';
 
 @Injectable({
   providedIn: 'root'
@@ -36,8 +37,8 @@ export class SpreadsheetService
                                             name: spreadsheet.name,
                                             columnInfos: spreadsheet.columnInfos,
                                             rows: spreadsheet.rows,
-                                            selectedCellCol: -1,
                                             selectedCellRow: -1,
+                                            selectedCellCol: -1,
                                             generatedNewColumns: 0
                                         }
                                 )
@@ -46,6 +47,7 @@ export class SpreadsheetService
                             {
                                 this.spreadsheetSubject.next(editableSpreadsheet);
                                 console.log('got spreadsheet from httpClient');
+                                this.logSpreadsheetValues();
                             }
                         );
     }
@@ -63,7 +65,7 @@ export class SpreadsheetService
         spreadsheet.selectedCellRow = rowIndex;
         spreadsheet.selectedCellCol = colIndex;
         this.spreadsheetSubject.next(spreadsheet);
-        console.log(`celula apasata: linie: ${rowIndex}, col: ${colIndex}`);
+        // console.log(`celula apasata: linie: ${rowIndex}, col: ${colIndex}`);
     }
 
     // metoda ce spune daca o celula oarecare de indexi 'rowIndex' si 'colIndex' este celula selectata
@@ -173,7 +175,7 @@ export class SpreadsheetService
         let newColumnInfo: ColumnInfo =
                                         {
                                             name: 'New Column' + spreadsheet.generatedNewColumns,
-                                            cellType: ColumnType.STRING,
+                                            colType: ColumnType.STRING,
                                             genMethod: GeneratingMethod.FROM_USER_INPUT,
                                             varName: 'newCol' + spreadsheet.generatedNewColumns,
                                             widthPx: 70
@@ -216,7 +218,7 @@ export class SpreadsheetService
         let newColumnInfo: ColumnInfo =
                                         {
                                             name: "New Column" + spreadsheet.generatedNewColumns,
-                                            cellType: ColumnType.STRING,
+                                            colType: ColumnType.STRING,
                                             genMethod: GeneratingMethod.FROM_USER_INPUT,
                                             varName: "newCol" + spreadsheet.generatedNewColumns,
                                             widthPx: 70
@@ -256,6 +258,15 @@ export class SpreadsheetService
         console.log('delete col');
     }
 
+    getCellTypeAsString(cellColIndex: number): string
+    {
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let typeAsString: string = String(spreadsheet.columnInfos[cellColIndex].colType);
+
+        return typeAsString;
+    }
+
     // ****************** metode auxiliare sau de debugging ***************************
 
     // metoda folosita pt. logging
@@ -281,30 +292,42 @@ export class SpreadsheetService
                 dar se doreste logarea doar a valorii efective a celulei, adica cea corespunzatoare
                 tipului coloanei din care face parte celula curenta. */
                 
-                switch(spreadsheet.columnInfos[i].cellType)
+                switch(spreadsheet.columnInfos[i].colType)
                 {
                     // daca celula face parte dintr-o coloana de tip STRING
                     case ColumnType.STRING:
+                    {
                         // atunci se foloseste valoare 'stringValue' a celulei
+                        // currentCellString = String(currentRow.cells[i].stringValue);
                         currentCellString = currentRow.cells[i].stringValue;
                         break;
+                    }
 
                     // daca celula face parte dintr-o coloana de tip NUMBER
                     case ColumnType.NUMBER:
+                    {
                         // atunci se foloseste valoare 'numberValue' a celulei
                         // ce trebuie covertita in 'string'
-                        currentCellString = currentRow.cells[i].stringValue.toString();
+                        currentCellString = String(currentRow.cells[i].numberValue);
+                        // currentCellString = currentRow.cells[i].numberValue.toString();
                         break;
+                    }
 
                     // daca celula face parte dintr-o coloana de tip BOOL
                     case ColumnType.BOOL:
+                    {
                         // atunci se foloseste valoare 'boolValue' a celulei
                         // ce trebuie covertita in 'string'
-                        currentCellString = currentRow.cells[i].boolValue.toString();
+                        currentCellString = String(currentRow.cells[i].boolValue);
+                        // currentCellString = currentRow.cells[i].boolValue.toString();
                         break;
+                    }
 
                     default:
+                    {
+                        currentCellString = currentRow.cells[i].stringValue;
                         break;
+                    }
                 }
                 currentStringRow.push(currentCellString);
             }
@@ -322,16 +345,39 @@ export class SpreadsheetService
             columnInfos:
             [
                 {
-                    name: 'Numbers',
-                    cellType: ColumnType.NUMBER,
+                    name: 'String Col',
+                    colType: ColumnType.STRING,
                     genMethod:GeneratingMethod.FROM_USER_INPUT,
-                    varName: 'number_col',
+                    varName: 'stringCol',
+                    widthPx: 70
+                },
+                {
+                    name: 'Number Col',
+                    colType: ColumnType.NUMBER,
+                    genMethod:GeneratingMethod.FROM_USER_INPUT,
+                    varName: 'numberCol',
                     widthPx: 70
                 }
             ],
-            rows: [ { cells: [ {stringValue: "xyz", numberValue: 100, boolValue: false, style: this.getDummyCellStyle()} ], heigthPx: 20 }, ],
-            selectedCellCol: -1,
+            rows:
+            [
+                { cells:
+                    [
+                        {stringValue: "abc", numberValue: 100, boolValue: false, style: this.getDummyCellStyle()},
+                        {stringValue: "def", numberValue: 200, boolValue: false, style: this.getDummyCellStyle()}
+                    ],
+                 heigthPx: 20
+                },
+                { cells:
+                    [
+                        {stringValue: "ghi", numberValue: 300, boolValue: true, style: this.getDummyCellStyle()},
+                        {stringValue: "jkl", numberValue: 400, boolValue: false, style: this.getDummyCellStyle()}
+                    ],
+                  heigthPx: 20
+                }
+            ],
             selectedCellRow: -1,
+            selectedCellCol: -1,
             generatedNewColumns: 0
         };
         return spreadsheet;
