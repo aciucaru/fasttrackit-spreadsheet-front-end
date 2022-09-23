@@ -44,45 +44,11 @@ table.fixed td
     border: 2px solid rgb(0, 0, 0);
 }
 
-.cell-value
-{
-    color: rgb(255, 255, 255);
-    // font-size: 0.8vw;
-    // &:hover
-    // {
-    //     color: rgb(0, 105, 146)
-    // }
-}
-
-.spreadsheet_cell
+.general-cell
 {
     border-style: solid;
     border-width: 1px;
     border-color: rgb(150, 150, 150);
-}
-
-.resizable-col
-{
-    display:block;
-    resize: horizontal;
-    // overflow: auto;
-    overflow:hidden;
-    width: auto;
-    height: auto;
-    min-height: 20px;
-    min-width: 20px;
-}
-
-.resizable-row
-{
-    display:block;
-    resize: vertical;
-    // overflow: auto;
-    overflow:hidden;
-    width: auto;
-    height: auto;
-    min-height: 20px;
-    min-width: 20px;
 }
 
 .cell-textarea

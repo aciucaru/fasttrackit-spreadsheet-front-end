@@ -1,0 +1,40 @@
+.resizable-row-block  // fara aceste optiuni block-ul nu se redimensioneaza cum trebuie
+{
+    // display: block; // este necesar ?
+    resize: vertical;
+    // overflow: auto;
+    overflow: hidden;
+    // position: absolute;
+    // overflow-x: hidden;
+    // overflow-y: hidden;
+    width: auto;
+    height: auto;
+    min-height: 20px;
+    min-width: 20px;
+
+    // setari pentru textul din interior
+    text-align: right;
+    vertical-align: middle;
+    color:rgb(150, 150, 150);
+}
+
+.resizable-col-block // fara aceste optiuni block-ul nu se redimensioneaza cum trebuie
+{
+    // display:block;  // este necesar ?
+    resize: horizontal;
+    overflow: hidden;
+    // overflow: auto;
+    // position: absolute;
+    // overflow-x: hidden;
+    // overflow-y: hidden;
+    width: auto;
+    height: auto;
+    min-height: 20px;
+    min-width: 20px;
+
+    // setari pentru textul din interior
+    text-align: middle;
+    vertical-align: middle;
+    color:rgb(0, 0, 0);
+    font-weight: bold;
+}

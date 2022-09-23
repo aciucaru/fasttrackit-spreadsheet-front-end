@@ -29,9 +29,19 @@ export interface EditableSpreadsheet
     selectedCellRow: number;
     selectedCellCol: number;
 
+     // stocheaza indexul celulei selectate ce afiseaza titlul coloanei
+    selectedColTitle: number;
+
+    // stocheaza indexul celulei selectate ce afiseaza numele de variabila al coloanei
+    selectedColVarName: number;
+
     /* variabila ce stocheaza cate coloane noi au fost create, ca fiecare coloana noua
        sa aiba un nume diferit de cele adaugata pana atunci si, mai ales, sa aiba un nume de
        variabila unic (numele de variabila al unei coloane este folosit in formule si trebuie
        sa fie unic) */
     generatedNewColumns: number;
+
+    colTitleHeightPx: number; // inaltimea in pixeli a celulelor cu titlul coloanelor
+    colVarNameHeightPx: number; // inaltimea in pixeli a celulelor cu numele de variabila a coloanelor
+
 }

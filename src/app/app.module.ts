@@ -23,6 +23,10 @@ import { DebugTabComponent } from './ui/ribbon/debug-tab.component';
 import { NumericCellComponent } from './ui/spreadsheet/numeric-cell.component';
 import { StringCellComponent } from './ui/spreadsheet/string-cell.component';
 import { BoolCellComponent } from './ui/spreadsheet/bool-cell.component';
+import { ResizableColBlockComponent } from './ui/spreadsheet/resizable-col-block.component';
+import { ResizableRowBlockComponent } from './ui/spreadsheet/resizable-row-block.component';
+import { ColTitleComponent } from './ui/spreadsheet/col-title.component';
+import { ColVarNameComponent } from './ui/spreadsheet/col-var-name.component';
 
 @NgModule({
     declarations:
@@ -35,7 +39,11 @@ import { BoolCellComponent } from './ui/spreadsheet/bool-cell.component';
         DebugTabComponent,
         NumericCellComponent,
         StringCellComponent,
-        BoolCellComponent
+        BoolCellComponent,
+        ResizableColBlockComponent,
+        ResizableRowBlockComponent,
+        ColTitleComponent,
+        ColVarNameComponent
     ],
     imports:
     [

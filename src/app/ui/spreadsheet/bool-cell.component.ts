@@ -16,12 +16,6 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
         <input type ="checkbox" style="color:green;"
         [(ngModel)]="cell!.boolValue" #value="ngModel" name="value">
 
-        <!-- <a *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
-        style="color:green;"> {{cell?.boolValue}} </a> -->
-
-        <!-- <input *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
-        type ="checkbox" style="color:green;" [(ngModel)]="cell!.boolValue" #value="ngModel" name="value"> -->
-
     <div>`,
   styles: [],
   styleUrls: ['./spreadsheet.component.scss']
@@ -52,9 +46,7 @@ export class BoolCellComponent implements OnInit
         this.spreadsheetService
             .getSpreadsheetSubject()
             .subscribe((spreadsheet: EditableSpreadsheet) =>
-                            {
-                                this.spreadsheet = spreadsheet;
-                            }
+                            { this.spreadsheet = spreadsheet; }
                         );
     }
 }

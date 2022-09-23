@@ -57,25 +57,33 @@ export class SpreadsheetService
     public getSpreadsheetSubject(): BehaviorSubject<EditableSpreadsheet>
     { return this.spreadsheetSubject!; }
 
-    // metoda ce seteaza celula selectata curent
-    // aceasta celula este singura ce va fi de tip html 'input', restul celulelor vor fi 'read-only'
-    setSelectedCell(rowIndex: number, colIndex: number): void
-    {
-        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
-        spreadsheet.selectedCellRow = rowIndex;
-        spreadsheet.selectedCellCol = colIndex;
-        this.spreadsheetSubject.next(spreadsheet);
-        // console.log(`celula apasata: linie: ${rowIndex}, col: ${colIndex}`);
-    }
-
     // metoda ce spune daca o celula oarecare de indexi 'rowIndex' si 'colIndex' este celula selectata
     // celula selectata va fi randata ca 'input', restul celulelor vor fi de tip 'read-only'
     isThisCellSelected(rowIndex: number, colIndex: number): boolean
     {
+        // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
 
         return spreadsheet.selectedCellCol === colIndex
                 && spreadsheet.selectedCellRow === rowIndex;
+    }
+
+    // returneaza daca celula de titlu, de index 'colIndex' este cea selectata
+    isThisColTitleSelected(colIndex: number): boolean
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        return spreadsheet.selectedColTitle === colIndex;
+    }
+
+    // returneaza daca celula de nume de variabila, de index 'colIndex' este cea selectata
+    isThisColVarNameSelected(colIndex: number): boolean
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        return spreadsheet.selectedColVarName === colIndex;
     }
 
     public addRowAbove(): void
@@ -258,11 +266,86 @@ export class SpreadsheetService
         console.log('delete col');
     }
 
+    // metoda ce seteaza celula selectata curent
+    // aceasta celula este singura ce va fi de tip html 'input', restul celulelor vor fi 'read-only'
+    setSelectedCell(rowIndex: number, colIndex: number): void
+    {
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        if(rowIndex >= 0 && colIndex >=0)
+        {
+            spreadsheet.selectedCellRow = rowIndex;
+            spreadsheet.selectedCellCol = colIndex;
+            this.spreadsheetSubject.next(spreadsheet);
+        }
+        // console.log(`celula apasata: linie: ${rowIndex}, col: ${colIndex}`);
+    }
+
+    // seteaza celula titlului de coloana, celula selectata ca urmare a unui click
+    setSelectedColTitle(colIndex: number): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+        
+        if(colIndex >= 0)
+        {
+            spreadsheet.selectedColTitle = colIndex; // se seteaza valoarea
+            this.spreadsheetSubject.next(spreadsheet); // se emite noul spreadsheet
+        }
+        console.log('selected col title:' + colIndex);
+    }
+
+    // seteaza celula numelui de variabila de coloana, celula selectata ca urmare a unui click
+    setSelectedColVarName(colIndex: number): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+        if(colIndex >= 0)
+        {
+            spreadsheet.selectedColVarName = colIndex; // se seteaza valoarea
+            this.spreadsheetSubject.next(spreadsheet); // se emite noul spreadsheet
+        }
+    }
+
+    // metoda ce modifica latimea tuturor celulelor din coloana de index 'colIndex'
+    setColumWidth(colIndex: number, width: number): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        if(colIndex >= 0 && width >= 0)
+        {
+            // se schimba latimea coloanei de index 'colIndex'
+            spreadsheet.columnInfos[colIndex].widthPx = width;
+            // se trimite noul spreasheet catre observatorii sai
+            this.spreadsheetSubject.next(spreadsheet);
+        }
+    }
+
+    // metoda ce modifica latimea tuturor celulelor liniei de index 'rowIndex'
+    setRowHeight(rowIndex: number, height: number): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        // se schimba inaltimea liniei de index 'rowIndex'
+        spreadsheet.rows[rowIndex].heigthPx = height;
+
+        // se trimite noul spreasheet catre observatorii sai
+        this.spreadsheetSubject.next(spreadsheet);
+    }
+
     getCellTypeAsString(cellColIndex: number): string
     {
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
-        return String(spreadsheet.columnInfos[cellColIndex].colType);
+        if(cellColIndex >= 0)
+            return String(spreadsheet.columnInfos[cellColIndex].colType);
+        else
+        {
+            console.log('warning: SpreadsheetService.getCellTypeAsString(): illegal index');
+            return String(ColumnType.STRING);
+        }
     }
 
     getCellWitdh(cellColIndex: number): number
@@ -270,9 +353,13 @@ export class SpreadsheetService
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
-        let width: number = spreadsheet.columnInfos[cellColIndex].widthPx;
-
-        return width;
+        if(cellColIndex >= 0)
+            return spreadsheet.columnInfos[cellColIndex].widthPx;
+        else
+        {
+            console.log('warning: SpreadsheetService.getCellWitdh(): illegal index');
+            return 100;
+        }
     }
 
     getCellHeight(cellRowIndex: number): number
@@ -280,9 +367,46 @@ export class SpreadsheetService
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
-        let height: number = spreadsheet.rows[cellRowIndex].heigthPx;
+        if(cellRowIndex >= 0)
+            return spreadsheet.rows[cellRowIndex].heigthPx;
+        else
+        {
+            console.log('warning: SpreadsheetService.getCellHeight(): illegal index');
+            return 100;
+        }
+    }
 
-        return height;
+    getColWidth(colIndex: number): number
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        if(colIndex >= 0)
+            return spreadsheet.columnInfos[colIndex].widthPx;
+        else
+        {
+            console.log('warning: SpreadsheetService.getColWidth(): illegal index');
+            return 100;
+        }
+    }
+
+
+    // metoda ce returneaza inaltimea celulelor ce reprezinta titlul coloanelor
+    getColTitleHeight(): number
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        return spreadsheet.colTitleHeightPx;
+    }
+
+    // metoda ce returneaza inaltimea celulelor ce reprezinta numele de variabila ale coloanelor
+    getColVarNameHeight(): number
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        return spreadsheet.colVarNameHeightPx;
     }
 
     // ****************** metode auxiliare sau de debugging ***************************
@@ -396,7 +520,12 @@ export class SpreadsheetService
             ],
             selectedCellRow: -1,
             selectedCellCol: -1,
-            generatedNewColumns: 0
+            selectedColTitle: -1,
+            selectedColVarName: -1,
+            generatedNewColumns: 0,
+
+            colTitleHeightPx: 20,
+            colVarNameHeightPx: 20
         };
         return spreadsheet;
     }

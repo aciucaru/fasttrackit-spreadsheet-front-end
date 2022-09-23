@@ -60,9 +60,7 @@ export class CellComponent implements OnInit
         this.spreadsheetService
             .getSpreadsheetSubject()
             .subscribe((spreadsheet: EditableSpreadsheet) =>
-                            {
-                                this.spreadsheet = spreadsheet;
-                            }
+                            { this.spreadsheet = spreadsheet; }
                         );
     }
 }
