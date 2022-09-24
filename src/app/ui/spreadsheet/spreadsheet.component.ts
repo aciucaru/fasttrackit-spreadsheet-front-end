@@ -19,7 +19,7 @@ import { Observer } from 'rxjs';
                 <app-resizable-row-block> </app-resizable-row-block>
             </td>
             <td class="general-cell" *ngFor="let currentCol of spreadsheet?.columnInfos; let colIndex = index">
-                <app-col-var-name [currentColInfo]="currentCol" [currentColIndex]="colIndex"></app-col-var-name>
+                <app-var-name-cell [currentColInfo]="currentCol" [currentColIndex]="colIndex"></app-var-name-cell>
             </td>
         </tr>
         <tr> <!-- rand cu titlul coloanelor -->
@@ -27,7 +27,7 @@ import { Observer } from 'rxjs';
                 <app-resizable-row-block></app-resizable-row-block>
             </td>
             <td class="general-cell" *ngFor="let currentCol of spreadsheet?.columnInfos; let colIndex = index">
-                <app-col-title [currentColInfo]="currentCol" [currentColIndex]="colIndex"></app-col-title>
+                <app-title-cell [currentColInfo]="currentCol" [currentColIndex]="colIndex"></app-title-cell>
             </td>
         </tr>
         <!-- randurile cu celulele de date ale spreadshet-ului -->

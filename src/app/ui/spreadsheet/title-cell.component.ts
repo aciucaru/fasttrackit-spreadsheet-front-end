@@ -6,7 +6,7 @@ import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
 @Component({
-  selector: 'app-col-title',
+  selector: 'app-title-cell',
   template: `
     <div class="cell-container" class="col-title-text"
     [style.width.px]="spreadsheetService.getColWidth(currentColIndex)"
@@ -28,7 +28,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
   styles: [],
   styleUrls: ['./spreadsheet.scss']
 })
-export class ColTitleComponent implements OnInit
+export class TitleCellComponent implements OnInit
 {
     /* Component ce afiseaza titlul unei coloane.
        Informatiile complete despre coloana si indexul coloanei sunt primite

@@ -26,8 +26,9 @@ import { BoolCellComponent } from './ui/spreadsheet/bool-cell.component';
 import { ResizableColBlockComponent } from './ui/spreadsheet/resizable-col-block.component';
 import { ResizableRowBlockComponent } from './ui/spreadsheet/resizable-row-block.component';
 import { ColTitleComponent } from './ui/spreadsheet/col-title.component';
-import { ColVarNameComponent } from './ui/spreadsheet/col-var-name.component';
 import { RowIndexComponent } from './ui/spreadsheet/row-index.component';
+import { VarNameCellComponent } from './ui/spreadsheet/var-name-cell.component';
+import { TitleCellComponent } from './ui/spreadsheet/title-cell.component';
 
 @NgModule({
     declarations:
@@ -44,8 +45,9 @@ import { RowIndexComponent } from './ui/spreadsheet/row-index.component';
         ResizableColBlockComponent,
         ResizableRowBlockComponent,
         ColTitleComponent,
-        ColVarNameComponent,
-        RowIndexComponent
+        RowIndexComponent,
+        VarNameCellComponent,
+        TitleCellComponent
     ],
     imports:
     [

@@ -5,29 +5,16 @@ import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
 @Component({
-  selector: 'app-col-var-name',
+  selector: 'app-var-name-cell',
   template: `
     <div class="resizable-col-block"
-    (click)="spreadsheetService.setSelectedVarNameCell(currentColIndex)">
+        (click)="spreadsheetService.setSelectedVarNameCell(currentColIndex)">
         <a class="col-var-name-text">{{currentColInfo?.varName}}</a>
-
-        <!-- <a *ngIf="!spreadsheetService.isThisColVarNameSelected(currentColIndex)">
-            {{currentColInfo?.varName}}
-        </a> -->
-
-        <!-- <textarea type="text" autofocus class="cell-textarea"
-            *ngIf="spreadsheetService.isThisColVarNameSelected(currentColIndex)"
-            [(ngModel)]="currentColInfo!.varName" #value="ngModel" name="value">
-        </textarea> -->
-
     <div>`,
   styles: [],
   styleUrls: ['./spreadsheet.scss', './resizable-blocks.scss']
 })
-
-// [style.width.px]="spreadsheetService.getColWidth(currentColIndex)"
-// [style.height.px]="spreadsheetService.getColVarNameHeight()"
-export class ColVarNameComponent implements OnInit, OnDestroy
+export class VarNameCellComponent implements OnInit
 {
     /* Component ce afiseaza titlul unei coloane.
        Informatiile complete despre coloana si indexul coloanei sunt primite
