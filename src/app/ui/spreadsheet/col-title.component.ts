@@ -13,12 +13,12 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     [style.height.px]="spreadsheetService.getTitleRowHeight()"
     (click)="spreadsheetService.setSelectedTitleCell(currentColIndex)">
 
-        <a *ngIf="!spreadsheetService.isThisColTitleSelected(currentColIndex)">
+        <a *ngIf="!spreadsheetService.isThisTitleCellSelected(currentColIndex)">
             {{currentColInfo?.title}}
         </a>
 
         <textarea type="text" autofocus class="cell-textarea"
-            *ngIf="spreadsheetService.isThisColTitleSelected(currentColIndex)"
+            *ngIf="spreadsheetService.isThisTitleCellSelected(currentColIndex)"
             [style.width.px]="spreadsheetService.getColWidth(currentColIndex)"
             [style.height.px]="spreadsheetService.getTitleRowHeight()"
             [(ngModel)]="currentColInfo!.title" #value="ngModel" name="value">

@@ -13,11 +13,11 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
     (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)">
 
-        <a style="color:blue;" *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">
+        <a style="color:blue;" *ngIf="!spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)">
         {{cell?.numberValue}} </a>
 
         <input type="number" style="color:blue;"
-        *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
+        *ngIf="spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)"
         [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
         [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
         [(ngModel)]="cell!.numberValue" #value="ngModel" name="value">

@@ -63,33 +63,57 @@ export class SpreadsheetService
     public getSpreadsheetSubject(): BehaviorSubject<EditableSpreadsheet>
     { return this.spreadsheetSubject!; }
 
-    // metoda ce spune daca o celula oarecare de indexi 'rowIndex' si 'colIndex' este celula selectata
-    // celula selectata va fi randata ca 'input', restul celulelor vor fi de tip 'read-only'
-    isThisCellSelected(rowIndex: number, colIndex: number): boolean
+    // metoda ce spune daca o celula de data oarecare de indexi 'rowIndex' si 'colIndex'
+    // este celula selectata; celula selectata va fi desenata ca 'input', restul vor fi 'read-only'
+    isThisDataCellSelected(rowIndex: number, colIndex: number): boolean
     {
+        let result: boolean = false;
+
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
 
-        return spreadsheet.selectedDataCellCol === colIndex
-                && spreadsheet.selectedDataCellRow === rowIndex;
+        // daca indexii sunt corecti
+        if(rowIndex >= 0 && colIndex >= 0)
+        {
+            // si daca tipul celulei selectate curent este 'celula de date' ('DATA_CELL')
+            if(spreadsheet.selectedCellType === SelectedCellType.DATA_CELL)
+                // atunci rezultatul mai depinde doar de indexi
+                result = spreadsheet.selectedDataCellCol === colIndex
+                    && spreadsheet.selectedDataCellRow === rowIndex;
+        }
+        // altfel, rezultatul este fals
+
+        return result; // se returneaza rezultatul
     }
 
     // returneaza daca celula de titlu, de index 'colIndex' este cea selectata
-    isThisColTitleSelected(colIndex: number): boolean
+    isThisTitleCellSelected(colIndex: number): boolean
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
 
-        return spreadsheet.selectedTitleCellCol === colIndex;
+        // daca indexul este corect si tipul celulei selectate curent
+        // este 'celula de titlu' ('TITLE_CELL')
+        if(colIndex >= 0 && spreadsheet.selectedCellType === SelectedCellType.TITLE_CELL)
+            // atunci rezultatul mai depinde doar de index
+            return spreadsheet.selectedTitleCellCol === colIndex;
+        else
+            return false; // altfel, celula sigur nu este selectata
     }
 
     // returneaza daca celula de nume de variabila, de index 'colIndex' este cea selectata
-    isThisColVarNameSelected(colIndex: number): boolean
+    isThisVarNameCellSelected(colIndex: number): boolean
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
 
-        return spreadsheet.selectedVarNameCellCol === colIndex;
+        // daca indexul este corect si tipul celulei selectate curent
+        // este 'celula de nume de variabila' ('VAR_NAME_CELL')
+        if(colIndex >= 0 && spreadsheet.selectedCellType === SelectedCellType.VAR_NAME_CELL)
+            // atunci rezultatul mai depinde doar de index
+            return spreadsheet.selectedVarNameCellCol === colIndex;
+        else
+            return false; // altfel, celula sigur nu este selectata
     }
 
     public addRowAbove(): void
@@ -300,6 +324,10 @@ export class SpreadsheetService
         
         if(colIndex >= 0)
         {
+            // pe ecran nu poate exista decat o singura celula selectata curent,
+            // in acest caz se seteaza tipul acelei celule ca fiind 'DATA_CELL'
+            spreadsheet.selectedCellType = SelectedCellType.TITLE_CELL;
+
             spreadsheet.selectedTitleCellCol = colIndex; // se seteaza valoarea
             this.spreadsheetSubject.next(spreadsheet); // se emite noul spreadsheet
         }
@@ -314,6 +342,10 @@ export class SpreadsheetService
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
         if(colIndex >= 0)
         {
+            // pe ecran nu poate exista decat o singura celula selectata curent,
+            // in acest caz se seteaza tipul acelei celule ca fiind 'DATA_CELL'
+            spreadsheet.selectedCellType = SelectedCellType.VAR_NAME_CELL;
+
             spreadsheet.selectedVarNameCellCol = colIndex; // se seteaza valoarea
             this.spreadsheetSubject.next(spreadsheet); // se emite noul spreadsheet
         }

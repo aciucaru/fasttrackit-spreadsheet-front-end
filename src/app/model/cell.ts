@@ -33,7 +33,7 @@ export interface CellStyle
 // (numai o singura celula poate fi selectata la un moment data)
 export enum SelectedCellType
 {
-    COL_TITLE_CELL = 'COL_TITLE_CELL', // celula selectata este un titlu de coloana
-    COL_VAR_NAME_CELL = 'COL_VAR_NAME_CELL', // celula selectata este un nume de variabila al unei coloane
-    DATA_CELL = 'DATA_CELL' // celula selectata este o celula obisnuita de date
+    DATA_CELL = 'DATA_CELL', // celula selectata este o celula obisnuita de date
+    TITLE_CELL = 'TITLE_CELL', // celula selectata este un titlu de coloana
+    VAR_NAME_CELL = 'VAR_NAME_CELL' // celula selectata este un nume de variabila al unei coloane
 }

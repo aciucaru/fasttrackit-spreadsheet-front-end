@@ -13,12 +13,12 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
     (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)">
 
-        <a *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
+        <a *ngIf="!spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)"
         style="color:purple;" >
         {{cell?.stringValue}} </a>
 
         <textarea class="cell-textarea" type="text" style="color:purple;" autofocus
-        *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
+        *ngIf="spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)"
         [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
         [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
         [(ngModel)]="cell!.stringValue" #value="ngModel" name="value"></textarea>
