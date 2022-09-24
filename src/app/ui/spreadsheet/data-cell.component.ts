@@ -6,7 +6,7 @@ import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
 @Component({
-  selector: 'app-cell',
+  selector: 'app-data-cell',
   template:`<!-- <div [ngStyle]="{backgroundColor: cell?.style?.rgbBGColor}"> -->
     <div class="cell-container"
         [style.width.px]="spreadsheetService.getCellWitdh(mainCellColIndex)"
@@ -34,7 +34,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
   styles: ['.main-cell-container { }'],
   styleUrls: ['./spreadsheet.scss']
 })
-export class CellComponent implements OnInit
+export class DataCellComponent implements OnInit
 {
     // datele celulei curente, primita ca input de la parine
     // trebuie  sa fie 'public' ca sa poate fi accesata din template-ul HTML

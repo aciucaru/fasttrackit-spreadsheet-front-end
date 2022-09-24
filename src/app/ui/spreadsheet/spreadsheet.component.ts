@@ -34,8 +34,8 @@ import { Observer } from 'rxjs';
         <tr *ngFor="let currentRow of spreadsheet?.rows; let rowIndex = index">
             <td class="general-cell"> <app-row-index [rowIndex]="rowIndex"></app-row-index> </td>
             <td class="general-cell" *ngFor="let currentCell of currentRow.cells; let colIndex = index">
-                <app-cell [mainCell]="currentCell" [mainCellRowIndex] = "rowIndex" [mainCellColIndex] = "colIndex">
-                </app-cell>
+                <app-data-cell [mainCell]="currentCell" [mainCellRowIndex] = "rowIndex" [mainCellColIndex] = "colIndex">
+                </app-data-cell>
             </td>
         </tr>
     </table>

@@ -15,7 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { CellComponent } from './ui/spreadsheet/cell.component';
+import { DataCellComponent } from './ui/spreadsheet/data-cell.component';
 import { SpreadsheetComponent } from './ui/spreadsheet/spreadsheet.component';
 import { RibbonComponent } from './ui/ribbon/ribbon.component';
 import { MainTabComponent } from './ui/ribbon/main-tab.component';
@@ -25,7 +25,6 @@ import { StringCellComponent } from './ui/spreadsheet/string-cell.component';
 import { BoolCellComponent } from './ui/spreadsheet/bool-cell.component';
 import { ResizableColBlockComponent } from './ui/spreadsheet/resizable-col-block.component';
 import { ResizableRowBlockComponent } from './ui/spreadsheet/resizable-row-block.component';
-import { ColTitleComponent } from './ui/spreadsheet/col-title.component';
 import { RowIndexComponent } from './ui/spreadsheet/row-index.component';
 import { VarNameCellComponent } from './ui/spreadsheet/var-name-cell.component';
 import { TitleCellComponent } from './ui/spreadsheet/title-cell.component';
@@ -34,7 +33,7 @@ import { TitleCellComponent } from './ui/spreadsheet/title-cell.component';
     declarations:
     [
         AppComponent,
-        CellComponent,
+        DataCellComponent,
         SpreadsheetComponent,
         RibbonComponent,
         MainTabComponent,
@@ -44,7 +43,6 @@ import { TitleCellComponent } from './ui/spreadsheet/title-cell.component';
         BoolCellComponent,
         ResizableColBlockComponent,
         ResizableRowBlockComponent,
-        ColTitleComponent,
         RowIndexComponent,
         VarNameCellComponent,
         TitleCellComponent
