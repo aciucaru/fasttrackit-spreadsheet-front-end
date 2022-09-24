@@ -10,8 +10,8 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
   template: `
     <div class="cell-container" class="col-title-text"
     [style.width.px]="spreadsheetService.getColWidth(currentColIndex)"
-    [style.height.px]="spreadsheetService.getColTitleHeight()"
-    (click)="spreadsheetService.setSelectedColTitle(currentColIndex)">
+    [style.height.px]="spreadsheetService.getTitleRowHeight()"
+    (click)="spreadsheetService.setSelectedTitleCell(currentColIndex)">
 
         <a *ngIf="!spreadsheetService.isThisColTitleSelected(currentColIndex)">
             {{currentColInfo?.title}}
@@ -20,7 +20,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
         <textarea type="text" autofocus class="cell-textarea"
             *ngIf="spreadsheetService.isThisColTitleSelected(currentColIndex)"
             [style.width.px]="spreadsheetService.getColWidth(currentColIndex)"
-            [style.height.px]="spreadsheetService.getColTitleHeight()"
+            [style.height.px]="spreadsheetService.getTitleRowHeight()"
             [(ngModel)]="currentColInfo!.title" #value="ngModel" name="value">
         </textarea>
 

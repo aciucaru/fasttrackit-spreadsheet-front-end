@@ -37,8 +37,14 @@ export class SpreadsheetService
                                             name: spreadsheet.name,
                                             columnInfos: spreadsheet.columnInfos,
                                             rows: spreadsheet.rows,
-                                            selectedCellRow: -1,
-                                            selectedCellCol: -1,
+                                            indexColWidthPx: 70,
+                                            titleRowHeightPx: 20,
+                                            varNameRowHeightPx:20,
+
+                                            selectedDataCellRow: -1,
+                                            selectedDataCellCol: -1,
+                                            selectedTitleCellCol: -1,
+                                            selectedVarNameCellCol: -1,
                                             generatedNewColumns: 0
                                         }
                                 )
@@ -64,8 +70,8 @@ export class SpreadsheetService
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
 
-        return spreadsheet.selectedCellCol === colIndex
-                && spreadsheet.selectedCellRow === rowIndex;
+        return spreadsheet.selectedDataCellCol === colIndex
+                && spreadsheet.selectedDataCellRow === rowIndex;
     }
 
     // returneaza daca celula de titlu, de index 'colIndex' este cea selectata
@@ -74,7 +80,7 @@ export class SpreadsheetService
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
 
-        return spreadsheet.selectedColTitle === colIndex;
+        return spreadsheet.selectedTitleCellCol === colIndex;
     }
 
     // returneaza daca celula de nume de variabila, de index 'colIndex' este cea selectata
@@ -83,7 +89,7 @@ export class SpreadsheetService
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
 
-        return spreadsheet.selectedColVarName === colIndex;
+        return spreadsheet.selectedVarNameCellCol === colIndex;
     }
 
     public addRowAbove(): void
@@ -107,12 +113,12 @@ export class SpreadsheetService
 
         // la sfarsit se dauga intreaga linie noua ce tocmai s-a populat cu celule
         // aici splice() se foloseste pt. a adauga elementul 'newRow' la sir (nu se sterge nimic)
-        spreadsheet.rows.splice(spreadsheet.selectedCellRow, 0, newRow);
+        spreadsheet.rows.splice(spreadsheet.selectedDataCellRow, 0, newRow);
 
         /* daca s-a adaugat o linie deasupra (adica inainte de linia curenta din sirul de linii),
         atunci inseamna ca indexul liniei curente ('selectedCellRow') se schimba si el, adica
         se incrementeaza cu 1 */
-        spreadsheet.selectedCellRow += 1;
+        spreadsheet.selectedDataCellRow += 1;
 
         this.spreadsheetSubject.next(spreadsheet);
         console.log('add row above');
@@ -139,8 +145,7 @@ export class SpreadsheetService
 
         // la sfarsit se dauga intreaga linie noua ce tocmai s-a populat cu celule
         // aici splice() se foloseste pt. a adauga elementul 'newRow' la sir (nu se sterge nimic)
-        spreadsheet.rows.splice(spreadsheet.selectedCellRow + 1, 0, newRow);
-
+        spreadsheet.rows.splice(spreadsheet.selectedDataCellRow + 1, 0, newRow);
         /* daca s-a adaugat o linie dedesupt (adica dupa linia curenta din sirul de linii),
         atunci inseamna ca indexul liniei curente ('selectedCellRow') NU se schimba si el,
         adica nu mai trebuie modificat nimic */
@@ -153,7 +158,7 @@ export class SpreadsheetService
     public deleteSelectedRow(): void
     {
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
-        spreadsheet.rows.splice(spreadsheet.selectedCellRow, 1);
+        spreadsheet.rows.splice(spreadsheet.selectedDataCellRow, 1);
         this.spreadsheetSubject!.next(spreadsheet);
         console.log('delete row');
     }
@@ -172,7 +177,7 @@ export class SpreadsheetService
 
             // se dauga noua celula la linia curenta
             // aici splice() se foloseste pt. a adauga la sir (nu pentru a sterge)
-            currentRow.cells.splice(spreadsheet.selectedCellCol + 1, 0, currentNewCell);
+            currentRow.cells.splice(spreadsheet.selectedDataCellCol + 1, 0, currentNewCell);
         }
 
         // se incrementeza numarul de coloane noi generate
@@ -190,7 +195,7 @@ export class SpreadsheetService
                                         };
         // se adauga noul 'ColumnInfo' la sirul cu informatii desprte coloane
         // aici splice() este folosit pt. a adauga, nu se sterge nimic
-        spreadsheet.columnInfos.splice(spreadsheet.selectedCellCol + 1, 0, newColumnInfo);
+        spreadsheet.columnInfos.splice(spreadsheet.selectedDataCellCol + 1, 0, newColumnInfo);
 
         /* daca s-a adaugat o coloana spre dreapta (adica dupa coloana curenta din sirul 'columnInofs'),
         atunci inseamna ca indexul coloanei curente ('selectedCellCol') NU se schimba si el, adica
@@ -215,7 +220,7 @@ export class SpreadsheetService
 
             // se dauga noua celula la linia curenta
             // aici splice() se foloseste pt. a adauga la sir (nu pentru a sterge)
-            currentRow.cells.splice(spreadsheet.selectedCellCol, 0, currentNewCell);
+            currentRow.cells.splice(spreadsheet.selectedDataCellCol, 0, currentNewCell);
         }
 
         // se incrementeza numarul de coloane noi generate
@@ -233,12 +238,12 @@ export class SpreadsheetService
                                         };
         // se adauga noul 'ColumnInfo' la sirul cu informatii desprte coloane
         // aici splice() este folosit pt. a adauga, nu se sterge nimic
-        spreadsheet.columnInfos.splice(spreadsheet.selectedCellCol, 0, newColumnInfo);
+        spreadsheet.columnInfos.splice(spreadsheet.selectedDataCellCol, 0, newColumnInfo);
 
         /* daca s-a adaugat o coloana spre stanga (adica inainte de coloana curenta din sirul 'columnInofs'),
         atunci inseamna ca indexul coloanei curente ('selectedCellCol') se schimba si el, adica
         trebuie incrementat cu 1 */
-        spreadsheet.selectedCellCol += 1;
+        spreadsheet.selectedDataCellCol += 1;
 
         // se trimite noul spreadsheet catre toti observatorii sai
         this.spreadsheetSubject.next(spreadsheet);
@@ -254,55 +259,62 @@ export class SpreadsheetService
         for(let currentRow of spreadsheet.rows) // pentru fiecare rand
         {
             // sterge celula din coloana curenta
-            currentRow.cells.splice(spreadsheet.selectedCellCol, 1);
+            currentRow.cells.splice(spreadsheet.selectedDataCellCol, 1);
         }
 
         // apoi se sterge si 'headerul', adica un element al sirului 'columnInfos', unde sunt
         // stocate informatiile despre fiecare coloana
-        spreadsheet.columnInfos.splice(spreadsheet.selectedCellCol, 1);
+        spreadsheet.columnInfos.splice(spreadsheet.selectedDataCellCol, 1);
 
         // apoi se trimite noul spreadsheet catre toti observatorii sai
         this.spreadsheetSubject!.next(spreadsheet);
         console.log('delete col');
     }
 
-    // metoda ce seteaza celula selectata curent
-    // aceasta celula este singura ce va fi de tip html 'input', restul celulelor vor fi 'read-only'
-    setSelectedCell(rowIndex: number, colIndex: number): void
+    // metoda ce seteaza celula de date selectata curent
+    // aceasta celula este singura ce va fi editabila, restul celulelor vor fi 'read-only'
+    setSelectedDataCell(rowIndex: number, colIndex: number): void
     {
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
 
         if(rowIndex >= 0 && colIndex >=0)
         {
-            spreadsheet.selectedCellRow = rowIndex;
-            spreadsheet.selectedCellCol = colIndex;
+            // pe ecran nu poate exista decat o singura celula selectata curent,
+            // in acest caz se seteaza tipul acelei celule ca fiind 'DATA_CELL'
+            spreadsheet.selectedCellType = SelectedCellType.DATA_CELL;
+
+            // se stocheaza indexii ceulei de date selectate
+            spreadsheet.selectedDataCellRow = rowIndex;
+            spreadsheet.selectedDataCellCol = colIndex;
             this.spreadsheetSubject.next(spreadsheet);
         }
         // console.log(`celula apasata: linie: ${rowIndex}, col: ${colIndex}`);
     }
 
-    // seteaza celula titlului de coloana, celula selectata ca urmare a unui click
-    setSelectedColTitle(colIndex: number): void
+    // seteaza celula titlului de coloana, celula selectata curent
+    // aceasta celula este singura ce va fi editabila, restul celulelor vor fi 'read-only'
+    setSelectedTitleCell(colIndex: number): void
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
         
         if(colIndex >= 0)
         {
-            spreadsheet.selectedColTitle = colIndex; // se seteaza valoarea
+            spreadsheet.selectedTitleCellCol = colIndex; // se seteaza valoarea
             this.spreadsheetSubject.next(spreadsheet); // se emite noul spreadsheet
         }
         console.log('selected col title:' + colIndex);
     }
 
-    // seteaza celula numelui de variabila de coloana, celula selectata ca urmare a unui click
-    setSelectedColVarName(colIndex: number): void
+    // seteaza celula numelui de variabila de coloana, celula selectata curent
+    // aceasta celula este singura ce va fi editabila, restul celulelor vor fi 'read-only'
+    setSelectedVarNameCell(colIndex: number): void
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
         if(colIndex >= 0)
         {
-            spreadsheet.selectedColVarName = colIndex; // se seteaza valoarea
+            spreadsheet.selectedVarNameCellCol = colIndex; // se seteaza valoarea
             this.spreadsheetSubject.next(spreadsheet); // se emite noul spreadsheet
         }
     }
@@ -395,21 +407,23 @@ export class SpreadsheetService
 
 
     // metoda ce returneaza inaltimea celulelor ce reprezinta titlul coloanelor
-    getColTitleHeight(): number
+    getTitleRowHeight(): number
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
-        return spreadsheet.colTitleHeightPx;
+        // return spreadsheet.colTitleHeightPx;
+        return spreadsheet.titleRowHeightPx;
     }
 
     // metoda ce returneaza inaltimea celulelor ce reprezinta numele de variabila ale coloanelor
-    getColVarNameHeight(): number
+    getVarNameRowHeight(): number
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
-        return spreadsheet.colVarNameHeightPx;
+        // return spreadsheet.colVarNameHeightPx;
+        return spreadsheet.varNameRowHeightPx;
     }
 
     // ****************** metode auxiliare sau de debugging ***************************
@@ -521,15 +535,16 @@ export class SpreadsheetService
                   heigthPx: 20
                 }
             ],
-            selectedCellType: SelectedCellType.DATA_CELL,
-            selectedCellRow: -1,
-            selectedCellCol: -1,
-            selectedColTitle: -1,
-            selectedColVarName: -1,
-            generatedNewColumns: 0,
+            indexColWidthPx: 70,
+            titleRowHeightPx: 20,
+            varNameRowHeightPx:20,
 
-            colTitleHeightPx: 20,
-            colVarNameHeightPx: 20
+            selectedCellType: SelectedCellType.DATA_CELL,
+            selectedDataCellRow: -1,
+            selectedDataCellCol: -1,
+            selectedTitleCellCol: -1,
+            selectedVarNameCellCol: -1,
+            generatedNewColumns: 0
         };
         return spreadsheet;
     }

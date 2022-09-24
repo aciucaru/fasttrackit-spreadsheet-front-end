@@ -8,7 +8,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
   selector: 'app-col-var-name',
   template: `
     <div class="resizable-col-block"
-    (click)="spreadsheetService.setSelectedColVarName(currentColIndex)">
+    (click)="spreadsheetService.setSelectedVarNameCell(currentColIndex)">
         <a class="col-var-name-text">{{currentColInfo?.varName}}</a>
 
         <!-- <a *ngIf="!spreadsheetService.isThisColVarNameSelected(currentColIndex)">

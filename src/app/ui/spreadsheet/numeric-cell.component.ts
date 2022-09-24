@@ -11,7 +11,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     <div class="cell-container"
     [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
     [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
-    (click)="spreadsheetService.setSelectedCell(currentRowIndex, currentColIndex)">
+    (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)">
 
         <a style="color:blue;" *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">
         {{cell?.numberValue}} </a>

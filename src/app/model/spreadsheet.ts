@@ -10,6 +10,9 @@ export interface Spreadsheet
     name: string;
     columnInfos: Array<ColumnInfo>;
     rows: Array<Row>;
+    indexColWidthPx: number;
+    titleRowHeightPx: number;
+    varNameRowHeightPx:number;
 }
 
 /* Clasa ce modeleaza un Spreadsheet editabil. Aceasta clasa contine un obiect de tip 'Spreadsheet' dar
@@ -21,29 +24,30 @@ export interface EditableSpreadsheet
     name: string;
     columnInfos: Array<ColumnInfo>;
     rows: Array<Row>;
+    indexColWidthPx: number;
+    titleRowHeightPx: number;
+    varNameRowHeightPx:number;
 
-    // valori suplimentare necesare pt. editorul de spreadsheet-uri
+
+    // ********** valori suplimentare necesare pt. editorul de spreadsheet-uri ***********
     // aceste valori NU se trimit inapoi catre server
 
     selectedCellType: SelectedCellType;
 
-    /* variabile ce stocheaza indexii celulei selectate */
-    selectedCellRow: number;
-    selectedCellCol: number;
+    /* variabile ce stocheaza indexii celulei de date selectate */
+    selectedDataCellRow: number;
+    selectedDataCellCol: number;
 
-     // stocheaza indexul celulei selectate ce afiseaza titlul coloanei
-    selectedColTitle: number;
+     // stocheaza indexul celulei de titlu selectate (aceste celule afiseaza titlul coloanei)
+    selectedTitleCellCol: number;
 
-    // stocheaza indexul celulei selectate ce afiseaza numele de variabila al coloanei
-    selectedColVarName: number;
+    // stocheaza indexul celulei de nume de variabila selectate
+    // (aceste celule afiseaza numele de variabila al unei coloane)
+    selectedVarNameCellCol: number;
 
     /* variabila ce stocheaza cate coloane noi au fost create, ca fiecare coloana noua
        sa aiba un nume diferit de cele adaugata pana atunci si, mai ales, sa aiba un nume de
        variabila unic (numele de variabila al unei coloane este folosit in formule si trebuie
        sa fie unic) */
     generatedNewColumns: number;
-
-    colTitleHeightPx: number; // inaltimea in pixeli a celulelor cu titlul coloanelor
-    colVarNameHeightPx: number; // inaltimea in pixeli a celulelor cu numele de variabila a coloanelor
-
 }
