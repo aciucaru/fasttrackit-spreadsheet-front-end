@@ -16,13 +16,14 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
         <a style="color:blue;" *ngIf="!spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)">
         {{cell?.numberValue}} </a>
 
-        <input *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
+        <input type="number" style="color:blue;"
+        *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
         [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
         [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
-        type="number" style="color:blue;" [(ngModel)]="cell!.numberValue" #value="ngModel" name="value">
+        [(ngModel)]="cell!.numberValue" #value="ngModel" name="value">
     <div>`,
     styles: [],
-    styleUrls: ['./spreadsheet.component.scss']
+    styleUrls: ['./spreadsheet.scss']
 })
 export class NumericCellComponent implements OnInit
 {

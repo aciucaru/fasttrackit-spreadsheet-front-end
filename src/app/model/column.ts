@@ -3,7 +3,7 @@
 
 export interface ColumnInfo
 {
-    name: string; // numele afisat al coloanei (un fel de "header" sau "caption")
+    title: string; // numele afisat al coloanei (un fel de "header" sau "caption")
     colType: ColumnType; // tipul tuturor celulelor coloanei
     genMethod: GeneratingMethod; // modul in care se genereaza valoarea celulelor coloanei
     varName: string; // numele coloanei folosit in formule

@@ -60,3 +60,23 @@ table.fixed td
 {
     display: inline-block;
 }
+
+
+// setari pt. coloane de tip header (titlu, nume de variabila)
+.col-title-text
+{
+    // setari pentru textul din interior
+    text-align: middle;
+    vertical-align: middle;
+    color:rgb(0, 0, 0);
+    // font-weight: bold;
+    background-color: rgb(230, 230, 230);
+}
+
+a.var-name-text
+{
+    // setari pentru textul din interior
+    text-align: middle;
+    vertical-align: middle;
+    color:rgb(130, 130, 130);
+}

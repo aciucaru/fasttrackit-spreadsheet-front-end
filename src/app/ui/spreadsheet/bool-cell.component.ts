@@ -18,7 +18,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
     <div>`,
   styles: [],
-  styleUrls: ['./spreadsheet.component.scss']
+  styleUrls: ['./spreadsheet.scss']
 })
 export class BoolCellComponent implements OnInit 
 {

@@ -14,13 +14,22 @@ import { Observer } from 'rxjs';
   selector: 'app-spreadsheet',
   template: `
     <table class="spreadsheet">
-        <tr> <!-- rand cu componente ce permit selectarea si redimensionarea unei coloane -->
-            <th class="general-cell"> <!-- celula suplimentara pt. coloana cu indexul randurilor -->
+        <!-- rand cu componente ce permit selectarea si redimensionarea unei coloane -->
+        <!-- <tr>
+            <th class="general-cell">
                 <app-resizable-col-block></app-resizable-col-block>
             </th>
             <th class="general-cell" *ngFor="let currentCol of spreadsheet?.columnInfos">
                 <app-resizable-col-block></app-resizable-col-block>
             </th>
+        </tr> -->
+        <tr> <!-- rand cu denumirile de variabila a coloanelor -->
+            <td class="general-cell"> <!-- celula header goala pt. celulele de redimensionare a inaltimii liniilor -->
+                <app-resizable-row-block [rowIndex]="''"> </app-resizable-row-block>
+            </td>
+            <td class="general-cell" *ngFor="let currentCol of spreadsheet?.columnInfos; let colIndex = index">
+                <app-col-var-name [currentColInfo]="currentCol" [currentColIndex]="colIndex"></app-col-var-name>
+            </td>
         </tr>
         <tr> <!-- rand cu titlul coloanelor -->
             <td class="general-cell"> <!-- celula suplimentara pt. coloana cu indexul randurilor -->
@@ -30,14 +39,7 @@ import { Observer } from 'rxjs';
                 <app-col-title [currentColInfo]="currentCol" [currentColIndex]="colIndex"></app-col-title>
             </td>
         </tr>
-        <tr>  <!-- rand cu denumirile de variabila a coloanelor -->
-            <td class="general-cell"> <!-- celula header goala pt. celulele de redimensionare a inaltimii liniilor -->
-                <app-resizable-row-block [rowIndex]="''"> </app-resizable-row-block>
-            </td>
-            <td class="general-cell" *ngFor="let currentCol of spreadsheet?.columnInfos; let colIndex = index">
-                <app-col-var-name [currentColInfo]="currentCol" [currentColIndex]="colIndex"></app-col-var-name>
-            </td>
-        </tr>
+        <!-- randurile cu celulele de date ale spreadshet-ului -->
         <tr *ngFor="let currentRow of spreadsheet?.rows; let rowIndex = index">
             <td class="general-cell"> <app-resizable-row-block [rowIndex]="rowIndex.toString()"></app-resizable-row-block> </td>
             <td class="general-cell" *ngFor="let currentCell of currentRow.cells; let colIndex = index">
@@ -48,7 +50,7 @@ import { Observer } from 'rxjs';
     </table>
   `,
     styles: [],
-    styleUrls: ['./spreadsheet.component.scss']
+    styleUrls: ['./spreadsheet.scss']
 })
 export class SpreadsheetComponent implements OnInit
 {
@@ -82,7 +84,7 @@ export class SpreadsheetComponent implements OnInit
                 {
                     this.spreadsheet = spreadsheet;
                     this.displayedColumns = this.spreadsheet.columnInfos
-                                            .map( columnInfo =>{ return columnInfo.name; });
+                                            .map( columnInfo =>{ return columnInfo.title; });
                 });
     }
 }

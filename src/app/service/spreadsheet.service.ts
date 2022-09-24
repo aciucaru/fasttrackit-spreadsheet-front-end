@@ -5,7 +5,7 @@ import { Observable, Subject, BehaviorSubject, of, shareReplay, share } from 'rx
 import { catchError, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Cell, CellStyle } from '../model/cell';
+import { Cell, CellStyle, SelectedCellType } from '../model/cell';
 import { Row } from '../model/row';
 import { ColumnInfo, ColumnType, GeneratingMethod } from '../model/column';
 import { Spreadsheet, EditableSpreadsheet} from '../model/spreadsheet';
@@ -182,7 +182,7 @@ export class SpreadsheetService
         // adica la sirul 'columnInfos', care poate fi vazut ca sirul de coloane
         let newColumnInfo: ColumnInfo =
                                         {
-                                            name: 'New Column' + spreadsheet.generatedNewColumns,
+                                            title: 'New Column' + spreadsheet.generatedNewColumns,
                                             colType: ColumnType.STRING,
                                             genMethod: GeneratingMethod.FROM_USER_INPUT,
                                             varName: 'newCol' + spreadsheet.generatedNewColumns,
@@ -225,7 +225,7 @@ export class SpreadsheetService
         // adica la sirul 'columnInfos', care poate fi vazut ca sirul de coloane
         let newColumnInfo: ColumnInfo =
                                         {
-                                            name: "New Column" + spreadsheet.generatedNewColumns,
+                                            title: "New Column" + spreadsheet.generatedNewColumns,
                                             colType: ColumnType.STRING,
                                             genMethod: GeneratingMethod.FROM_USER_INPUT,
                                             varName: "newCol" + spreadsheet.generatedNewColumns,
@@ -487,14 +487,14 @@ export class SpreadsheetService
             columnInfos:
             [
                 {
-                    name: 'String Col',
+                    title: 'String Col',
                     colType: ColumnType.STRING,
                     genMethod:GeneratingMethod.FROM_USER_INPUT,
                     varName: 'stringCol',
                     widthPx: 70
                 },
                 {
-                    name: 'Number Col',
+                    title: 'Number Col',
                     colType: ColumnType.NUMBER,
                     genMethod:GeneratingMethod.FROM_USER_INPUT,
                     varName: 'numberCol',
@@ -518,6 +518,7 @@ export class SpreadsheetService
                   heigthPx: 20
                 }
             ],
+            selectedCellType: SelectedCellType.DATA_CELL,
             selectedCellRow: -1,
             selectedCellCol: -1,
             selectedColTitle: -1,

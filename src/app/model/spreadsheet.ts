@@ -1,4 +1,4 @@
-import { Cell } from './cell';
+import { Cell, SelectedCellType } from './cell';
 import { Row } from './row';
 import { ColumnInfo } from './column';
 
@@ -24,6 +24,8 @@ export interface EditableSpreadsheet
 
     // valori suplimentare necesare pt. editorul de spreadsheet-uri
     // aceste valori NU se trimit inapoi catre server
+
+    selectedCellType: SelectedCellType;
 
     /* variabile ce stocheaza indexii celulei selectate */
     selectedCellRow: number;

@@ -17,16 +17,15 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
         style="color:purple;" >
         {{cell?.stringValue}} </a>
 
-        <textarea class="cell-textarea"
+        <textarea class="cell-textarea" type="text" style="color:purple;" autofocus
         *ngIf="spreadsheetService.isThisCellSelected(currentRowIndex, currentColIndex)"
-        type="text" style="color:purple;" autofocus
         [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
         [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
         [(ngModel)]="cell!.stringValue" #value="ngModel" name="value"></textarea>
 
     <div>`,
   styles: [],
-  styleUrls: ['./spreadsheet.component.scss']
+  styleUrls: ['./spreadsheet.scss']
 })
 export class StringCellComponent implements OnInit
 {

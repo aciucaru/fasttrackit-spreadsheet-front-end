@@ -8,26 +8,25 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 @Component({
   selector: 'app-col-title',
   template: `
-    <div class="cell-container"
+    <div class="cell-container" class="col-title-text"
     [style.width.px]="spreadsheetService.getColWidth(currentColIndex)"
     [style.height.px]="spreadsheetService.getColTitleHeight()"
     (click)="spreadsheetService.setSelectedColTitle(currentColIndex)">
 
         <a *ngIf="!spreadsheetService.isThisColTitleSelected(currentColIndex)">
-            {{currentColInfo?.name}}
+            {{currentColInfo?.title}}
         </a>
 
-        <textarea class="cell-textarea"
+        <textarea type="text" autofocus class="cell-textarea"
             *ngIf="spreadsheetService.isThisColTitleSelected(currentColIndex)"
-            type="text" autofocus
             [style.width.px]="spreadsheetService.getColWidth(currentColIndex)"
             [style.height.px]="spreadsheetService.getColTitleHeight()"
-            [(ngModel)]="currentColInfo!.name" #value="ngModel" name="value">
+            [(ngModel)]="currentColInfo!.title" #value="ngModel" name="value">
         </textarea>
 
     <div>`,
   styles: [],
-  styleUrls: ['./spreadsheet.component.scss']
+  styleUrls: ['./spreadsheet.scss']
 })
 
 export class ColTitleComponent implements OnInit

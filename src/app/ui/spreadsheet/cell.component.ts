@@ -32,7 +32,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
         matInput [(ngModel)]="cell!.stringValue" #value="ngModel" name="value"> -->
     <div>`,
   styles: ['.main-cell-container { }'],
-  styleUrls: ['./spreadsheet.component.scss']
+  styleUrls: ['./spreadsheet.scss']
 })
 export class CellComponent implements OnInit
 {
