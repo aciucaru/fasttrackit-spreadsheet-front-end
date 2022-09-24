@@ -27,6 +27,7 @@ import { ResizableColBlockComponent } from './ui/spreadsheet/resizable-col-block
 import { ResizableRowBlockComponent } from './ui/spreadsheet/resizable-row-block.component';
 import { ColTitleComponent } from './ui/spreadsheet/col-title.component';
 import { ColVarNameComponent } from './ui/spreadsheet/col-var-name.component';
+import { RowIndexComponent } from './ui/spreadsheet/row-index.component';
 
 @NgModule({
     declarations:
@@ -43,7 +44,8 @@ import { ColVarNameComponent } from './ui/spreadsheet/col-var-name.component';
         ResizableColBlockComponent,
         ResizableRowBlockComponent,
         ColTitleComponent,
-        ColVarNameComponent
+        ColVarNameComponent,
+        RowIndexComponent
     ],
     imports:
     [

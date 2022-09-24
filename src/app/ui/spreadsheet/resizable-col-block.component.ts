@@ -12,7 +12,6 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 })
 export class ResizableColBlockComponent implements OnInit, OnDestroy
 {
-    @Input() colIndex?: number; // indexul coloanei din care face parte acest block, primit de la container
     width: number = 0; // latimea acestui component
     height: number = 0; // inaltime acestui component
     resizeObserver?: ResizeObserver; // observator al evenimetelor de tip resize ce au loc asupra acestui component

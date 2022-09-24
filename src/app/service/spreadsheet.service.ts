@@ -333,6 +333,9 @@ export class SpreadsheetService
 
         // se trimite noul spreasheet catre observatorii sai
         this.spreadsheetSubject.next(spreadsheet);
+
+        // console.log(`setRowHeight(${rowIndex}, ${height})`);
+        console.log(`setRowHeight(${rowIndex}, ${height})`);
     }
 
     getCellTypeAsString(cellColIndex: number): string
