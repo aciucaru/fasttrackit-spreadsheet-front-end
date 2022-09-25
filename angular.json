@@ -77,11 +77,6 @@
         "serve":
         {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options":
-          {
-            "browserTarget": "tema-finala-front-end:build",
-            "proxyConfig": "src/proxy.conf.js"
-          },
           "configurations":
             {
                 "production":

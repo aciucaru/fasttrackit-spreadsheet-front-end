@@ -10,15 +10,27 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     template: `
         <div class="tab-group-container">
             <div class="tab-group">
-                <button (click)="spreadsheetService.addRowAbove()">
-                    <img src="/assets/icons/insertrowbefore.png" alt="Add row above">
+                <button id="add-row-above" (click)="spreadsheetService.addRowAbove()">
+                    <img src="assets/icons/insertrowsbefore.png" alt="Add row above">
                 </button><br>
-                <button id="add-row-below" (click)="spreadsheetService.addRowBelow()">Add row below</button><br>
-                <button id="delete-row" (click)="spreadsheetService.deleteSelectedRow()">Delete row</button>
-                <button id="add-col-right" (click)="spreadsheetService.addColToRight()">Add col right</button><br>
-                <button id="add-col-left" (click)="spreadsheetService.addColToLeft()">Add col left</button><br>
-                <button id="delete-col" (click)="spreadsheetService.deleteSelectedCol()">Delete col</button>
-                <button (click)="spreadsheetService.logSpreadsheetValues()">Log table values</button>
+                <button id="add-row-below" (click)="spreadsheetService.addRowBelow()">
+                    <img src="assets/icons/insertrowsafter.png" alt="Add row below">
+                </button><br>
+                <button id="delete-row" (click)="spreadsheetService.deleteSelectedRow()">
+                    <img src="assets/icons/deleterows.png" alt="Delete row">
+                </button>
+                <button id="add-col-right" (click)="spreadsheetService.addColToRight()">
+                    <img src="assets/icons/insertcolumnsafter.png" alt="Add column right">
+                </button><br>
+                <button id="add-col-left" (click)="spreadsheetService.addColToLeft()">
+                    <img src="assets/icons/insertcolumnsbefore.png" alt="Add column left">
+                </button><br>
+                <button id="delete-col" (click)="spreadsheetService.deleteSelectedCol()">
+                    <img src="assets/icons/deletecolumns.png" alt="Delete column">
+                </button>
+                <button (click)="spreadsheetService.logSpreadsheetValues()">
+                    <img src="assets/icons/chapternumberingdialog.png" alt="Log spreadsheet">
+                </button>
             <div>
         </div>
     `,
