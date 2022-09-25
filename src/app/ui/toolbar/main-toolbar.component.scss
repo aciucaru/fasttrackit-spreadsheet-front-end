@@ -1,3 +1,16 @@
+.tab-group-container
+{
+    background-color: rgb(255, 255, 255);
+}
+
+.tab-group
+{
+    display: grid;
+    row-gap: 0px;
+    column-gap: 0px;
+    grid-template-columns: max-content max-content;
+}
+
 #add-row-above
 {
     grid-row: 1 / 2;

@@ -17,9 +17,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 import { DataCellComponent } from './ui/spreadsheet/data-cell.component';
 import { SpreadsheetComponent } from './ui/spreadsheet/spreadsheet.component';
-import { RibbonComponent } from './ui/ribbon/ribbon.component';
-import { MainTabComponent } from './ui/ribbon/main-tab.component';
-import { DebugTabComponent } from './ui/ribbon/debug-tab.component';
+import { MainToolbarComponent } from './ui/toolbar/main-toolbar.component';
 import { NumericCellComponent } from './ui/spreadsheet/numeric-cell.component';
 import { StringCellComponent } from './ui/spreadsheet/string-cell.component';
 import { BoolCellComponent } from './ui/spreadsheet/bool-cell.component';
@@ -33,9 +31,7 @@ import { TitleCellComponent } from './ui/spreadsheet/title-cell.component';
         AppComponent,
         DataCellComponent,
         SpreadsheetComponent,
-        RibbonComponent,
-        MainTabComponent,
-        DebugTabComponent,
+        MainToolbarComponent,
         NumericCellComponent,
         StringCellComponent,
         BoolCellComponent,

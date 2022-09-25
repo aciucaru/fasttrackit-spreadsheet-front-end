@@ -6,23 +6,26 @@ import { Spreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
 @Component({
-    selector: 'app-main-tab',
+    selector: 'app-main-toolbar',
     template: `
         <div class="tab-group-container">
             <div class="tab-group">
-                <button id="add-row-above" (click)="spreadsheetService.addRowAbove()">Add row above</button><br>
+                <button (click)="spreadsheetService.addRowAbove()">
+                    <img src="/assets/icons/insertrowbefore.png" alt="Add row above">
+                </button><br>
                 <button id="add-row-below" (click)="spreadsheetService.addRowBelow()">Add row below</button><br>
                 <button id="delete-row" (click)="spreadsheetService.deleteSelectedRow()">Delete row</button>
                 <button id="add-col-right" (click)="spreadsheetService.addColToRight()">Add col right</button><br>
                 <button id="add-col-left" (click)="spreadsheetService.addColToLeft()">Add col left</button><br>
                 <button id="delete-col" (click)="spreadsheetService.deleteSelectedCol()">Delete col</button>
+                <button (click)="spreadsheetService.logSpreadsheetValues()">Log table values</button>
             <div>
         </div>
     `,
     styles: [],
-    styleUrls: ['./ribbon-general.scss', './main-tab.component.scss']
+    styleUrls: ['./main-toolbar.component.scss', './buttons.scss']
 })
-export class MainTabComponent implements OnInit
+export class MainToolbarComponent implements OnInit
 {
     spreadsheet?: EditableSpreadsheet;
     

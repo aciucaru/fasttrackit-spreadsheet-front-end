@@ -20,18 +20,22 @@
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
-          "options": {
+          "options":
+          {
             "outputPath": "dist/tema-finala-front-end",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
+            "assets":
+            [
+                "src/favicon.ico",
+                "src/assets",
+                "src/assets/icons"
             ],
-            "styles": [
+            "styles":
+            [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"
             ],
@@ -70,16 +74,25 @@
           },
           "defaultConfiguration": "production"
         },
-        "serve": {
+        "serve":
+        {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "configurations": {
-            "production": {
-              "browserTarget": "tema-finala-front-end:build:production"
-            },
-            "development": {
-              "browserTarget": "tema-finala-front-end:build:development"
-            }
+          "options":
+          {
+            "browserTarget": "tema-finala-front-end:build",
+            "proxyConfig": "src/proxy.conf.js"
           },
+          "configurations":
+            {
+                "production":
+                {
+                    "browserTarget": "tema-finala-front-end:build:production"
+                },
+                "development":
+                {
+                    "browserTarget": "tema-finala-front-end:build:development"
+                }
+            },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
@@ -96,9 +109,11 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "inlineStyleLanguage": "scss",
-            "assets": [
+            "assets":
+            [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/assets/icons"
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",

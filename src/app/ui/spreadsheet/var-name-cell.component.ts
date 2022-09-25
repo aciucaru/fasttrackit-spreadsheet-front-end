@@ -4,9 +4,6 @@ import { ColumnInfo } from 'src/app/model/column';
 import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
-// [class.active]="isBeingResized"
-// [style.transform]="'translate3d('+ containerLeft + 'px,' + containerTop + 'px,' + '0px)'"
-
 @Component({
   selector: 'app-var-name-cell',
   template: `
@@ -26,7 +23,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 })
 export class VarNameCellComponent implements OnInit
 {
-    /* Component ce afiseaza titlul unei coloane.
+    /* Component ce afiseaza numele de variabila al unei coloane.
        Informatiile complete despre coloana si indexul coloanei sunt primite
        ca input de la parinte. */
 
