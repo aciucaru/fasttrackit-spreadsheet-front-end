@@ -1,0 +1,53 @@
+.resizable-container
+{
+    position: relative;
+
+    // optional:
+    // outline: 1px dashed green;
+    // &.active
+    // {
+    //     outline-style: solid;
+    //     background-color: #80ff800d;
+    // }
+}
+
+.text-content
+{
+    position: absolute;
+    overflow-x: hidden;
+    user-select: none;
+
+    left: 0%; // cu cat este impins din stanga handle-ul
+    right: 10px; // cu cat este impins din dreapta handle-ul
+    top: 0%; // cu cat este impins de sus handle-ul
+    bottom: 0%; // cu cat este impin de jos handle-ul
+
+    // optionale:
+    // border-style: solid;
+    // border-width: 1px;
+    // border-color:#0010a5;
+    // background-color: #80b5d8;
+
+    // setari pentru textul din interior
+    text-align: middle;
+    vertical-align: middle;
+    color:rgb(150, 150, 150);
+}
+
+.resize-handle
+{
+    position: absolute;
+    width: 10px; // latimea
+    right: 0%; // cu cat este impins din dreapta handle-ul
+    top: 0%; // cu cat este impins de sus handle-ul
+    bottom: 0%; // cu cat este impin de jos handle-ul
+
+    border-style: solid;
+    border-width: 1px;
+    border-color:rgb(150, 150, 150);
+    background-color: rgb(238, 238, 238);
+    &:hover, &:active 
+    {
+        cursor: col-resize;
+    }
+}

@@ -10,9 +10,9 @@ export interface Spreadsheet
     name: string;
     columnInfos: Array<ColumnInfo>;
     rows: Array<Row>;
-    indexColWidthPx: number;
-    titleRowHeightPx: number;
     varNameRowHeightPx:number;
+    titleRowHeightPx: number;
+    // indexColWidthPx: number;
 }
 
 /* Clasa ce modeleaza un Spreadsheet editabil. Aceasta clasa contine un obiect de tip 'Spreadsheet' dar

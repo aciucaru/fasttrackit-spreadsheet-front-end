@@ -16,7 +16,7 @@ import { Observer } from 'rxjs';
     <table class="spreadsheet">
         <tr> <!-- rand cu denumirile de variabila a coloanelor -->
             <td class="general-cell"> <!-- celula header goala pt. celulele de redimensionare a inaltimii liniilor -->
-                <app-resizable-row-block> </app-resizable-row-block>
+                <div></div>
             </td>
             <td class="general-cell" *ngFor="let currentCol of spreadsheet?.columnInfos; let colIndex = index">
                 <app-var-name-cell [currentColInfo]="currentCol" [currentColIndex]="colIndex"></app-var-name-cell>
@@ -24,7 +24,7 @@ import { Observer } from 'rxjs';
         </tr>
         <tr> <!-- rand cu titlul coloanelor -->
             <td class="general-cell"> <!-- celula suplimentara pt. coloana cu indexul randurilor -->
-                <app-resizable-row-block></app-resizable-row-block>
+                <div></div>
             </td>
             <td class="general-cell" *ngFor="let currentCol of spreadsheet?.columnInfos; let colIndex = index">
                 <app-title-cell [currentColInfo]="currentCol" [currentColIndex]="colIndex"></app-title-cell>

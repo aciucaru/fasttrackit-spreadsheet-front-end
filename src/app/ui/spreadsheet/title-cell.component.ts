@@ -8,16 +8,17 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 @Component({
   selector: 'app-title-cell',
   template: `
-    <div class="cell-container" class="col-title-text"
+    <div class="cell-container" class="col-title-text" style="user-select: none;"
     [style.width.px]="spreadsheetService.getColWidth(currentColIndex)"
     [style.height.px]="spreadsheetService.getTitleRowHeight()"
     (click)="spreadsheetService.setSelectedTitleCell(currentColIndex)">
 
-        <a *ngIf="!spreadsheetService.isThisTitleCellSelected(currentColIndex)">
+        <a *ngIf="!spreadsheetService.isThisTitleCellSelected(currentColIndex)"
+            style="user-select: none;">
             {{currentColInfo?.title}}
         </a>
 
-        <textarea type="text" autofocus class="cell-textarea"
+        <textarea type="text" autofocus class="cell-textarea" style="user-select: none;"
             *ngIf="spreadsheetService.isThisTitleCellSelected(currentColIndex)"
             [style.width.px]="spreadsheetService.getColWidth(currentColIndex)"
             [style.height.px]="spreadsheetService.getTitleRowHeight()"

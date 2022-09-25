@@ -567,9 +567,9 @@ export class SpreadsheetService
                   heigthPx: 20
                 }
             ],
-            indexColWidthPx: 70,
+            varNameRowHeightPx: 20,
             titleRowHeightPx: 20,
-            varNameRowHeightPx:20,
+            indexColWidthPx: 70,
 
             selectedCellType: SelectedCellType.DATA_CELL,
             selectedDataCellRow: -1,

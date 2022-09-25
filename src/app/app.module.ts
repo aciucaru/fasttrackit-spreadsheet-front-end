@@ -23,8 +23,6 @@ import { DebugTabComponent } from './ui/ribbon/debug-tab.component';
 import { NumericCellComponent } from './ui/spreadsheet/numeric-cell.component';
 import { StringCellComponent } from './ui/spreadsheet/string-cell.component';
 import { BoolCellComponent } from './ui/spreadsheet/bool-cell.component';
-import { ResizableColBlockComponent } from './ui/spreadsheet/resizable-col-block.component';
-import { ResizableRowBlockComponent } from './ui/spreadsheet/resizable-row-block.component';
 import { RowIndexComponent } from './ui/spreadsheet/row-index.component';
 import { VarNameCellComponent } from './ui/spreadsheet/var-name-cell.component';
 import { TitleCellComponent } from './ui/spreadsheet/title-cell.component';
@@ -41,8 +39,6 @@ import { TitleCellComponent } from './ui/spreadsheet/title-cell.component';
         NumericCellComponent,
         StringCellComponent,
         BoolCellComponent,
-        ResizableColBlockComponent,
-        ResizableRowBlockComponent,
         RowIndexComponent,
         VarNameCellComponent,
         TitleCellComponent
