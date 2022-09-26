@@ -7,7 +7,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
 @Component({
   selector: 'app-data-cell',
-  template:`<!-- <div [ngStyle]="{backgroundColor: cell?.style?.rgbBGColor}"> -->
+  template:`
     <div class="cell-container"
         [style.width.px]="spreadsheetService.getCellWitdh(mainCellColIndex)"
         [style.height.px]="spreadsheetService.getCellHeight(mainCellRowIndex)"
@@ -28,8 +28,6 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
             [cell]="mainCell" [currentRowIndex] = "mainCellRowIndex" [currentColIndex] = "mainCellColIndex">
             </app-bool-cell>
         </ng-container>
-        <!-- <input *ngSwitchDefault style="color:black;"
-        matInput [(ngModel)]="cell!.stringValue" #value="ngModel" name="value"> -->
     <div>`,
   styles: ['.main-cell-container { }'],
   styleUrls: ['./spreadsheet.scss']

@@ -5,6 +5,8 @@ import { Observable, Subject, BehaviorSubject, of, shareReplay, share } from 'rx
 import { catchError, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import * as mathjs from "mathjs";
+
 import { Cell, CellStyle, SelectedCellType } from '../model/cell';
 import { Row } from '../model/row';
 import { ColumnInfo, ColumnType, GeneratingMethod } from '../model/column';

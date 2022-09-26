@@ -10,9 +10,9 @@ export interface Spreadsheet
     name: string;
     columnInfos: Array<ColumnInfo>;
     rows: Array<Row>;
-    varNameRowHeightPx:number;
+    varNameRowHeightPx: number;
     titleRowHeightPx: number;
-    // indexColWidthPx: number;
+    indexColWidthPx: number;
 }
 
 /* Clasa ce modeleaza un Spreadsheet editabil. Aceasta clasa contine un obiect de tip 'Spreadsheet' dar
@@ -24,10 +24,9 @@ export interface EditableSpreadsheet
     name: string;
     columnInfos: Array<ColumnInfo>;
     rows: Array<Row>;
-    indexColWidthPx: number;
+    varNameRowHeightPx: number;
     titleRowHeightPx: number;
-    varNameRowHeightPx:number;
-
+    indexColWidthPx: number;
 
     // ********** valori suplimentare necesare pt. editorul de spreadsheet-uri ***********
     // aceste valori NU se trimit inapoi catre server
