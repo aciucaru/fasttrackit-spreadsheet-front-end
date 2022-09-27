@@ -1,9 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-main-ui',
-  template: `
-    <app-main-toolbar></app-main-toolbar>
+    selector: 'app-main-ui',
+    template: `
+    <div class="main-ui">
+        <app-main-toolbar id="main-toolbar"></app-main-toolbar>
+        <app-navigator id="navigator"></app-navigator>
+        <app-spreadsheet id="spreadsheet"></app-spreadsheet>
+        <app-column-editor id="column-editor"></app-column-editor>
+    <div>
+
+    <!-- <app-main-toolbar></app-main-toolbar>
     <div class="horizontal-splitter">
         <div class="left-split-section">
             <app-navigator></app-navigator>
@@ -14,12 +21,13 @@ import { Component, OnInit } from '@angular/core';
                     <app-spreadsheet></app-spreadsheet>
                 </div>
                 <div class="bottom-split-section">
-                    <app-col-details></app-col-details>
+                    <app-column-editor></app-column-editor>
                 </div>
         </div>
-    </div>
-  `,
-  styles: []
+    </div> -->
+    `,
+    styles: [],
+    styleUrls: ['./main-ui.component.scss']
 })
 export class MainUiComponent implements OnInit
 {

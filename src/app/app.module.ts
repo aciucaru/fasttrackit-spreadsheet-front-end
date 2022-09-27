@@ -24,9 +24,9 @@ import { BoolCellComponent } from './ui/spreadsheet/bool-cell.component';
 import { RowIndexComponent } from './ui/spreadsheet/row-index.component';
 import { VarNameCellComponent } from './ui/spreadsheet/var-name-cell.component';
 import { TitleCellComponent } from './ui/spreadsheet/title-cell.component';
-import { ColDetailsComponent } from './ui/column-details/col-details.component';
-import { MainUiComponent } from './ui/main-ui.component';
 import { NavigatorComponent } from './ui/panels/navigator.component';
+import { ColumnEditorComponent } from './ui/panels/column-editor.component';
+import { MainUiComponent } from './ui/main/main-ui.component';
 
 @NgModule({
     declarations:
@@ -41,9 +41,9 @@ import { NavigatorComponent } from './ui/panels/navigator.component';
         RowIndexComponent,
         VarNameCellComponent,
         TitleCellComponent,
-        ColDetailsComponent,
-        MainUiComponent,
-        NavigatorComponent
+        NavigatorComponent,
+        ColumnEditorComponent,
+        MainUiComponent
     ],
     imports:
     [

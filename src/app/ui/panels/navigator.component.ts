@@ -1,37 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
-import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
-import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
-
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-navigator',
-  template: `
-    <p>
-      navigator works!
-    </p>
-  `,
-  styles: []
+    selector: 'app-navigator',
+    template: `
+        <div class="navigator">Navigator</div>
+    `,
+    styles: [],
+    styleUrls: ['./navigator.component.scss']
 })
-export class NavigatorComponent implements OnInit
-{
-    private spreadsheet?: EditableSpreadsheet;
+export class NavigatorComponent implements OnInit {
 
-    constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute)
-    { }
+  constructor() { }
 
-    ngOnInit(): void
-    {
-        this.subscribeAsSpreadsheetObserver();
-    }
+  ngOnInit(): void {
+  }
 
-    subscribeAsSpreadsheetObserver(): void
-    {
-        this.spreadsheetService
-            .getSpreadsheetSubject()
-            .subscribe((spreadsheet: EditableSpreadsheet) =>
-                            { this.spreadsheet = spreadsheet; }
-                        );
-    }
 }

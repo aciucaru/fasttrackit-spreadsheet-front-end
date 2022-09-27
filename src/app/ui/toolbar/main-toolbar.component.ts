@@ -8,34 +8,46 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 @Component({
     selector: 'app-main-toolbar',
     template: `
-        <div class="tab-group-container">
-            <div class="tab-group">
-                <button id="add-row-above" (click)="spreadsheetService.addRowAbove()">
+        <div class="toolbar">
+
+        <!-- Rows and cols group -->
+            <div class="group">
+                <button id="add-row-above" class="toolbar-button" title="Add row above"
+                    (click)="spreadsheetService.addRowAbove()">
                     <img src="assets/icons/insertrowsbefore.png" alt="Add row above">
-                </button><br>
-                <button id="add-row-below" (click)="spreadsheetService.addRowBelow()">
+                </button>
+                <button id="add-row-below" class="toolbar-button" title="Add row below"
+                    (click)="spreadsheetService.addRowBelow()">
                     <img src="assets/icons/insertrowsafter.png" alt="Add row below">
-                </button><br>
-                <button id="delete-row" (click)="spreadsheetService.deleteSelectedRow()">
+                </button>
+                <button id="delete-row" class="toolbar-button" title="Delete row"
+                    (click)="spreadsheetService.deleteSelectedRow()">
                     <img src="assets/icons/deleterows.png" alt="Delete row">
                 </button>
-                <button id="add-col-right" (click)="spreadsheetService.addColToRight()">
+                <button id="add-col-right" class="toolbar-button" title="Add column right"
+                    (click)="spreadsheetService.addColToRight()">
                     <img src="assets/icons/insertcolumnsafter.png" alt="Add column right">
-                </button><br>
-                <button id="add-col-left" (click)="spreadsheetService.addColToLeft()">
+                </button>
+                <button id="add-col-left" class="toolbar-button" title="Add column left"
+                    (click)="spreadsheetService.addColToLeft()">
                     <img src="assets/icons/insertcolumnsbefore.png" alt="Add column left">
-                </button><br>
-                <button id="delete-col" (click)="spreadsheetService.deleteSelectedCol()">
+                </button>
+                <button id="delete-col" class="toolbar-button" title="Delete column"
+                    (click)="spreadsheetService.deleteSelectedCol()">
                     <img src="assets/icons/deletecolumns.png" alt="Delete column">
                 </button>
-                <button (click)="spreadsheetService.logSpreadsheetValues()">
+                <div class="group-label">Rows and cols</div>
+                <!-- <button class="toolbar-button"
+                    (click)="spreadsheetService.logSpreadsheetValues()">
                     <img src="assets/icons/chapternumberingdialog.png" alt="Log spreadsheet">
-                </button>
-            <div>
+                </button> -->
+            </div>
+
+            
         </div>
     `,
     styles: [],
-    styleUrls: ['./main-toolbar.component.scss', './buttons.scss']
+    styleUrls: ['./toolbar-general.scss', './rows-and-cols-group.scss']
 })
 export class MainToolbarComponent implements OnInit
 {

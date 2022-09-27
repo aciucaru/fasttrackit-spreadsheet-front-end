@@ -107,7 +107,7 @@ export class RowIndexComponent implements OnInit
 
     private resize()
     {
-        if(this.containerPos.top < this.mouse.y-10 && this.mouse.y < this.containerPos.bottom)
+        if(this.containerPos.top < this.mouse.y-10 && this.mouse.y < 1000)
         {
             if(this.mouse.y > this.boxPosition.top)
             {
