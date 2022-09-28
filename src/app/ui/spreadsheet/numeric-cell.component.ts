@@ -9,18 +9,19 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     selector: 'app-numeric-cell',
     template: `
     <div class="cell-container"
-    [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
-    [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
-    (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)">
+    (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)"
+    [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)">
 
-        <a style="color:blue;" *ngIf="!spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)">
-        {{cell?.numberValue}} </a>
+        <div *ngIf="!spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)"
+            [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
+            style="color:blue;">
+            {{cell?.numberValue}}
+        </div>
 
         <input type="number" style="color:blue;"
         *ngIf="spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)"
-        [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
-        [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
-        [(ngModel)]="cell!.numberValue" #value="ngModel" name="value">
+        [(ngModel)]="cell!.numberValue" #value="ngModel" name="value"
+        [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)">
     <div>`,
     styles: [],
     styleUrls: ['./spreadsheet.scss']

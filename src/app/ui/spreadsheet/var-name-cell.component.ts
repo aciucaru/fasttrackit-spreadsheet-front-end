@@ -62,7 +62,13 @@ export class VarNameCellComponent implements OnInit
     ngAfterViewInit()
     {
         this.loadBox();
-        this.loadContainer();
+        
+        // load container
+        const left = this.boxPosition.left - this.containerLeft;
+        const top = this.boxPosition.top - this.containerTop;
+        const right = left + 100;
+        const bottom = top + 25;
+        this.containerPos = { left, top, right, bottom };
     }
 
     subscribeAsSpreadsheetObserver(): void
@@ -80,14 +86,14 @@ export class VarNameCellComponent implements OnInit
         this.boxPosition = {left, top};
     }
     
-    private loadContainer()
-    {
-        const left = this.boxPosition.left - this.containerLeft;
-        const top = this.boxPosition.top - this.containerTop;
-        const right = left + 100;
-        const bottom = top + 25;
-        this.containerPos = { left, top, right, bottom };
-    }
+    // private loadContainer()
+    // {
+    //     const left = this.boxPosition.left - this.containerLeft;
+    //     const top = this.boxPosition.top - this.containerTop;
+    //     const right = left + 100;
+    //     const bottom = top + 25;
+    //     this.containerPos = { left, top, right, bottom };
+    // }
     
 
     setStatus(event: MouseEvent, isBeingResized: boolean)

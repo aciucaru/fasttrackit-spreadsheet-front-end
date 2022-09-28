@@ -44,6 +44,9 @@ export interface EditableSpreadsheet
     // (aceste celule afiseaza numele de variabila al unei coloane)
     selectedVarNameCellCol: number;
 
+    // stocheaza indexul coloanei corespunzatoare celulei selectate (indiferent de tipul celulei)
+    currentOnFocusCol: number;
+
     /* variabila ce stocheaza cate coloane noi au fost create, ca fiecare coloana noua
        sa aiba un nume diferit de cele adaugata pana atunci si, mai ales, sa aiba un nume de
        variabila unic (numele de variabila al unei coloane este folosit in formule si trebuie

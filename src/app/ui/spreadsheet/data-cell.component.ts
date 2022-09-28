@@ -10,7 +10,6 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
   template:`
     <div class="cell-container"
         [style.width.px]="spreadsheetService.getCellWitdh(mainCellColIndex)"
-        [style.height.px]="spreadsheetService.getCellHeight(mainCellRowIndex)"
         [style.background-color]="mainCell?.style?.rgbBGColor"
         [style.color]="mainCell?.style?.rgbFGColor"
         [style.font-family]="mainCell?.style?.font">

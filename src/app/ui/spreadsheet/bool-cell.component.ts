@@ -9,9 +9,8 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
   selector: 'app-bool-cell',
   template: `
     <div class="cell-container"
-    [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
-    [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
-    (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)">
+    (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)"
+    [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)">
 
         <input type ="checkbox" style="color:green;"
         [(ngModel)]="cell!.boolValue" #value="ngModel" name="value">

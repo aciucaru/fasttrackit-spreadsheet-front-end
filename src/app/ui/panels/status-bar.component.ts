@@ -4,26 +4,13 @@ import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
 @Component({
-    selector: 'app-column-editor',
-    template: `
-    <as-split direction="horizontal">
-        <as-split-area [size]="15">
-            <app-column-info></app-column-info>
-        </as-split-area>
-
-        <as-split-area [size]="60">
-            <div class="formula-editor">Formula editor</div>   
-        </as-split-area>
-
-        <as-split-area [size]="25">
-            <div class="formula-errors">Formula errors</div>
-        </as-split-area>
-    </as-split>
-    `,
-    styles: [],
-    styleUrls: ['./column-editor.component.scss']
+  selector: 'app-status-bar',
+  template: `
+    <div>Status bar</div>
+  `,
+  styles: []
 })
-export class ColumnEditorComponent implements OnInit
+export class StatusBarComponent implements OnInit
 {
     // indexul coloanei curente din care face parte acest component, 
     // indexul este primit de la service

@@ -312,6 +312,10 @@ export class SpreadsheetService
             // se stocheaza indexii ceulei de date selectate
             spreadsheet.selectedDataCellRow = rowIndex;
             spreadsheet.selectedDataCellCol = colIndex;
+
+            // se stocheaza indexul coloanei ce contine celula selectata
+            spreadsheet.currentOnFocusCol = colIndex;
+
             this.spreadsheetSubject.next(spreadsheet);
         }
         // console.log(`celula apasata: linie: ${rowIndex}, col: ${colIndex}`);
@@ -331,6 +335,10 @@ export class SpreadsheetService
             spreadsheet.selectedCellType = SelectedCellType.TITLE_CELL;
 
             spreadsheet.selectedTitleCellCol = colIndex; // se seteaza valoarea
+
+            // se stocheaza indexul coloanei ce contine celula selectata
+            spreadsheet.currentOnFocusCol = colIndex;
+            
             this.spreadsheetSubject.next(spreadsheet); // se emite noul spreadsheet
         }
         console.log('selected col title:' + colIndex);
@@ -349,6 +357,10 @@ export class SpreadsheetService
             spreadsheet.selectedCellType = SelectedCellType.VAR_NAME_CELL;
 
             spreadsheet.selectedVarNameCellCol = colIndex; // se seteaza valoarea
+
+            // se stocheaza indexul coloanei ce contine celula selectata
+            spreadsheet.currentOnFocusCol = colIndex;
+
             this.spreadsheetSubject.next(spreadsheet); // se emite noul spreadsheet
         }
     }
@@ -452,6 +464,15 @@ export class SpreadsheetService
 
     // metoda ce returneaza inaltimea celulelor ce reprezinta numele de variabila ale coloanelor
     getVarNameRowHeight(): number
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        // return spreadsheet.colVarNameHeightPx;
+        return spreadsheet.varNameRowHeightPx;
+    }
+
+    getCurrentOnFocusColumn(): number
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
@@ -578,7 +599,8 @@ export class SpreadsheetService
             selectedDataCellCol: -1,
             selectedTitleCellCol: -1,
             selectedVarNameCellCol: -1,
-            generatedNewColumns: 0
+            generatedNewColumns: 0,
+            currentOnFocusCol: -1
         };
         return spreadsheet;
     }

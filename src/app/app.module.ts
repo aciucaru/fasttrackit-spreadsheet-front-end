@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CommonModule } from '@angular/common';
 
-
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 // import { CdkTableModule } from '@angular/cdk/table';
@@ -13,7 +12,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSelectModule } from '@angular/material/select';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { AngularSplitModule } from 'angular-split';
 
 import { DataCellComponent } from './ui/spreadsheet/data-cell.component';
 import { SpreadsheetComponent } from './ui/spreadsheet/spreadsheet.component';
@@ -27,6 +29,8 @@ import { TitleCellComponent } from './ui/spreadsheet/title-cell.component';
 import { NavigatorComponent } from './ui/panels/navigator.component';
 import { ColumnEditorComponent } from './ui/panels/column-editor.component';
 import { MainUiComponent } from './ui/main/main-ui.component';
+import { StatusBarComponent } from './ui/panels/status-bar.component';
+import { ColumnInfoComponent } from './ui/panels/column-info.component';
 
 @NgModule({
     declarations:
@@ -43,7 +47,9 @@ import { MainUiComponent } from './ui/main/main-ui.component';
         TitleCellComponent,
         NavigatorComponent,
         ColumnEditorComponent,
-        MainUiComponent
+        MainUiComponent,
+        StatusBarComponent,
+        ColumnInfoComponent
     ],
     imports:
     [
@@ -59,9 +65,12 @@ import { MainUiComponent } from './ui/main/main-ui.component';
         MatFormFieldModule,
         MatInputModule,
         MatTableModule,
-        MatTabsModule
+        MatTabsModule,
+        MatSelectModule,
+
+        AngularSplitModule
     ],
     providers: [],
-    bootstrap: [AppComponent]
+    bootstrap: [ AppComponent ]
 })
 export class AppModule { }

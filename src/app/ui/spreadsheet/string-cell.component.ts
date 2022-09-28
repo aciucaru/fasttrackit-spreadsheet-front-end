@@ -5,23 +5,24 @@ import { Cell } from 'src/app/model/cell';
 import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
+// [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
 @Component({
   selector: 'app-string-cell',
   template: `
     <div class="cell-container"
-    [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
-    [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
-    (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)">
+    (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)"
+    [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)">
 
-        <a *ngIf="!spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)"
-        style="color:purple;" >
-        {{cell?.stringValue}} </a>
+        <div *ngIf="!spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)"
+            [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
+            style="color:purple;">
+            {{cell?.stringValue}}
+        </div>
 
-        <textarea class="cell-textarea" type="text" style="color:purple;" autofocus
+        <textarea class="cell-textarea" type="text" style="color:purple;"
         *ngIf="spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)"
-        [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
-        [style.height.px]="spreadsheetService.getCellHeight(currentRowIndex)"
-        [(ngModel)]="cell!.stringValue" #value="ngModel" name="value"></textarea>
+        [(ngModel)]="cell!.stringValue" #value="ngModel" name="value"
+        [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"></textarea>
 
     <div>`,
   styles: [],
