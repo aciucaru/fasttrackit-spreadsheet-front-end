@@ -4,13 +4,14 @@ import { ColumnInfo } from 'src/app/model/column';
 import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
+// [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
 @Component({
   selector: 'app-var-name-cell',
   template: `
     <div #varNameCell class="resizable-container"
         (click)="spreadsheetService.setSelectedVarNameCell(currentColIndex)"
-        [style.width.px]="containerWidth" 
-        [style.height.px]="containerHeight" 
+        [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
+        [style.height.px]="spreadsheetService.getVarNameRowHeight()"
         (window:mouseup)="setStatus($event, false)">
 
         <div class="text-content">
@@ -62,7 +63,7 @@ export class VarNameCellComponent implements OnInit
     ngAfterViewInit()
     {
         this.loadBox();
-        
+
         // load container
         const left = this.boxPosition.left - this.containerLeft;
         const top = this.boxPosition.top - this.containerTop;
@@ -86,16 +87,6 @@ export class VarNameCellComponent implements OnInit
         this.boxPosition = {left, top};
     }
     
-    // private loadContainer()
-    // {
-    //     const left = this.boxPosition.left - this.containerLeft;
-    //     const top = this.boxPosition.top - this.containerTop;
-    //     const right = left + 100;
-    //     const bottom = top + 25;
-    //     this.containerPos = { left, top, right, bottom };
-    // }
-    
-
     setStatus(event: MouseEvent, isBeingResized: boolean)
     {
         if(isBeingResized === true)

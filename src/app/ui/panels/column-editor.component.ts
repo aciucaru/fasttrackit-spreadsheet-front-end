@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+
+import { CodeModel } from '@ngstack/code-editor';
+// import { CodeEditorModule } from '@ngstack/code-editor';
+// import * as fs from 'fs';
+
 import { ColumnInfo } from 'src/app/model/column';
 import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
@@ -12,7 +17,13 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
         </as-split-area>
 
         <as-split-area [size]="60">
-            <div class="formula-editor">Formula editor</div>   
+            <!-- <div class="formula-editor">Formula editor</div>    -->
+            <ngs-code-editor
+                [theme]="theme"
+                [codeModel]="codeModel"
+                [options]="options"
+                (valueChanged)="onCodeChanged($event)">
+            </ngs-code-editor>
         </as-split-area>
 
         <as-split-area [size]="25">
@@ -55,5 +66,37 @@ export class ColumnEditorComponent implements OnInit
                                 this.currentColInfo = spreadsheet.columnInfos[this.currentColIndex];
                             }
                         );
+    }
+
+
+    // pentru editorul de cod:
+    theme = 'vs';
+
+    codeModel: CodeModel =
+    {
+        language: 'typescript',
+        uri: 'main.ts',
+        value: ''
+        // dependencies: ['@types/node', '@ngstack/translate', '@ngstack/code-editor']
+      };
+
+    // CodeModel
+    // {
+    //     language: string;
+    //     value: string;
+    //     uri: string;
+    //     dependencies?: Array<string>;
+    //     schemas?: Array<{ uri: string; schema: Object; }>;
+    // }
+  
+    options =
+    {
+      contextmenu: true,
+      minimap: { enabled: false }
+    };
+  
+    onCodeChanged(value: any)
+    {
+      console.log('CODE', value);
     }
 }

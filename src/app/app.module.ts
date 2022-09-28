@@ -16,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AngularSplitModule } from 'angular-split';
+import { CodeEditorModule } from '@ngstack/code-editor';
 
 import { DataCellComponent } from './ui/spreadsheet/data-cell.component';
 import { SpreadsheetComponent } from './ui/spreadsheet/spreadsheet.component';
@@ -68,7 +69,8 @@ import { ColumnInfoComponent } from './ui/panels/column-info.component';
         MatTabsModule,
         MatSelectModule,
 
-        AngularSplitModule
+        AngularSplitModule,
+        CodeEditorModule.forRoot()
     ],
     providers: [],
     bootstrap: [ AppComponent ]
