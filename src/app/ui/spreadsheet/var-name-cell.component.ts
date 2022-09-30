@@ -5,13 +5,15 @@ import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
 // [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
+// [style.height.px]="spreadsheetService.getGeneralRowHeight()"
 @Component({
   selector: 'app-var-name-cell',
   template: `
     <div #varNameCell class="resizable-container"
         (click)="spreadsheetService.setSelectedVarNameCell(currentColIndex)"
         [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
-        [style.height.px]="spreadsheetService.getVarNameRowHeight()"
+        [style.height.px]="spreadsheet?.generalRowHeightPx"
+        [class.active]="isBeingResized"
         (window:mouseup)="setStatus($event, false)">
 
         <div class="text-content">
@@ -36,7 +38,7 @@ export class VarNameCellComponent implements OnInit
     @Input() public currentColIndex: number = -1;
 
     // referinta catre spreadsheet-ul curent
-    private spreadsheet?: EditableSpreadsheet;
+    protected spreadsheet?: EditableSpreadsheet;
 
     @ViewChild("varNameCell") public varNameCell?: ElementRef;
 

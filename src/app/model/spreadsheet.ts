@@ -10,8 +10,6 @@ export interface Spreadsheet
     name: string;
     columnInfos: Array<ColumnInfo>;
     rows: Array<Row>;
-    varNameRowHeightPx: number;
-    titleRowHeightPx: number;
     indexColWidthPx: number;
 }
 
@@ -24,7 +22,7 @@ export interface EditableSpreadsheet
     name: string;
     columnInfos: Array<ColumnInfo>;
     rows: Array<Row>;
-    varNameRowHeightPx: number;
+    generalRowHeightPx: number;
     titleRowHeightPx: number;
     indexColWidthPx: number;
 

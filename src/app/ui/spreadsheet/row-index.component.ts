@@ -5,10 +5,9 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 @Component({
   selector: 'app-row-index',
   template: `
-    <div #rowIndexCell class="resizable-container" 
+    <!-- <div #rowIndexCell class="resizable-container" 
       [style.width.px]="containerWidth" 
       [style.height.px]="containerHeight" 
-      [style.transform]="'translate3d('+ containerLeft + 'px,' + containerTop + 'px,' + '0px)'"
       [class.active]="isBeingResized"
       (window:mouseup)="setStatus($event, false)">
 
@@ -16,6 +15,16 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
             <a class="row-index">{{this.rowIndex}}</a>
         </div>
         <div class="resize-handle" (mousedown)="setStatus($event, true)"></div>
+    </div> -->
+
+    <div #rowIndexCell class="resizable-container" 
+      [style.width.px]="containerWidth" 
+      [style.height.px]="containerHeight" 
+      [class.active]="isBeingResized"
+      (window:mouseup)="setStatus($event, false)">
+
+        <a class="row-index">{{this.rowIndex}}</a>
+
     </div>
   `,
     styles: [],
@@ -67,7 +76,7 @@ export class RowIndexComponent implements OnInit
 
     setNewHeight(height: number): void
     {
-        this.spreadsheetService.setRowHeight(this.rowIndex, this.containerHeight);
+        // this.spreadsheetService.setRowHeight(this.rowIndex, this.containerHeight);
         console.log('data row resize');
     }
 
@@ -112,7 +121,7 @@ export class RowIndexComponent implements OnInit
             if(this.mouse.y > this.boxPosition.top)
             {
                 this.containerHeight = this.mouse.y - this.boxPosition.top;
-                this.spreadsheetService.setRowHeight(this.rowIndex, this.containerHeight);
+                // this.spreadsheetService.setRowHeight(this.rowIndex, this.containerHeight);
                 console.log('redimensionare linie');
             }
             else

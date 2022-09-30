@@ -40,8 +40,8 @@ export class SpreadsheetService
                                             columnInfos: spreadsheet.columnInfos,
                                             rows: spreadsheet.rows,
                                             indexColWidthPx: 70,
+                                            generalRowHeightPx: 20,
                                             titleRowHeightPx: 20,
-                                            varNameRowHeightPx:20,
 
                                             selectedDataCellRow: -1,
                                             selectedDataCellCol: -1,
@@ -123,14 +123,14 @@ export class SpreadsheetService
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
-        let newRow: Row = {cells: [], heigthPx: 20};
+        let newRow: Row = {cells: []};
         let currentNewCell: Cell;
 
         // pentru fiecare coloana
         for(let columnInfo of spreadsheet.columnInfos)
         {
             // se creeaza o noua celula
-            currentNewCell = { stringValue: 'abc', numberValue: 0, boolValue: false, style: this.getDummyCellStyle() };
+            currentNewCell = { stringValue: 'abc', numberValue: 0, boolValue: false, style: this.getDefaultCellStyle() };
  
             // celula respectiva se adauga la linia (randul) initial goala
             // in felul acesta, linia se umple treptat cu celule si se formeaza o linie completa
@@ -155,14 +155,14 @@ export class SpreadsheetService
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
-        let newRow: Row = {cells: [], heigthPx: 20};
+        let newRow: Row = {cells: []};
         let currentNewCell: Cell;
         
         // pentru fiecare coloana
         for(let columnInfo of spreadsheet.columnInfos)
         {
             // se creeaza o noua celula
-            currentNewCell = { stringValue: 'abc', numberValue:0, boolValue: false, style: this.getDummyCellStyle() };
+            currentNewCell = { stringValue: 'abc', numberValue:0, boolValue: false, style: this.getDefaultCellStyle() };
 
             // celula respectiva se adauga la linia (randul) initial goala
             // in felul acesta, linia se umple treptat cu celule si se formeaza o linie completa
@@ -199,7 +199,7 @@ export class SpreadsheetService
         for(let currentRow of spreadsheet.rows)
         {
             // se creeaza o noua celula de tip STRING (acesta este tipul default al spreadsheet-ului)
-            currentNewCell = { stringValue: 'abc', numberValue: 0, boolValue: false, style: this.getDummyCellStyle() };
+            currentNewCell = { stringValue: 'abc', numberValue: 0, boolValue: false, style: this.getDefaultCellStyle() };
 
             // se dauga noua celula la linia curenta
             // aici splice() se foloseste pt. a adauga la sir (nu pentru a sterge)
@@ -242,7 +242,7 @@ export class SpreadsheetService
         for(let currentRow of spreadsheet.rows)
         {
             // se creeaza o noua celula de tip STRING (acesta este tipul default al spreadsheet-ului)
-            currentNewCell = { stringValue: 'abc', numberValue: 0, boolValue: false, style: this.getDummyCellStyle() };
+            currentNewCell = { stringValue: 'abc', numberValue: 0, boolValue: false, style: this.getDefaultCellStyle() };
 
             // se dauga noua celula la linia curenta
             // aici splice() se foloseste pt. a adauga la sir (nu pentru a sterge)
@@ -381,20 +381,20 @@ export class SpreadsheetService
     }
 
     // metoda ce modifica latimea tuturor celulelor liniei de index 'rowIndex'
-    setRowHeight(rowIndex: number, height: number): void
-    {
-        // se ia spreadsheet-ul curent
-        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+    // setRowHeight(rowIndex: number, height: number): void
+    // {
+    //     // se ia spreadsheet-ul curent
+    //     let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
 
-        // se schimba inaltimea liniei de index 'rowIndex'
-        spreadsheet.rows[rowIndex].heigthPx = height;
+    //     // se schimba inaltimea liniei de index 'rowIndex'
+    //     spreadsheet.rows[rowIndex].heigthPx = height;
 
-        // se trimite noul spreasheet catre observatorii sai
-        this.spreadsheetSubject.next(spreadsheet);
+    //     // se trimite noul spreasheet catre observatorii sai
+    //     this.spreadsheetSubject.next(spreadsheet);
 
-        // console.log(`setRowHeight(${rowIndex}, ${height})`);
-        console.log(`setRowHeight(${rowIndex}, ${height})`);
-    }
+    //     // console.log(`setRowHeight(${rowIndex}, ${height})`);
+    //     console.log(`setRowHeight(${rowIndex}, ${height})`);
+    // }
 
     getCellTypeAsString(cellColIndex: number): string
     {
@@ -428,13 +428,15 @@ export class SpreadsheetService
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
-        if(cellRowIndex >= 0)
-            return spreadsheet.rows[cellRowIndex].heigthPx;
-        else
-        {
-            console.log('warning: SpreadsheetService.getCellHeight(): illegal index');
-            return 100;
-        }
+        // if(cellRowIndex >= 0)
+        //     return spreadsheet.rows[cellRowIndex].heigthPx;
+        // else
+        // {
+        //     console.log('warning: SpreadsheetService.getCellHeight(): illegal index');
+        //     return 100;
+        // }
+
+        return spreadsheet.generalRowHeightPx;
     }
 
     getColWidth(colIndex: number): number
@@ -451,6 +453,15 @@ export class SpreadsheetService
         }
     }
 
+    // metoda ce returneaza inaltimea celulelor ce reprezinta titlul coloanelor
+    getGeneralRowHeight(): number
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        // return spreadsheet.colTitleHeightPx;
+        return spreadsheet.generalRowHeightPx;
+    }
 
     // metoda ce returneaza inaltimea celulelor ce reprezinta titlul coloanelor
     getTitleRowHeight(): number
@@ -463,22 +474,21 @@ export class SpreadsheetService
     }
 
     // metoda ce returneaza inaltimea celulelor ce reprezinta numele de variabila ale coloanelor
-    getVarNameRowHeight(): number
-    {
-        // se ia spreadsheet-ul curent
-        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+    // getVarNameRowHeight(): number
+    // {
+    //     // se ia spreadsheet-ul curent
+    //     let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
-        // return spreadsheet.colVarNameHeightPx;
-        return spreadsheet.varNameRowHeightPx;
-    }
+    //     // return spreadsheet.colVarNameHeightPx;
+    //     return spreadsheet.varNameRowHeightPx;
+    // }
 
     getCurrentOnFocusColumn(): number
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
-        // return spreadsheet.colVarNameHeightPx;
-        return spreadsheet.varNameRowHeightPx;
+        return spreadsheet.currentOnFocusCol;
     }
 
     // ****************** metode auxiliare sau de debugging ***************************
@@ -577,20 +587,18 @@ export class SpreadsheetService
             [
                 { cells:
                     [
-                        {stringValue: "abc", numberValue: 100, boolValue: false, style: this.getDummyCellStyle()},
-                        {stringValue: "def", numberValue: 200, boolValue: false, style: this.getDummyCellStyle()}
-                    ],
-                 heigthPx: 20
+                        {stringValue: "abc", numberValue: 100, boolValue: false, style: this.getDefaultCellStyle()},
+                        {stringValue: "def", numberValue: 200, boolValue: false, style: this.getDefaultCellStyle()}
+                    ]
                 },
                 { cells:
                     [
-                        {stringValue: "ghi", numberValue: 300, boolValue: true, style: this.getDummyCellStyle()},
-                        {stringValue: "jkl", numberValue: 400, boolValue: false, style: this.getDummyCellStyle()}
-                    ],
-                  heigthPx: 20
+                        {stringValue: "ghi", numberValue: 300, boolValue: true, style: this.getDefaultCellStyle()},
+                        {stringValue: "jkl", numberValue: 400, boolValue: false, style: this.getDefaultCellStyle()}
+                    ]
                 }
             ],
-            varNameRowHeightPx: 20,
+            generalRowHeightPx: 20,
             titleRowHeightPx: 20,
             indexColWidthPx: 70,
 
@@ -605,27 +613,17 @@ export class SpreadsheetService
         return spreadsheet;
     }
 
-    private getDummyCellStyle(): CellStyle
+    private getDefaultCellStyle(): CellStyle
     {
         let cellStyle: CellStyle =
         {
-            hasBGColor: false,
             rgbBGColor: '#ffffff',
-    
-            hasFGColor: false,
             rgbFGColor: '#000000',
-    
-            hasFont: false,
-            font: "Arial, sans-serif",
-    
-            isBold: false,
-            isItalic: false,
-    
-            hasBorderColor: false,
             borderColor: '#000000',
     
-            hasBorderThickness: false,
-            borderThickness: 1
+            font: "Arial, sans-serif",
+            isBold: false,
+            isItalic: false,
         };
 
         return cellStyle;
