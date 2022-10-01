@@ -14,7 +14,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
         <div class="col-info-label">Data type:</div>
         <select #typeSelect class="col-info-select"
-            (change)="someMethod(typeSelect.value)">
+            (change)="changeColumnType(typeSelect.value)">
             <option *ngFor="let currentType of availableDataTypes">
                 {{currentType}}
             </option>
@@ -22,7 +22,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
         <div class="col-info-label">Generation method:</div>
         <select #genMethodSelect class="col-info-select"
-            (change)="someMethod(genMethodSelect.value)">
+            (change)="changeColumnGenMethod(genMethodSelect.value)">
             <option *ngFor="let currentGenMethod of availableGenMethods">
                 {{currentGenMethod}}
             </option>
@@ -39,7 +39,7 @@ export class ColumnInfoComponent implements OnInit
 
     // indexul coloanei curente din care face parte acest component, 
     // indexul este primit de la service
-    protected currentColIndex: number = 0;
+    protected currentColIndex: number = -1;
 
     // informatiile coloanei curente, primita de la sevice
     protected currentColInfo?: ColumnInfo;
@@ -72,8 +72,27 @@ export class ColumnInfoComponent implements OnInit
                         );
     }
 
-    someMethod(selection: string): void
+    changeColumnType(selection: string): void
     {
-        console.log('selection: ' + selection);
+        console.log('new type: ' + selection);
+        switch(selection)
+        {
+            case 'BOOL':
+                this.spreadsheetService.setColumType(ColumnType.BOOL);
+                break;
+
+            case 'NUMBER':
+                this.spreadsheetService.setColumType(ColumnType.NUMBER);
+                break;
+
+            case 'STRING':
+                this.spreadsheetService.setColumType(ColumnType.STRING);
+                break;
+        }
+    }
+
+    changeColumnGenMethod(selection: string): void
+    {
+        console.log('new gen method: ' + selection);
     }
 }

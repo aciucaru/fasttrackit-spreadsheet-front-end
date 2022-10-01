@@ -83,7 +83,7 @@ export class MainToolbarComponent implements OnInit
 {
     spreadsheet?: EditableSpreadsheet;
     
-    constructor(protected spreadsheetService: SpreadsheetService, private route: ActivatedRoute) { }
+    constructor(protected spreadsheetService: SpreadsheetService) { }
 
     ngOnInit(): void { this.subscribeAsSpreadsheetObserver(); }
 

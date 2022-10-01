@@ -110,7 +110,8 @@ export class VarNameCellComponent implements OnInit
     
     private resize()
     {
-        if(this.containerPos.left < this.mouse.x-10 && this.mouse.x < 1000)
+        // if(this.containerPos.left < this.mouse.x-10 && this.mouse.x-10 < 1000)
+        if(this.containerPos.left < this.mouse.x-10)
         {
             if(this.mouse.x > this.boxPosition.left)
             {

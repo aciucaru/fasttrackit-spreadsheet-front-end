@@ -33,6 +33,7 @@ import { MainUiComponent } from './ui/main/main-ui.component';
 import { StatusBarComponent } from './ui/panels/status-bar.component';
 import { ColumnInfoComponent } from './ui/panels/column-info.component';
 import { FormulaEditorComponent } from './ui/panels/formula-editor.component';
+import { FormulaToolbarComponent } from './ui/toolbar/formula-toolbar.component';
 
 @NgModule({
     declarations:
@@ -52,7 +53,8 @@ import { FormulaEditorComponent } from './ui/panels/formula-editor.component';
         MainUiComponent,
         StatusBarComponent,
         ColumnInfoComponent,
-        FormulaEditorComponent
+        FormulaEditorComponent,
+        FormulaToolbarComponent
     ],
     imports:
     [

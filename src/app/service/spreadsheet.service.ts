@@ -276,6 +276,14 @@ export class SpreadsheetService
         console.log('add col to left');
     }
 
+    calculateColumnValues(): void
+    {
+
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+    }
+
     public deleteSelectedCol(): void
     {
         // se ia spreadsheet-ul curent
@@ -395,6 +403,142 @@ export class SpreadsheetService
     //     // console.log(`setRowHeight(${rowIndex}, ${height})`);
     //     console.log(`setRowHeight(${rowIndex}, ${height})`);
     // }
+
+    // metoda ce modifica latimea tuturor celulelor din coloana de index 'colIndex'
+    setColumType(newColType: ColumnType): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        // se ia indexul coloanei curente
+        let currentColIndex = this.getCurrentOnFocusColumn();
+
+        // se ia tipul coloanei curente
+        let oldColType: ColumnType = spreadsheet.columnInfos[currentColIndex].colType;
+
+        // se seteaza noul tip in infortmatiile despre coloana
+        // acest lucru nu are nici un efect asupra celulelor coloanei (nu realizeaza si cast)
+        spreadsheet.columnInfos[currentColIndex ].colType = newColType;
+
+        // se convertesc celulele coloanei din tipul vechi in tipul nou:
+        // conversie de la 'BOOL' la 'NUMBER'
+        if(oldColType === ColumnType.BOOL && newColType === ColumnType.NUMBER)
+        {
+            // pentru fiecare rand (linie) al spreadsheet-ului
+            for(let currentRow of spreadsheet.rows)
+            {
+                // pentru fiecare celula din randul curent
+                for(let currentCell of currentRow.cells)
+                {
+                    if(currentCell.boolValue === true)
+                        // 'true' se converteste in 1
+                        currentCell.numberValue = 1;
+                    else
+                        // 'false' se converteste in 0
+                        currentCell.numberValue = 0;
+                }
+            }
+        }
+
+        // conversie de la 'BOOL' la 'STRING'
+        if(oldColType === ColumnType.BOOL && newColType === ColumnType.STRING)
+        {
+            // pentru fiecare rand (linie) al spreadsheet-ului
+            for(let currentRow of spreadsheet.rows)
+            {
+                // pentru fiecare celula din randul curent
+                for(let currentCell of currentRow.cells)
+                {
+                    if(currentCell.boolValue === true)
+                        // 'true' se converteste in stringul 'true'
+                        currentCell.stringValue = 'true';
+                    else
+                        // 'false' se converteste in stringul 'false'
+                        currentCell.stringValue = 'false';
+                }
+            }
+        }
+
+        // conversie de la 'NUMBER' la 'BOOL'
+        if(oldColType === ColumnType.NUMBER && newColType === ColumnType.BOOL)
+        {
+            // pentru fiecare rand (linie) al spreadsheet-ului
+            for(let currentRow of spreadsheet.rows)
+            {
+                // pentru fiecare celula din randul curent
+                for(let currentCell of currentRow.cells)
+                {
+                    if(currentCell.numberValue > 0)
+                        // > 0 se converteste in 'true'
+                        currentCell.boolValue = true;
+                    else if(currentCell.numberValue < 0)
+                        // < 0 se converteste in 'true'
+                        currentCell.boolValue = true;
+                    else
+                        // 0 se converteste in 'false'
+                        currentCell.boolValue = false;
+                }
+            }
+        }
+
+        // conversie de la 'NUMBER' la 'STRING'
+        if(oldColType === ColumnType.NUMBER && newColType === ColumnType.STRING)
+        {
+            // pentru fiecare rand (linie) al spreadsheet-ului
+            for(let currentRow of spreadsheet.rows)
+            {
+                // pentru fiecare celula din randul curent
+                for(let currentCell of currentRow.cells)
+                {
+                    currentCell.stringValue = currentCell.numberValue.toString();
+                }
+            }
+        }
+
+        // conversie de la 'STRING' la 'BOOL'
+        if(oldColType === ColumnType.STRING && newColType === ColumnType.BOOL)
+        {
+            // pentru fiecare rand (linie) al spreadsheet-ului
+            for(let currentRow of spreadsheet.rows)
+            {
+                // pentru fiecare celula din randul curent
+                for(let currentCell of currentRow.cells)
+                {
+                    if(currentCell.stringValue != '')
+                        // orice string de minim 1 caracter se converteste in 'true'
+                        currentCell.boolValue = true;
+                    else
+                        // altfel se converteste in 'false'
+                        currentCell.boolValue = false;
+                }
+            }
+        }
+
+        // conversie de la 'STRING' la 'NUMBER'
+        if(oldColType === ColumnType.STRING && newColType === ColumnType.NUMBER)
+        {
+            // pentru fiecare rand (linie) al spreadsheet-ului
+            for(let currentRow of spreadsheet.rows)
+            {
+                // pentru fiecare celula din randul curent
+                for(let currentCell of currentRow.cells)
+                {
+                    if(currentCell.stringValue != '')
+                        // orice string de minim 1 caracter se converteste in '1'
+                        currentCell.numberValue = 1;
+                    else
+                        // altfel se converteste in '0'
+                        currentCell.numberValue = 0;
+                }
+            }
+        }
+
+        // se trimite noul spreasheet catre observatorii sai
+        this.spreadsheetSubject.next(spreadsheet);
+
+        console.log(`SpreadsheetService: setColumType(${currentColIndex}), ${newColType}`);
+    }
+
 
     getCellTypeAsString(cellColIndex: number): string
     {
@@ -603,12 +747,12 @@ export class SpreadsheetService
             indexColWidthPx: 70,
 
             selectedCellType: SelectedCellType.DATA_CELL,
-            selectedDataCellRow: -1,
-            selectedDataCellCol: -1,
+            selectedDataCellRow: 0,
+            selectedDataCellCol: 0,
             selectedTitleCellCol: -1,
             selectedVarNameCellCol: -1,
             generatedNewColumns: 0,
-            currentOnFocusCol: -1
+            currentOnFocusCol: 0
         };
         return spreadsheet;
     }
