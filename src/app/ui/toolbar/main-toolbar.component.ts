@@ -12,7 +12,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
             <!-- Rows and cols group -->
             <div class="group-container">
-                <div class="group">
+                <div class="row-and-cols-group">
                     <button id="add-row-above" class="toolbar-button" title="Add row above"
                         (click)="spreadsheetService.addRowAbove()">
                         <img src="assets/icons/insertrowsbefore.png" alt="Add row above">
@@ -37,13 +37,13 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
                         (click)="spreadsheetService.deleteSelectedCol()">
                         <img src="assets/icons/deletecolumns.png" alt="Delete column">
                     </button>
-                    <div class="group-label">Rows and cols</div>
+                    <div class="row-and-cols-group-label">Rows and cols</div>
                 </div>
             </div>
 
             <div class="group-container">
                 <!-- Debug group -->
-                <div class="group">
+                <div class="debug-group">
                     <button id="log-spreadsheet" class="toolbar-button" title="Log spreadsheet"
                         (click)="spreadsheetService.logSpreadsheetValues()">
                         <img src="assets/icons/chapternumberingdialog.png" alt="Log spreadsheet">
@@ -65,7 +65,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
                         <img src="assets/icons/hidenote.png" alt="dummy">
                     </button>
 
-                    <div class="group-label">Debug</div>
+                    <div class="debug-group-label">Debug</div>
                 </div>
             </div>
 

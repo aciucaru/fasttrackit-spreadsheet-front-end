@@ -10,16 +10,26 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     <app-formula-toolbar></app-formula-toolbar>
     <as-split unit="percent" direction="horizontal">
         <as-split-area [size]="60">
-            <ngs-code-editor #formulaEditor
+            <ngs-code-editor #formulaEditor *ngIf="isGeneratedByFormula"
                 [theme]="'vs'"
                 [codeModel]="codeModel"
                 [options]="options"
                 (valueChanged)="onCodeChanged($event)">
             </ngs-code-editor>
+
+            <div *ngIf="!isGeneratedByFormula">
+                Formula editor (disabled)
+            </div>
         </as-split-area>
 
         <as-split-area [size]="40">
-            <div #formulaErrors class="formula-errors">Formula errors</div>
+            <div #formulaErrors class="formula-errors"
+                *ngIf="isGeneratedByFormula">
+                Formula errors
+            </div>
+            <div *ngIf="!isGeneratedByFormula">
+                Formula errors (disabled)
+            </div>
         </as-split-area>
     </as-split>
     `,
@@ -29,13 +39,15 @@ export class FormulaEditorComponent implements OnInit
 {
     // indexul coloanei curente din care face parte acest component, 
     // indexul este primit de la service
-    public currentColIndex: number = -1;
+    protected currentColIndex: number = -1;
 
     // informatiile coloanei curente, primita de la sevice
-    public currentColInfo?: ColumnInfo;
+    protected currentColInfo?: ColumnInfo;
+
+    protected isGeneratedByFormula: boolean = false;
 
     // referinta catre spreadsheet-ul curent
-    private spreadsheet?: EditableSpreadsheet;
+    protected spreadsheet?: EditableSpreadsheet;
 
     @ViewChild('formulaEditor') formulaEditor: any;
     @ViewChild('formulaErrors') formulaErrors: any;
@@ -61,14 +73,20 @@ export class FormulaEditorComponent implements OnInit
         this.spreadsheetService
             .getSpreadsheetSubject()
             .subscribe( (spreadsheet: EditableSpreadsheet) =>
+                        {
+                            this.spreadsheet = spreadsheet;
+                            this.currentColIndex = spreadsheet.currentOnFocusCol;
+                            if(this.currentColIndex >= 0)
                             {
-                                this.spreadsheet = spreadsheet;
-                                this.currentColIndex = spreadsheet.currentOnFocusCol;
                                 this.currentColInfo = spreadsheet.columnInfos[this.currentColIndex];
-                                // if(this.currentColInfo?.genMethod === GeneratingMethod.FROM_USER_INPUT)
-                                //     this.disableFormulaEditor();
+                                if(this.currentColInfo.genMethod === GeneratingMethod.FROM_FORMULA)
+                                    this.isGeneratedByFormula = true;
+                                
+                                if(this.currentColInfo.genMethod === GeneratingMethod.FROM_USER_INPUT)
+                                    this.isGeneratedByFormula = false;
                             }
-                        );
+                        }
+                    );
     }
 
     disableFormulaEditor(): void

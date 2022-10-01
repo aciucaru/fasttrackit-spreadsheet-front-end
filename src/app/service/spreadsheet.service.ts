@@ -276,14 +276,6 @@ export class SpreadsheetService
         console.log('add col to left');
     }
 
-    calculateColumnValues(): void
-    {
-
-        // se ia spreadsheet-ul curent
-        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
-
-    }
-
     public deleteSelectedCol(): void
     {
         // se ia spreadsheet-ul curent
@@ -303,6 +295,14 @@ export class SpreadsheetService
         // apoi se trimite noul spreadsheet catre toti observatorii sai
         this.spreadsheetSubject!.next(spreadsheet);
         console.log('delete col');
+    }
+
+    calculateColumnValues(): void
+    {
+
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
     }
 
     // metoda ce seteaza celula de date selectata curent
@@ -325,8 +325,9 @@ export class SpreadsheetService
             spreadsheet.currentOnFocusCol = colIndex;
 
             this.spreadsheetSubject.next(spreadsheet);
+
+            console.log(`SpreadsheetService: setSelectedDataCell(${rowIndex}, ${colIndex})`);
         }
-        // console.log(`celula apasata: linie: ${rowIndex}, col: ${colIndex}`);
     }
 
     // seteaza celula titlului de coloana, celula selectata curent
@@ -348,8 +349,9 @@ export class SpreadsheetService
             spreadsheet.currentOnFocusCol = colIndex;
             
             this.spreadsheetSubject.next(spreadsheet); // se emite noul spreadsheet
+
+            console.log(`SpreadsheetService: setSelectedTitleCell(${colIndex})`);
         }
-        console.log('selected col title:' + colIndex);
     }
 
     // seteaza celula numelui de variabila de coloana, celula selectata curent
@@ -370,6 +372,8 @@ export class SpreadsheetService
             spreadsheet.currentOnFocusCol = colIndex;
 
             this.spreadsheetSubject.next(spreadsheet); // se emite noul spreadsheet
+
+            console.log(`SpreadsheetService: setSelectedVarNameCell(${colIndex})`);
         }
     }
 
@@ -404,8 +408,8 @@ export class SpreadsheetService
     //     console.log(`setRowHeight(${rowIndex}, ${height})`);
     // }
 
-    // metoda ce modifica latimea tuturor celulelor din coloana de index 'colIndex'
-    setColumType(newColType: ColumnType): void
+    // metoda ce modifica tipul de date al coloanei curente
+    changeCurrentColumType(newColType: ColumnType): void
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
@@ -536,7 +540,29 @@ export class SpreadsheetService
         // se trimite noul spreasheet catre observatorii sai
         this.spreadsheetSubject.next(spreadsheet);
 
-        console.log(`SpreadsheetService: setColumType(${currentColIndex}), ${newColType}`);
+        console.log(`SpreadsheetService: changeCurrentColumType(${newColType}), index: ${currentColIndex}`);
+    }
+
+    changeCurrentColumGenMethod(newGenMethod: GeneratingMethod): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        // se ia indexul coloanei curente
+        let currentColIndex = this.getCurrentOnFocusColumn();
+
+        // se ia tipul coloanei curente
+        let oldGenMethod: GeneratingMethod = spreadsheet.columnInfos[currentColIndex].genMethod;
+
+        // se seteaza noul tip in infortmatiile despre coloana
+        // acest lucru nu are nici un efect asupra celulelor coloanei (nu realizeaza si cast)
+        spreadsheet.columnInfos[currentColIndex ].genMethod = newGenMethod;
+
+
+        // se trimite noul spreasheet catre observatorii sai
+        this.spreadsheetSubject.next(spreadsheet);
+
+        console.log(`SpreadsheetService: changeCurrentColumType(${newGenMethod}), index: ${currentColIndex}`);
     }
 
 
@@ -633,6 +659,19 @@ export class SpreadsheetService
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
         return spreadsheet.currentOnFocusCol;
+    }
+
+    getCurrentColumnInfo(): ColumnInfo | null
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let currentColIndex: number = spreadsheet.currentOnFocusCol;
+
+        if(currentColIndex >= 0)
+            return spreadsheet.columnInfos[currentColIndex];
+        else
+            return null;
     }
 
     // ****************** metode auxiliare sau de debugging ***************************
@@ -747,12 +786,14 @@ export class SpreadsheetService
             indexColWidthPx: 70,
 
             selectedCellType: SelectedCellType.DATA_CELL,
-            selectedDataCellRow: 0,
-            selectedDataCellCol: 0,
+
+            selectedDataCellRow: -1,
+            selectedDataCellCol: -1,
+
             selectedTitleCellCol: -1,
             selectedVarNameCellCol: -1,
-            generatedNewColumns: 0,
-            currentOnFocusCol: 0
+            currentOnFocusCol: -1,
+            generatedNewColumns: 0
         };
         return spreadsheet;
     }
