@@ -10,8 +10,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
   selector: 'app-string-cell',
   template: `
     <div class="cell-container"
-    (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)"
-    [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)">
+    (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)">
 
         <div *ngIf="!spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)"
             [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
@@ -22,7 +21,8 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
         <textarea class="cell-textarea" type="text" style="color:purple;"
         *ngIf="spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)"
         [(ngModel)]="cell!.stringValue" #value="ngModel" name="value"
-        [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"></textarea>
+        [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex) - 5">
+        </textarea>
 
     <div>`,
   styles: [],

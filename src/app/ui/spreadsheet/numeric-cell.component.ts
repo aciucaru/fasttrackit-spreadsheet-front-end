@@ -9,8 +9,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     selector: 'app-numeric-cell',
     template: `
     <div class="cell-container"
-    (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)"
-    [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)">
+    (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)">
 
         <div *ngIf="!spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)"
             [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
@@ -21,7 +20,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
         <input type="number" style="color:blue;"
         *ngIf="spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)"
         [(ngModel)]="cell!.numberValue" #value="ngModel" name="value"
-        [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)">
+        [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex) - 5">
     <div>`,
     styles: [],
     styleUrls: ['./spreadsheet.scss']

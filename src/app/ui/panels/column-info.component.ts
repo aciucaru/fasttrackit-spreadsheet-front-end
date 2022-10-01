@@ -9,8 +9,9 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
   selector: 'app-column-info',
   template: `
     <div>
-        <div class="col-info-label">Variable name:</div>
+        <div class="col-info-label">Column variable name:</div>
         <div class="col-info-value">{{this.varName}}</div>
+
         <div class="col-info-label">Data type:</div>
         <select #typeSelect class="col-info-select"
             (change)="someMethod(typeSelect.value)">
@@ -18,6 +19,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
                 {{currentType}}
             </option>
         </select>
+
         <div class="col-info-label">Generation method:</div>
         <select #genMethodSelect class="col-info-select"
             (change)="someMethod(genMethodSelect.value)">
@@ -37,17 +39,15 @@ export class ColumnInfoComponent implements OnInit
 
     // indexul coloanei curente din care face parte acest component, 
     // indexul este primit de la service
-    public currentColIndex: number = 0;
+    protected currentColIndex: number = 0;
 
     // informatiile coloanei curente, primita de la sevice
-    public currentColInfo?: ColumnInfo;
+    protected currentColInfo?: ColumnInfo;
 
-    public varName: string = ' ';
-    public dataType: string = ' ';
-    public genMethod: string = ' ';
+    protected varName: string = ' ';
 
-    public availableDataTypes: string[] = Object.values(ColumnType);
-    public availableGenMethods: string[] = Object.values(GeneratingMethod);
+    protected availableDataTypes: string[] = Object.values(ColumnType);
+    protected availableGenMethods: string[] = Object.values(GeneratingMethod);
 
     constructor(protected spreadsheetService: SpreadsheetService)
     { }

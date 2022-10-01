@@ -5,11 +5,11 @@ import { Cell } from 'src/app/model/cell';
 import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
+// [style.width.px]="spreadsheetService.getCellWitdh(mainCellColIndex)"
 @Component({
   selector: 'app-data-cell',
   template:`
     <div class="cell-container"
-        [style.width.px]="spreadsheetService.getCellWitdh(mainCellColIndex)"
         [style.background-color]="mainCell?.style?.rgbBGColor"
         [style.color]="mainCell?.style?.rgbFGColor"
         [style.font-family]="mainCell?.style?.font">
