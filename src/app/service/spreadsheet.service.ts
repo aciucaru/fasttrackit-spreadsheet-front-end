@@ -11,7 +11,6 @@ import { Cell, CellStyle, SelectedCellType } from '../model/cell';
 import { Row } from '../model/row';
 import { ColumnInfo, ColumnType, GeneratingMethod } from '../model/column';
 import { Spreadsheet, EditableSpreadsheet} from '../model/spreadsheet';
-import { EventListenerFocusTrapInertStrategy } from '@angular/cdk/a11y';
 
 @Injectable({
   providedIn: 'root'
@@ -65,9 +64,30 @@ export class SpreadsheetService
     public getSpreadsheetSubject(): BehaviorSubject<EditableSpreadsheet>
     { return this.spreadsheetSubject!; }
 
+    public getCurrentOnFocusColumn(): number
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        return spreadsheet.currentOnFocusCol;
+    }
+
+    public getCurrentColumnInfo(): ColumnInfo | null
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let currentColIndex: number = spreadsheet.currentOnFocusCol;
+
+        if(currentColIndex >= 0)
+            return spreadsheet.columnInfos[currentColIndex];
+        else
+            return null;
+    }
+
     // metoda ce spune daca o celula de data oarecare de indexi 'rowIndex' si 'colIndex'
     // este celula selectata; celula selectata va fi desenata ca 'input', restul vor fi 'read-only'
-    isThisDataCellSelected(rowIndex: number, colIndex: number): boolean
+    public isThisDataCellSelected(rowIndex: number, colIndex: number): boolean
     {
         let result: boolean = false;
 
@@ -89,7 +109,7 @@ export class SpreadsheetService
     }
 
     // returneaza daca celula de titlu, de index 'colIndex' este cea selectata
-    isThisTitleCellSelected(colIndex: number): boolean
+    public isThisTitleCellSelected(colIndex: number): boolean
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
@@ -104,7 +124,7 @@ export class SpreadsheetService
     }
 
     // returneaza daca celula de nume de variabila, de index 'colIndex' este cea selectata
-    isThisVarNameCellSelected(colIndex: number): boolean
+    public isThisVarNameCellSelected(colIndex: number): boolean
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
@@ -217,6 +237,7 @@ export class SpreadsheetService
                                             colType: ColumnType.STRING,
                                             genMethod: GeneratingMethod.FROM_USER_INPUT,
                                             varName: 'newCol' + spreadsheet.generatedNewColumns,
+                                            formula: '',
                                             widthPx: 70
                                         };
         // se adauga noul 'ColumnInfo' la sirul cu informatii desprte coloane
@@ -260,6 +281,7 @@ export class SpreadsheetService
                                             colType: ColumnType.STRING,
                                             genMethod: GeneratingMethod.FROM_USER_INPUT,
                                             varName: "newCol" + spreadsheet.generatedNewColumns,
+                                            formula: '',
                                             widthPx: 70
                                         };
         // se adauga noul 'ColumnInfo' la sirul cu informatii desprte coloane
@@ -297,17 +319,102 @@ export class SpreadsheetService
         console.log('delete col');
     }
 
-    calculateColumnValues(): void
+    public calculateAllCellsValues(): void
     {
-
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
 
+        // se ia sirul cu informatii despre fiecare coloana
+        let colInfos: ColumnInfo[] = spreadsheet.columnInfos;
+
+        // // se ia indexul coloanei curente
+        // let currentColIndex: number = this.getCurrentOnFocusColumn();
+
+        let currentRow: Row;
+        let currentCell: Cell;
+        let currentColInfo: ColumnInfo;
+        let currentColVarName: string;
+        let currentColFormula: string;
+        let currentRowResolvedCells: Map<string, Cell> = new Map<string, Cell>();
+        // pentru fiecare rand in parte
+        for(let i=0; i<spreadsheet.rows.length; i++)
+        {
+            console.log(`row ${i}:`);
+
+            // lista de celule rezolvate se goleste la inceputul fiecarui rand al spreadsheet-ului
+            currentRowResolvedCells.clear();
+
+            // pentru fiecare celula in parte
+            for(let j=0; j<colInfos.length; j++)
+            {
+                currentRow = spreadsheet.rows[i];
+                currentCell = currentRow.cells[j];
+                currentColInfo = colInfos[j];
+                currentColVarName = colInfos[j].varName;
+                currentColFormula = colInfos[j].formula;
+
+                // daca valoarea celulei NU trebuie calculata
+                if(currentColInfo.genMethod === GeneratingMethod.FROM_USER_INPUT)
+                {
+                    // atunci valoarea este deja calculata
+                    // si valoarea se adauga la sirul celulelor deja rezolvate ale sirului curent
+                    currentRowResolvedCells.set(currentColVarName, currentCell);
+                }
+
+                // daca valoarea celulei trebuie calculata prin formula
+                if(currentColInfo.genMethod === GeneratingMethod.FROM_FORMULA)
+                {
+                    console.log(`  j=${j}`)
+                    console.log(`    formula before: ${currentColFormula}`);
+
+                    // se ia formula specifica coloanei celulei curente
+                    currentColFormula = currentColInfo.formula;
+
+                    // se inlocuiesc identificatorii din formula cu valorile rezolvate
+                    // pana la acest moment:
+                    // pentru fiecare celula deja rezolvata pana acum
+                    for(let [key, value] of currentRowResolvedCells.entries())
+                    {
+                        // se inlocuiesc identificatorii din formula cu valoarea
+                        // corespunzatoare tipului celulei curente
+                        switch(currentColInfo.colType) // se determina tipul celulei curente
+                        {
+                            case ColumnType.STRING:
+                                currentColFormula = currentColFormula.replace(key, value.stringValue);
+                                console.log('    value: ', currentCell.stringValue);
+                                break;
+
+                            case ColumnType.NUMBER:
+                                currentColFormula = currentColFormula.replace(key, value.numberValue.toString());
+                                console.log('    value: ', currentCell.numberValue.toString());
+                                break;
+
+                            case ColumnType.BOOL:
+                                currentColFormula = currentColFormula.replace(key, value.boolValue.toString());
+                                console.log('    value: ', currentCell.boolValue.toString());
+                                break;
+                        }
+                    }
+
+                    console.log(`    formula after: ${currentColFormula}`);
+
+                    // dupa inlocuirea variabilelor deja cunoscute, se evalueaza efectiv
+                    // formula, adica se calculeaza valoarea celulei curente
+                    let currentResult = mathjs.evaluate(currentColFormula);
+                    currentCell.numberValue = currentResult;
+                    console.log(`    result: ${currentResult}`);
+                }
+            }
+        }
+
+        // apoi se trimite noul spreadsheet catre toti observatorii sai
+        this.spreadsheetSubject!.next(spreadsheet);
+        console.log(`SpreadsheetService: calculateAllCellsValues()`);
     }
 
     // metoda ce seteaza celula de date selectata curent
     // aceasta celula este singura ce va fi editabila, restul celulelor vor fi 'read-only'
-    setSelectedDataCell(rowIndex: number, colIndex: number): void
+    public setSelectedDataCell(rowIndex: number, colIndex: number): void
     {
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
 
@@ -332,7 +439,7 @@ export class SpreadsheetService
 
     // seteaza celula titlului de coloana, celula selectata curent
     // aceasta celula este singura ce va fi editabila, restul celulelor vor fi 'read-only'
-    setSelectedTitleCell(colIndex: number): void
+    public setSelectedTitleCell(colIndex: number): void
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
@@ -356,7 +463,7 @@ export class SpreadsheetService
 
     // seteaza celula numelui de variabila de coloana, celula selectata curent
     // aceasta celula este singura ce va fi editabila, restul celulelor vor fi 'read-only'
-    setSelectedVarNameCell(colIndex: number): void
+    public setSelectedVarNameCell(colIndex: number): void
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
@@ -378,7 +485,7 @@ export class SpreadsheetService
     }
 
     // metoda ce modifica latimea tuturor celulelor din coloana de index 'colIndex'
-    setColumWidth(colIndex: number, width: number): void
+    public setColumWidth(colIndex: number, width: number): void
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
@@ -408,8 +515,24 @@ export class SpreadsheetService
     //     console.log(`setRowHeight(${rowIndex}, ${height})`);
     // }
 
+    public setColumnFormula(formula: string): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        // se ia indexul coloanei curente
+        let currentColIndex = this.getCurrentOnFocusColumn();
+
+        // se seteaza noua formula in infortmatiile despre coloana
+        // acest lucru nu are nici un efect asupra celulelor coloanei (nu se recalculeaza nimic)
+        spreadsheet.columnInfos[currentColIndex].formula = formula;
+
+        // se trimite noul spreasheet catre observatorii sai
+        this.spreadsheetSubject.next(spreadsheet);
+    }
+
     // metoda ce modifica tipul de date al coloanei curente
-    changeCurrentColumType(newColType: ColumnType): void
+    public changeCurrentColumType(newColType: ColumnType): void
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
@@ -422,7 +545,7 @@ export class SpreadsheetService
 
         // se seteaza noul tip in infortmatiile despre coloana
         // acest lucru nu are nici un efect asupra celulelor coloanei (nu realizeaza si cast)
-        spreadsheet.columnInfos[currentColIndex ].colType = newColType;
+        spreadsheet.columnInfos[currentColIndex].colType = newColType;
 
         // se convertesc celulele coloanei din tipul vechi in tipul nou:
         // conversie de la 'BOOL' la 'NUMBER'
@@ -543,7 +666,7 @@ export class SpreadsheetService
         console.log(`SpreadsheetService: changeCurrentColumType(${newColType}), index: ${currentColIndex}`);
     }
 
-    changeCurrentColumGenMethod(newGenMethod: GeneratingMethod): void
+    public changeCurrentColumGenMethod(newGenMethod: GeneratingMethod): void
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
@@ -566,7 +689,7 @@ export class SpreadsheetService
     }
 
 
-    getCellTypeAsString(cellColIndex: number): string
+    public getCellTypeAsString(cellColIndex: number): string
     {
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
@@ -579,7 +702,7 @@ export class SpreadsheetService
         }
     }
 
-    getCellWitdh(cellColIndex: number): number
+    public getCellWitdh(cellColIndex: number): number
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
@@ -593,7 +716,7 @@ export class SpreadsheetService
         }
     }
 
-    getCellHeight(cellRowIndex: number): number
+    public getCellHeight(cellRowIndex: number): number
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
@@ -609,7 +732,7 @@ export class SpreadsheetService
         return spreadsheet.generalRowHeightPx;
     }
 
-    getColWidth(colIndex: number): number
+    public getColWidth(colIndex: number): number
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
@@ -624,7 +747,7 @@ export class SpreadsheetService
     }
 
     // metoda ce returneaza inaltimea celulelor ce reprezinta titlul coloanelor
-    getGeneralRowHeight(): number
+    public getGeneralRowHeight(): number
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
@@ -634,7 +757,7 @@ export class SpreadsheetService
     }
 
     // metoda ce returneaza inaltimea celulelor ce reprezinta titlul coloanelor
-    getTitleRowHeight(): number
+    public getTitleRowHeight(): number
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
@@ -653,34 +776,11 @@ export class SpreadsheetService
     //     return spreadsheet.varNameRowHeightPx;
     // }
 
-    getCurrentOnFocusColumn(): number
-    {
-        // se ia spreadsheet-ul curent
-        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
-        return spreadsheet.currentOnFocusCol;
-    }
-
-    getCurrentColumnInfo(): ColumnInfo | null
-    {
-        // se ia spreadsheet-ul curent
-        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
-
-        let currentColIndex: number = spreadsheet.currentOnFocusCol;
-
-        if(currentColIndex >= 0)
-            return spreadsheet.columnInfos[currentColIndex];
-        else
-            return null;
-    }
 
     // ****************** metode auxiliare sau de debugging ***************************
 
-    // metoda folosita pt. logging
-    public logSpreadsheetValues(): void
-    { console.table(this.spreadsheetToStringMatrix()); }
-
-    // metoda ce transforma 
+    // metoda ce transforma un spreadsheet intr-o matrice, pt. logging
     public spreadsheetToStringMatrix(): string[][]
     {
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
@@ -756,6 +856,7 @@ export class SpreadsheetService
                     colType: ColumnType.STRING,
                     genMethod:GeneratingMethod.FROM_USER_INPUT,
                     varName: 'stringCol',
+                    formula: '',
                     widthPx: 70
                 },
                 {
@@ -763,6 +864,7 @@ export class SpreadsheetService
                     colType: ColumnType.NUMBER,
                     genMethod:GeneratingMethod.FROM_USER_INPUT,
                     varName: 'numberCol',
+                    formula: '',
                     widthPx: 70
                 }
             ],
@@ -812,5 +914,29 @@ export class SpreadsheetService
         };
 
         return cellStyle;
+    }
+
+
+    // ***************** metode pt. logging ********************
+
+    // metoda folosita pt. logging
+    public logSpreadsheetValues(): void
+    {
+        console.table(this.spreadsheetToStringMatrix());
+    }
+    
+    public logCurrentColumFormula(): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        // se ia indexul coloanei curente
+        let currentColIndex: number = this.getCurrentOnFocusColumn();
+
+        let currentColVarName: string = spreadsheet.columnInfos[currentColIndex].varName;
+        let currentColFormula: string = spreadsheet.columnInfos[currentColIndex].formula;
+
+        console.log(`Column ${currentColIndex}, ${currentColVarName} formula:`);
+        console.log(currentColFormula);
     }
 }

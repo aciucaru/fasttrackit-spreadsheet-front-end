@@ -49,9 +49,11 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
                         <img src="assets/icons/chapternumberingdialog.png" alt="Log spreadsheet">
                     </button>
 
-                    <button class="dummy02" class="toolbar-button" title="dummy">
-                        <img src="assets/icons/hidenote.png" alt="dummy">
+                    <button id="log-col-formula" class="toolbar-button" title="Log column formula"
+                        (click)="spreadsheetService.logCurrentColumFormula()">
+                        <img src="assets/icons/pasteonlyformula.png" alt="Log column formula">
                     </button>
+                    
                     <button class="dummy03" class="toolbar-button" title="dummy">
                         <img src="assets/icons/hidenote.png" alt="Delete row">
                     </button>

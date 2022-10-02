@@ -10,7 +10,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
   template: `
     <div class="formula-toolbar">
         <button id="apply-formula" class="formula-toolbar-button" title="Apply formula"
-        (click)="spreadsheetService.calculateColumnValues()">
+            (click)="evaluateFormula()">
             <img src="assets/icons/toggleformula.png" alt="Apply formula">
         </button>
     </div>
@@ -48,5 +48,10 @@ export class FormulaToolbarComponent implements OnInit
                     this.currentColIndex = spreadsheet.currentOnFocusCol;
                     this.currentColInfo = spreadsheet.columnInfos[this.currentColIndex];
                 });
+    }
+
+    evaluateFormula(): void
+    {
+        this.spreadsheetService.calculateAllCellsValues();
     }
 }
