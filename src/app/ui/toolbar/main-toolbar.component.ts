@@ -37,7 +37,48 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
                         (click)="spreadsheetService.deleteSelectedCol()">
                         <img src="assets/icons/deletecolumns.png" alt="Delete column">
                     </button>
-                    <div class="row-and-cols-group-label">Rows and cols</div>
+                    <div class="group-label">Rows and cols</div>
+                </div>
+            </div>
+
+            <div class="group-container">
+                <!-- formula group -->
+                <div class="formula-group">
+                    <button id="apply-formula" class="toolbar-button" title="Apply formula"
+                        (click)="evaluateFormula()">
+                        <img src="assets/icons/toggleformula.png" alt="Apply formula">
+                    </button>
+
+                    <button class="dummy02" class="toolbar-button" title="dummy">
+                        <img src="assets/icons/hidenote.png" alt="Delete row">
+                    </button>
+                    <button class="dummy03" class="toolbar-button" title="dummy">
+                        <img src="assets/icons/hidenote.png" alt="Delete row">
+                    </button>
+                    <button class="dummy04" class="toolbar-button" title="dummy">
+                        <img src="assets/icons/hidenote.png" alt="dummy">
+                    </button>
+                    <button class="dummy05" class="toolbar-button" title="dummy">
+                        <img src="assets/icons/hidenote.png" alt="dummy">
+                    </button>
+                    <button class="dummy06" class="toolbar-button" title="dummy">
+                        <img src="assets/icons/hidenote.png" alt="dummy">
+                    </button>
+
+                    <div class="group-label">Formula</div>
+                </div>
+            </div>
+
+            <div class="group-container">
+                <!-- Debug group -->
+                <div class="column-group">
+                    <div id="col-type-select-label">Data type</div>
+                    <app-col-type-select id="col-type-select"></app-col-type-select>
+
+                    <div id="col-gen-method-select-label">Generation</div>
+                    <app-gen-method-select id="col-gen-method-select"></app-gen-method-select>
+                    
+                    <div class="group-label">Column</div>
                 </div>
             </div>
 
@@ -67,7 +108,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
                         <img src="assets/icons/hidenote.png" alt="dummy">
                     </button>
 
-                    <div class="debug-group-label">Debug</div>
+                    <div class="group-label">Debug</div>
                 </div>
             </div>
 
@@ -78,7 +119,10 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     [
         './toolbar-general.scss',
         './rows-and-cols-group.scss',
+        './formula-group.scss',
+        './column-group.scss',
         './debug-group.scss',
+        './dummy-group.scss',
     ]
 })
 export class MainToolbarComponent implements OnInit
@@ -97,5 +141,10 @@ export class MainToolbarComponent implements OnInit
                 {
                     this.spreadsheet = spreadsheet;
                 });
+    }
+
+    evaluateFormula(): void
+    {
+        this.spreadsheetService.calculateAllCellsValues();
     }
 }

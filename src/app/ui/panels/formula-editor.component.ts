@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CodeModel } from '@ngstack/code-editor';
+
 import { ColumnInfo, GeneratingMethod } from 'src/app/model/column';
 import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
@@ -7,34 +8,25 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 @Component({
     selector: 'app-formula-editor',
     template: `
-    <app-formula-toolbar></app-formula-toolbar>
-    <as-split unit="percent" direction="horizontal">
-        <as-split-area [size]="60">
-            <ngs-code-editor #formulaEditor
-                [theme]="'vs'"
+    <div class="formula-editor-container">
+        <div id="col-var-name-value">{{this.currentColVarNameString}}</div>
+        <div>=</div>
+
+        <textarea id="code-editor" [(ngModel)]="formulaCode" (input)="onCodeChanged($event)"></textarea>
+
+        <!-- <div id="code-editor">
+            <ngs-code-editor 
+                [theme]="'vs-dark'"
                 [codeModel]="codeModel"
                 [readOnly]="!isGeneratedByFormula"
                 [options]="options"
                 (valueChanged)="onCodeChanged($event)">
             </ngs-code-editor>
-
-            <!-- <div *ngIf="!isGeneratedByFormula">
-                Formula editor (disabled)
-            </div> -->
-        </as-split-area>
-
-        <as-split-area [size]="40">
-            <div #formulaErrors class="formula-errors"
-                *ngIf="isGeneratedByFormula">
-                Formula errors
-            </div>
-            <div *ngIf="!isGeneratedByFormula">
-                Formula errors (disabled)
-            </div>
-        </as-split-area>
-    </as-split>
+        <div> -->
+    </div>
     `,
-    styles: []
+    styles: [],
+    styleUrls: ['./formula-editor.component.scss']
 })
 export class FormulaEditorComponent implements OnInit
 {
@@ -45,28 +37,13 @@ export class FormulaEditorComponent implements OnInit
     // informatiile coloanei curente, primita de la sevice
     protected currentColInfo?: ColumnInfo;
 
+    protected currentColVarNameString: string = '';
     protected isGeneratedByFormula: boolean = false;
 
+    protected formulaCode: string = '';
+
     // referinta catre spreadsheet-ul curent
-    protected spreadsheet?: EditableSpreadsheet;
-
-    // pentru editorul de cod:
-    codeModel: CodeModel =
-    {
-        language: 'javascript',
-        uri: 'main.js',
-        value: ''
-        // dependencies: ['@types/node', '@ngstack/translate', '@ngstack/code-editor']
-    };
-
-    options =
-    {
-        contextmenu: true,
-        minimap: { enabled: false }
-    };
-
-    @ViewChild('formulaEditor') formulaEditor: any;
-    @ViewChild('formulaErrors') formulaErrors: any;
+    // protected spreadsheet?: EditableSpreadsheet;
 
     constructor(protected spreadsheetService: SpreadsheetService)
     { }
@@ -76,52 +53,35 @@ export class FormulaEditorComponent implements OnInit
         this.subscribeAsSpreadsheetObserver();
     }
 
-    ngAfterViewInit(): void
-    {
-        // daca celulele coloanei sunt introduse de catre utilizator (nu sunt generate de formule)
-        // atunci se dezactiveaza editorul de formule
-        // if(this.currentColInfo?.genMethod === GeneratingMethod.FROM_USER_INPUT)
-        //     this.disableFormulaEditor();
-    }
-
     subscribeAsSpreadsheetObserver(): void
     {
         this.spreadsheetService
             .getSpreadsheetSubject()
             .subscribe( (spreadsheet: EditableSpreadsheet) =>
                         {
-                            this.spreadsheet = spreadsheet;
+                            // this.spreadsheet = spreadsheet;
                             this.currentColIndex = spreadsheet.currentOnFocusCol;
                             if(this.currentColIndex >= 0)
                             {
                                 this.currentColInfo = spreadsheet.columnInfos[this.currentColIndex];
+                                this.currentColVarNameString = this.currentColInfo.varName;
+                                
                                 if(this.currentColInfo.genMethod === GeneratingMethod.FROM_FORMULA)
                                     this.isGeneratedByFormula = true;
                                 
                                 if(this.currentColInfo.genMethod === GeneratingMethod.FROM_USER_INPUT)
                                     this.isGeneratedByFormula = false;
 
-                                this.codeModel.value = this.currentColInfo.formula;
+                                // this.codeModel.value = this.currentColInfo.formula;
                             }
                         }
                     );
     }
 
-    disableFormulaEditor(): void
-    {
-        let nativeFormulaEditor: HTMLElement = this.formulaEditor.nativeElement;
-        let nativeFormulaErrors: HTMLElement = this.formulaErrors.nativeElement;
-
-        nativeFormulaEditor.setAttribute('disabled', 'true');
-        nativeFormulaErrors.setAttribute('disabled', 'true');
-
-        console.log('disableFormulaEditor()');
-    }
-
     // pentru editorul de cod
-    onCodeChanged(code: string)
+    onCodeChanged(event: any): void
     {
-        this.spreadsheetService.setColumnFormula(code);
-        console.log(`FormulaEditorComponent: onCodeChanged(${code})`);
+        this.spreadsheetService.setColumnFormula(this.formulaCode);
+        console.log(`FormulaEditorComponent: onCodeChanged(${this.formulaCode})`);
     }
 }

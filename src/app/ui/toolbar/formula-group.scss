@@ -1,4 +1,4 @@
-.debug-group
+.formula-group
 {
     display: grid;
     row-gap: 0px;
@@ -11,14 +11,8 @@
     border-color: rgb(151, 151, 151);
 }
 
-#log-spreadsheet
+#apply-formula
 {
     grid-row: 1 / 2;
     grid-column: 1 / 2;
-}
-
-#log-col-formula
-{
-    grid-row: 1 / 2;
-    grid-column: 2 / 3;
 }
