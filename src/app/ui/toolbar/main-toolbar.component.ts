@@ -1,150 +1,40 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Observable, Observer } from 'rxjs';
+
 import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
-import { Spreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
 @Component({
     selector: 'app-main-toolbar',
     template: `
-        <div class="toolbar">
-
-            <!-- Rows and cols group -->
-            <div class="group-container">
-                <div class="row-and-cols-group">
-                    <button id="add-row-above" class="toolbar-button" title="Add row above"
-                        (click)="spreadsheetService.addRowAbove()">
-                        <img src="assets/icons/insertrowsbefore.png" alt="Add row above">
-                    </button>
-                    <button id="add-row-below" class="toolbar-button" title="Add row below"
-                        (click)="spreadsheetService.addRowBelow()">
-                        <img src="assets/icons/insertrowsafter.png" alt="Add row below">
-                    </button>
-                    <button id="delete-row" class="toolbar-button" title="Delete row"
-                        (click)="spreadsheetService.deleteSelectedRow()">
-                        <img src="assets/icons/deleterows.png" alt="Delete row">
-                    </button>
-                    <button id="add-col-right" class="toolbar-button" title="Add column right"
-                        (click)="spreadsheetService.addColToRight()">
-                        <img src="assets/icons/insertcolumnsafter.png" alt="Add column right">
-                    </button>
-                    <button id="add-col-left" class="toolbar-button" title="Add column left"
-                        (click)="spreadsheetService.addColToLeft()">
-                        <img src="assets/icons/insertcolumnsbefore.png" alt="Add column left">
-                    </button>
-                    <button id="delete-col" class="toolbar-button" title="Delete column"
-                        (click)="spreadsheetService.deleteSelectedCol()">
-                        <img src="assets/icons/deletecolumns.png" alt="Delete column">
-                    </button>
-                    <div class="group-label">Rows and cols</div>
-                </div>
-            </div>
-
-            <div class="group-container">
-                <!-- formula group -->
-                <div class="formula-group">
-                    <button id="apply-formula" class="toolbar-button" title="Apply formula"
-                        (click)="evaluateFormula()">
-                        <img src="assets/icons/toggleformula.png" alt="Apply formula">
-                    </button>
-
-                    <button class="dummy02" class="toolbar-button" title="dummy">
-                        <img src="assets/icons/hidenote.png" alt="Delete row">
-                    </button>
-                    <button class="dummy03" class="toolbar-button" title="dummy">
-                        <img src="assets/icons/hidenote.png" alt="Delete row">
-                    </button>
-                    <button class="dummy04" class="toolbar-button" title="dummy">
-                        <img src="assets/icons/hidenote.png" alt="dummy">
-                    </button>
-                    <button class="dummy05" class="toolbar-button" title="dummy">
-                        <img src="assets/icons/hidenote.png" alt="dummy">
-                    </button>
-                    <button class="dummy06" class="toolbar-button" title="dummy">
-                        <img src="assets/icons/hidenote.png" alt="dummy">
-                    </button>
-
-                    <div class="group-label">Formula</div>
-                </div>
-            </div>
-
-            <div class="group-container">
-                <!-- Debug group -->
-                <div class="column-group">
-                    <div id="col-type-select-label">Data type</div>
-                    <app-col-type-select id="col-type-select"></app-col-type-select>
-
-                    <div id="col-gen-method-select-label">Generation</div>
-                    <app-gen-method-select id="col-gen-method-select"></app-gen-method-select>
-                    
-                    <div class="group-label">Column</div>
-                </div>
-            </div>
-
-            <div class="group-container">
-                <!-- Debug group -->
-                <div class="debug-group">
-                    <button id="log-spreadsheet" class="toolbar-button" title="Log spreadsheet"
-                        (click)="spreadsheetService.logSpreadsheetValues()">
-                        <img src="assets/icons/chapternumberingdialog.png" alt="Log spreadsheet">
-                    </button>
-
-                    <button id="log-col-formula" class="toolbar-button" title="Log column formula"
-                        (click)="spreadsheetService.logCurrentColumFormula()">
-                        <img src="assets/icons/pasteonlyformula.png" alt="Log column formula">
-                    </button>
-                    
-                    <button class="dummy03" class="toolbar-button" title="dummy">
-                        <img src="assets/icons/hidenote.png" alt="Delete row">
-                    </button>
-                    <button class="dummy04" class="toolbar-button" title="dummy">
-                        <img src="assets/icons/hidenote.png" alt="dummy">
-                    </button>
-                    <button class="dummy05" class="toolbar-button" title="dummy">
-                        <img src="assets/icons/hidenote.png" alt="dummy">
-                    </button>
-                    <button class="dummy06" class="toolbar-button" title="dummy">
-                        <img src="assets/icons/hidenote.png" alt="dummy">
-                    </button>
-
-                    <div class="group-label">Debug</div>
-                </div>
-            </div>
-
-        </div>
+    <div class="toolbar">
+        <app-rows-and-cols-group></app-rows-and-cols-group>
+        <app-column-group></app-column-group>
+        <app-formula-group></app-formula-group>
+        <app-chart-group></app-chart-group>
+        <app-debug-group></app-debug-group>
+    </div>
     `,
     styles: [],
-    styleUrls:
-    [
-        './toolbar-general.scss',
-        './rows-and-cols-group.scss',
-        './formula-group.scss',
-        './column-group.scss',
-        './debug-group.scss',
-        './dummy-group.scss',
-    ]
+    styleUrls: ['./toolbar-general.scss']
 })
 export class MainToolbarComponent implements OnInit
 {
     spreadsheet?: EditableSpreadsheet;
     
-    constructor(protected spreadsheetService: SpreadsheetService) { }
+    constructor() { }
 
-    ngOnInit(): void { this.subscribeAsSpreadsheetObserver(); }
-
-    subscribeAsSpreadsheetObserver(): void
+    ngOnInit(): void
     {
-        this.spreadsheetService
-            .getSpreadsheetSubject()
-            .subscribe( (spreadsheet: EditableSpreadsheet) =>
-                {
-                    this.spreadsheet = spreadsheet;
-                });
+        // this.subscribeAsSpreadsheetObserver();
     }
 
-    evaluateFormula(): void
-    {
-        this.spreadsheetService.calculateAllCellsValues();
-    }
+    // subscribeAsSpreadsheetObserver(): void
+    // {
+    //     this.spreadsheetService
+    //         .getSpreadsheetSubject()
+    //         .subscribe( (spreadsheet: EditableSpreadsheet) =>
+    //             {
+    //                 this.spreadsheet = spreadsheet;
+    //             });
+    // }
 }

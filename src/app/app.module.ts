@@ -33,6 +33,11 @@ import { StatusBarComponent } from './ui/panels/status-bar.component';
 import { FormulaEditorComponent } from './ui/panels/formula-editor.component';
 import { ColTypeSelectComponent } from './ui/controls/col-type-select.component';
 import { GenMethodSelectComponent } from './ui/controls/gen-method-select.component';
+import { RowsAndColsGroupComponent } from './ui/toolbar/rows-and-cols-group.component';
+import { ColumnGroupComponent } from './ui/toolbar/column-group.component';
+import { FormulaGroupComponent } from './ui/toolbar/formula-group.component';
+import { DebugGroupComponent } from './ui/toolbar/debug-group.component';
+import { ChartGroupComponent } from './ui/toolbar/chart-group.component';
 
 @NgModule({
     declarations:
@@ -52,7 +57,12 @@ import { GenMethodSelectComponent } from './ui/controls/gen-method-select.compon
         StatusBarComponent,
         FormulaEditorComponent,
         ColTypeSelectComponent,
-        GenMethodSelectComponent
+        GenMethodSelectComponent,
+        RowsAndColsGroupComponent,
+        ColumnGroupComponent,
+        FormulaGroupComponent,
+        DebugGroupComponent,
+        ChartGroupComponent
     ],
     imports:
     [
