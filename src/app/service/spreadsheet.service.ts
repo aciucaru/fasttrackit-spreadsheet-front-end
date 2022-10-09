@@ -11,6 +11,7 @@ import { Cell, CellStyle, SelectedCellType } from '../model/cell';
 import { Row } from '../model/row';
 import { ColumnInfo, ColumnType, GeneratingMethod } from '../model/column';
 import { Spreadsheet, EditableSpreadsheet} from '../model/spreadsheet';
+import { ChartColumnDataInfo, ChartColumnLabelInfo, ChartType, ChartInfo } from '../model/chart';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,7 @@ export class SpreadsheetService
                                             indexColWidthPx: 70,
                                             generalRowHeightPx: 20,
                                             titleRowHeightPx: 20,
+                                            charts: spreadsheet.charts,
 
                                             selectedDataCellRow: -1,
                                             selectedDataCellCol: -1,
@@ -317,6 +319,29 @@ export class SpreadsheetService
         // apoi se trimite noul spreadsheet catre toti observatorii sai
         this.spreadsheetSubject!.next(spreadsheet);
         console.log('delete col');
+    }
+
+    public addBarChart(): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let chartInfo: ChartInfo =
+        {
+            chartType: ChartType.BAR,
+            labelColumn:
+            {
+                labelColumnVarName: '', // numele coloanei cu label-ul chartului
+                labelColor: '#15a9f9' // culoarea de display a label-ului
+            },
+            dataColumns: []
+        }
+
+        spreadsheet.charts.push(chartInfo);
+
+        // apoi se trimite noul spreadsheet catre toti observatorii sai
+        this.spreadsheetSubject!.next(spreadsheet);
+        console.log('SpreadsheetService: addBarChart()');
     }
 
     public calculateAllCellsValues(): void
@@ -886,6 +911,7 @@ export class SpreadsheetService
             generalRowHeightPx: 20,
             titleRowHeightPx: 20,
             indexColWidthPx: 70,
+            charts: new Array<ChartInfo>(),
 
             selectedCellType: SelectedCellType.DATA_CELL,
 

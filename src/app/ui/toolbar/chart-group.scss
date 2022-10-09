@@ -4,7 +4,7 @@
     row-gap: 0px;
     column-gap: 0px;
     grid-template-columns: 70px 70px 70px;
-    grid-template-rows: 52px 16px 20px;
+    grid-template-rows: 52px 20px 20px;
 
     // background-color: rgb(255, 255, 255);
     border: solid 1px;
@@ -33,19 +33,28 @@
 {
     grid-row: 2 / 3;
     grid-column: 1 / 2;
-    font-size: 12px;
+
+    font-size: 14px;
+    text-align: center;
+    user-select: none;
 }
 
 #xy-chart-label
 {
     grid-row: 2 / 3;
     grid-column: 2 / 3;
-    font-size: 12px;
+
+    font-size: 14px;
+    text-align: center;
+    user-select: none;
 }
 
 #pie-chart-label
 {
     grid-row: 2 / 3;
     grid-column: 3 / 4;
-    font-size: 12px;
+
+    font-size: 14px;
+    text-align: center;
+    user-select: none;
 }

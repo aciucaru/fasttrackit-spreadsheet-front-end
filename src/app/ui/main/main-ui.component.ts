@@ -14,7 +14,7 @@ import { Component, OnInit } from '@angular/core';
                 </as-split-area>
 
                 <as-split-area [size]="15">
-                    <app-navigator></app-navigator>
+                    <app-chart-panel></app-chart-panel>
                 </as-split-area>
             </as-split>
         </div>

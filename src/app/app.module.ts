@@ -27,7 +27,6 @@ import { BoolCellComponent } from './ui/spreadsheet/bool-cell.component';
 import { RowIndexComponent } from './ui/spreadsheet/row-index.component';
 import { VarNameCellComponent } from './ui/spreadsheet/var-name-cell.component';
 import { TitleCellComponent } from './ui/spreadsheet/title-cell.component';
-import { NavigatorComponent } from './ui/panels/navigator.component';
 import { MainUiComponent } from './ui/main/main-ui.component';
 import { StatusBarComponent } from './ui/panels/status-bar.component';
 import { FormulaEditorComponent } from './ui/panels/formula-editor.component';
@@ -38,6 +37,8 @@ import { ColumnGroupComponent } from './ui/toolbar/column-group.component';
 import { FormulaGroupComponent } from './ui/toolbar/formula-group.component';
 import { DebugGroupComponent } from './ui/toolbar/debug-group.component';
 import { ChartGroupComponent } from './ui/toolbar/chart-group.component';
+import { BarChartComponent } from './ui/chart/bar-chart.component';
+import { ChartPanelComponent } from './ui/panels/chart-panel.component';
 
 @NgModule({
     declarations:
@@ -52,7 +53,6 @@ import { ChartGroupComponent } from './ui/toolbar/chart-group.component';
         RowIndexComponent,
         VarNameCellComponent,
         TitleCellComponent,
-        NavigatorComponent,
         MainUiComponent,
         StatusBarComponent,
         FormulaEditorComponent,
@@ -62,7 +62,9 @@ import { ChartGroupComponent } from './ui/toolbar/chart-group.component';
         ColumnGroupComponent,
         FormulaGroupComponent,
         DebugGroupComponent,
-        ChartGroupComponent
+        ChartGroupComponent,
+        BarChartComponent,
+        ChartPanelComponent
     ],
     imports:
     [

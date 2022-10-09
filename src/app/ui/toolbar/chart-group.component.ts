@@ -8,7 +8,8 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     template: `
     <div class="group-container">
         <div class="formula-group">
-            <button id="bar-chart" class="toolbar-button" title="Bar chart">
+            <button id="bar-chart" class="toolbar-button" title="Bar chart"
+                (click)="spreadsheetService.addBarChart()">
                 <img src="assets/icons/bar_52x60_v2.png" alt="Bar chart">
             </button>
 

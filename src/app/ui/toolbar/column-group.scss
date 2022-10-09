@@ -4,7 +4,7 @@
     row-gap: 0px;
     column-gap: 0px;
     grid-template-columns: 70px 100px;
-    grid-template-rows: 34px 34px 20px;
+    grid-template-rows: 36px 36px 20px;
 
     // background-color: rgb(255, 255, 255);
     border: solid 1px;
@@ -15,7 +15,10 @@
 {
     grid-row: 1 / 2;
     grid-column: 1 / 2;
+
     font-size: 14px;
+    text-align: left;
+    user-select: none;
 }
 
 #col-type-select
@@ -28,7 +31,10 @@
 {
     grid-row: 2 / 3;
     grid-column: 1 / 2;
+
     font-size: 14px;
+    text-align: left;
+    user-select: none;
 }
 
 #col-gen-method-select
