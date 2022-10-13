@@ -331,7 +331,7 @@ export class SpreadsheetService
             chartType: ChartType.BAR,
             labelColumn:
             {
-                labelColumnVarName: '', // numele coloanei cu label-ul chartului
+                labelColumnVarNameRef: '', // numele coloanei cu label-ul chartului
                 labelColor: '#15a9f9' // culoarea de display a label-ului
             },
             dataColumns: []
