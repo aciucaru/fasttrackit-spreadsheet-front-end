@@ -8,38 +8,22 @@ import { ChartInfo } from 'src/app/model/chart';
     selector: 'app-bar-chart',
     template: `
     <div class="chart-container">
-        <div class="chart-area">
-            chart area
-        </div>
+        <div class="chart-area">chart area</div>
 
-        <div class="chart-settings" *ngIf="showChartSettings">
-            <div class="label-column-select-container">
-                <div class="chart-column-select-label"></div>
-                <select #labelColumnSelect class="label-column-select" [value]="currentColDataTypeString">
-                    <option value="string">string</option>
-                    <option value="number">number</option>
-                    <option value="bool">bool</option>
-                </select>
-            </div>
+        <app-chart-settings class="chart-settings" *ngIf="showChartSettings">
+        </app-chart-settings>
 
-            <div class="data-column-select-container">
-                <div class="chart-column-select-label"></div>
-                <select class="data-column-select" [value]="currentColDataTypeString">
-                    <option value="string">string</option>
-                    <option value="number">number</option>
-                    <option value="bool">bool</option>
-                </select>
-                <button class="display-chart-settings-button" class="toolbar-button" title="Remove data column"
-                    (click)="displayChartSettings()">
-                    <img src="assets/icons/presenterscreen-ButtonMinusNormal.png" alt="Remove data column">
-                </button>
-            </div>
+        <button class="display-chart-settings-button" *ngIf="!showChartSettings"
+            class="toolbar-button" title="Display chart settings"
+            (click)="displayChartSettings()">
+            <img src="assets/icons/optionstreedialog.png" alt="Display chart settings">
+        </button>
 
-            <button class="add-data-column-button" class="toolbar-button" title="Add data column"
-                (click)="displayChartSettings()">
-                <img src="assets/icons/presenterscreen-ButtonPlusNormal.png" alt="Add data column">
-            </button>
-        </div>
+        <button class="hide-chart-settings-button" *ngIf="showChartSettings"
+            class="toolbar-button" title="Hide chart settings"
+            (click)="hideChartSettings()">
+            <img src="assets/icons/arrowshapes.right-arrow.png" alt="Hide chart settings">
+        </button>
     </div>
     `,
     styles: [],

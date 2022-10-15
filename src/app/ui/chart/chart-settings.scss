@@ -1,0 +1,62 @@
+.chart-settings-container
+{
+    display: grid;
+    row-gap: 0px;
+    column-gap: 0px;
+    grid-template-columns: 100px 100px 36px 36px 36px;
+    grid-template-rows: repeat(36px);
+
+    min-height: 200px;
+    border: solid 1px;
+    border-color: rgb(151, 151, 151);
+}
+
+.label-for-label-column
+{
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+}
+
+.label-column-selector
+{
+    grid-row: 1 / 2;
+    grid-column: 2 / 3;
+}
+
+.label-col-fg-color-input
+{
+    grid-row: 1 / 2;
+    grid-column: 3 / 4;
+}
+
+.label-for-data-column
+{
+    grid-column: 1 / 2;
+}
+
+.data-column-selector
+{
+    grid-column: 2 / 3;
+}
+
+.data-col-fg-color-input
+{
+    grid-column: 3 / 4;
+}
+
+.data-col-bg-color-input
+{
+    grid-column: 4 / 5;
+}
+
+.remove-data-column-button
+{
+    grid-column: 5 / 6;
+}
+
+.add-data-column-button
+{
+    grid-column: 2 / 3;
+    // grid-row-start: 1;
+    grid-row-end: -1;
+}
