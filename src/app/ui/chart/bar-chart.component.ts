@@ -10,7 +10,8 @@ import { ChartInfo } from 'src/app/model/chart';
     <div class="chart-container">
         <div class="chart-area">chart area</div>
 
-        <app-chart-settings class="chart-settings" *ngIf="showChartSettings">
+        <app-chart-settings class="chart-settings" *ngIf="showChartSettings"
+        [chartInfo]="this.chartInfo">
         </app-chart-settings>
 
         <button class="display-chart-settings-button" *ngIf="!showChartSettings"

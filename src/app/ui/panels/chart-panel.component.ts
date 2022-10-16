@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
+import { ChartInfo } from 'src/app/model/chart';
 
 @Component({
     selector: 'app-chart-panel',
