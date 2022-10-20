@@ -7,8 +7,8 @@ import { ChartInfo } from 'src/app/model/chart';
 @Component({
     selector: 'app-chart-panel',
     template: `
-    <div *ngFor="let currentChart of spreadsheet?.charts; let chartIndex = index">
-        <app-bar-chart [chartInfo]="currentChart"></app-bar-chart>
+    <div *ngFor="let currentChart of spreadsheet?.charts; let barChartIndex = index">
+        <app-bar-chart [chartIndex]="barChartIndex" [chartInfo]="currentChart"></app-bar-chart>
     </div>
     `,
     styles: []

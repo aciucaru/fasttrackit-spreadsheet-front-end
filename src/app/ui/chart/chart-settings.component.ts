@@ -40,7 +40,7 @@ import { ColumnInfo, ColumnType } from 'src/app/model/column';
         </div>
         
         <button class="add-data-column-button" class="toolbar-button" title="Add data column"
-            (click)="displayChartSettings()">
+            (click)="addEmptyChartDataColumn()">
             <img src="assets/icons/plus11-5.png" alt="Add data column">
         </button>
     </div>
@@ -50,6 +50,7 @@ import { ColumnInfo, ColumnType } from 'src/app/model/column';
 })
 export class ChartSettingsComponent implements OnInit
 {
+    @Input() public chartIndex: number = -1;
     @Input() public chartInfo?: ChartInfo;
 
     protected spreadsheet?: EditableSpreadsheet;
@@ -104,14 +105,19 @@ export class ChartSettingsComponent implements OnInit
         }
     }
 
-    changeChartLabelColumn(selection: string): void
+    protected changeChartLabelColumn(selection: string): void
     {
-        // this.chartInfo.
-        console.log(`ChartSettingsCompone: changeChartLabelColumn(${selection})`);
+        this.spreadsheetService.setChartLabelColumn(this.chartIndex, selection);
+        console.log(`ChartSettingsComponent: setChartLabelColumn(${this.chartIndex}, ${selection})`);
     }
 
-    changeChartDataColumn(selection: string): void
+    protected changeChartDataColumn(selection: string): void
     {
-        console.log(`ChartSettingsCompone: changeChartDataColumn(${selection})`);
+        console.log(`ChartSettingsComponent: changeChartDataColumn(${selection})`);
+    }
+
+    protected addEmptyChartDataColumn(): void
+    {
+
     }
 }

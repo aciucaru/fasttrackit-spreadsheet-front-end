@@ -87,6 +87,31 @@ export class SpreadsheetService
             return null;
     }
 
+    public findColumnInfoByVarName(varName: string): number
+    {
+        let columnInfo: ColumnInfo;
+
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        // se cauta 'columnInfo' dupa string-ul 'varName'
+        let notFound: boolean = true;
+        let currentColumnInfo: ColumnInfo;
+        let i = 0;
+        while(notFound && i<spreadsheet.columnInfos.length)
+        {
+            currentColumnInfo = spreadsheet.columnInfos[i];
+            if(currentColumnInfo.varName === varName)
+                notFound = false;
+            i++;
+        }
+
+        if(notFound != true)
+            return i;
+        else
+            return -1;
+    }
+
     // metoda ce spune daca o celula de data oarecare de indexi 'rowIndex' si 'colIndex'
     // este celula selectata; celula selectata va fi desenata ca 'input', restul vor fi 'read-only'
     public isThisDataCellSelected(rowIndex: number, colIndex: number): boolean
@@ -581,7 +606,7 @@ export class SpreadsheetService
         this.spreadsheetSubject.next(spreadsheet);
     }
 
-    public setChartLabelColumn(chartIndex: number, labelColIndex: number, colInfo: ColumnInfo): void
+    public setChartLabelColumn(chartIndex: number, colVarName: string): void
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
@@ -589,19 +614,25 @@ export class SpreadsheetService
         let charts: ChartInfo[] = spreadsheet.charts;
         let columnInfos: ColumnInfo[] = spreadsheet.columnInfos;
 
-        if(chartIndex < charts.length && labelColIndex < columnInfos.length)
+        if(chartIndex < charts.length)
         {
-            let newChartColumnLabelInfo: ChartColumnLabelInfo = 
+            let columnInfoIndex: number = this.findColumnInfoByVarName(colVarName);
+
+            if(columnInfoIndex >= 0)
             {
-                labelColumnVarNameRef: colInfo.varName, // numele coloanei cu label-ul chartului
-                labelColor: "#ffffff" // culoarea de display a label-ului
-            };
+                let newChartColumnLabelInfo: ChartColumnLabelInfo = 
+                {
+                    labelColumnVarNameRef: colVarName, // numele coloanei cu label-ul chartului
+                    labelColor: "#ffffff" // culoarea de display a label-ului
+                };
+                console.log(`setChartLabelColumn() chartIndex: ${chartIndex}`);
 
-            charts[chartIndex].labelColumn = newChartColumnLabelInfo;
-
-            // se trimite noul spreadsheet catre toti observatorii sai
-            this.spreadsheetSubject.next(spreadsheet);
-            console.log('setChartLabelColumn()');
+                charts[chartIndex].labelColumn = newChartColumnLabelInfo;
+    
+                // se trimite noul spreadsheet catre toti observatorii sai
+                this.spreadsheetSubject.next(spreadsheet);
+                console.log('setChartLabelColumn()');
+            }
         }
     }
 
@@ -1039,5 +1070,36 @@ export class SpreadsheetService
 
         console.log(`Column ${currentColIndex}, ${currentColVarName} formula:`);
         console.log(currentColFormula);
+    }
+
+    public logChartsInfo(): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        console.log(`charts: \n`);
+        let currentChartInfo: ChartInfo;
+        for(let i = 0; i<spreadsheet.charts.length; i++)
+        {
+            console.log(`chart ${i}:`);
+            currentChartInfo = spreadsheet.charts[i];
+            console.log(`  type: ${currentChartInfo.chartType}`);
+
+            console.log(`  label col ref: ${currentChartInfo.labelColumn.labelColumnVarNameRef}`);
+            console.log(`  label col fg color: ${currentChartInfo.labelColumn.labelColor}`);
+
+            console.log(`  data cols:`);
+            let currentDataCol: ChartColumnDataInfo;
+            for(let j = 0; j<currentChartInfo.dataColumns.length; j++)
+            {
+                currentDataCol = currentChartInfo.dataColumns[j];
+                console.log(`    data col ${j}`);
+                console.log(`    - ref: ${currentDataCol.dataColumnVarNameRef}`);
+                console.log(`    - bg color: ${currentDataCol.rgbBGColor}`);
+                console.log(`    - fg color: ${currentDataCol.rgbFGColor}`);
+            }
+
+            console.log(`\n`);
+        }
     }
 }

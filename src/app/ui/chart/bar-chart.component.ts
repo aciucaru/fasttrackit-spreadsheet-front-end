@@ -11,7 +11,7 @@ import { ChartInfo } from 'src/app/model/chart';
         <div class="chart-area">chart area</div>
 
         <app-chart-settings class="chart-settings" *ngIf="showChartSettings"
-        [chartInfo]="this.chartInfo">
+        [chartIndex]="this.chartIndex" [chartInfo]="this.chartInfo">
         </app-chart-settings>
 
         <button class="display-chart-settings-button" *ngIf="!showChartSettings"
@@ -32,6 +32,7 @@ import { ChartInfo } from 'src/app/model/chart';
 })
 export class BarChartComponent implements OnInit
 {
+    @Input() public chartIndex: number = -1;
     @Input() public chartInfo?: ChartInfo;
 
     protected spreadsheet?: EditableSpreadsheet;
