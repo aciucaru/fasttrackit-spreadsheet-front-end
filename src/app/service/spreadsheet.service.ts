@@ -87,8 +87,65 @@ export class SpreadsheetService
             return null;
     }
 
+    public getColumnNumericData(columnRef: string): number[]
+    {
+        let numericDataArray: number[] = [];
+
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let columnIndex: number = this.findColumnInfoByVarName(columnRef);
+
+        // daca acea coloana chiar exista
+        if(columnIndex >= 0)
+        {
+            let currentCellNumericValue: number;
+            for(let currentRow of spreadsheet.rows)
+            {
+                currentCellNumericValue = currentRow.cells[columnIndex].numberValue
+                numericDataArray.push(currentCellNumericValue);
+            }
+        }
+
+        console.log(`SpreadsheetService: getColumnNumericData(${columnRef}): \n`, numericDataArray);
+
+        return numericDataArray;
+    }
+
+    public getColumnMinNumericValue(columnRef: string): number
+    {
+        let minValue: number = Number.MAX_SAFE_INTEGER;
+
+        let numericDataArray: number[] = this.getColumnNumericData(columnRef);
+        minValue = Math.min(...numericDataArray);
+
+        console.log(`SpreadsheetService: getColumnMinNumericValue(${columnRef}): ${minValue}`);
+
+        return minValue;
+    }
+
+    public getChartMinValue(chartInfo: ChartInfo): number
+    {
+        let minValue: number = Number.MAX_SAFE_INTEGER;
+        let dataColumns: ChartColumnDataInfo[] = chartInfo.dataColumns;
+
+        let currentDataColNumericValues: number[];
+        let tempMinValue: number = 0;
+        for(let currentDataCol of dataColumns)
+        {
+            currentDataColNumericValues = this.getColumnNumericData(currentDataCol.dataColumnVarNameRef);
+            
+            tempMinValue = Math.min(...currentDataColNumericValues);
+            if(minValue > tempMinValue)
+                minValue = tempMinValue;
+        }
+
+        return minValue;
+    }
+
     public findColumnInfoByVarName(varName: string): number
     {
+        let foundIndex = -1;
         let columnInfo: ColumnInfo;
 
         // se ia spreadsheet-ul curent
@@ -102,14 +159,14 @@ export class SpreadsheetService
         {
             currentColumnInfo = spreadsheet.columnInfos[i];
             if(currentColumnInfo.varName === varName)
+            {
+                foundIndex = i;
                 notFound = false;
+            }
             i++;
         }
 
-        if(notFound != true)
-            return i;
-        else
-            return -1;
+        return foundIndex;
     }
 
     // metoda ce spune daca o celula de data oarecare de indexi 'rowIndex' si 'colIndex'
@@ -337,9 +394,7 @@ export class SpreadsheetService
             let newChartColumnDataInfo: ChartColumnDataInfo = 
             {
                 dataColumnVarNameRef: "", // numele coloanei cu label-ul chartului
-                rgbBGColor: "#ffffff", // valoare HTML hex a culorii de background
-                rgbFGColor: "#ffffff", // valaore HTML hex a culorii pt. text
-                borderColor: "#ffffff" // valoare HTML hex a culorii a marginilor
+                rgbBGColor: "#ffffff" // valoare HTML hex a culorii de background
             };
 
             charts[chartIndex]?.dataColumns.push(newChartColumnDataInfo);
@@ -382,15 +437,13 @@ export class SpreadsheetService
             labelColumn:
             {
                 labelColumnVarNameRef: '', // numele coloanei cu label-ul chartului
-                labelColor: '#15a9f9' // culoarea de display a label-ului
+                rgbFGColor: '#000000' // culoarea de display a label-ului
             },
             dataColumns:
             [
                 {
                     dataColumnVarNameRef: '', // numele coloanei cu label-ul chartului
-                    rgbBGColor: '#15a9f9', // valoare HTML hex a culorii de background
-                    rgbFGColor: '#000000', // valaore HTML hex a culorii pt. text
-                    borderColor: '#000000' // valoare HTML hex a culorii a marginilor
+                    rgbBGColor: '#ffffff' // valoare HTML hex a culorii de background
                 }
             ]
         }
@@ -670,7 +723,7 @@ export class SpreadsheetService
 
         if(chartIndex < charts.length)
         {
-            charts[chartIndex].labelColumn.labelColor = labelColor;
+            charts[chartIndex].labelColumn.rgbFGColor = labelColor;
 
             // se trimite noul spreadsheet catre toti observatorii sai
             this.spreadsheetSubject.next(spreadsheet);
@@ -1152,7 +1205,7 @@ export class SpreadsheetService
 
             console.log(`  label col:`);
             console.log(`  - ref: ${currentChartInfo.labelColumn.labelColumnVarNameRef}`);
-            console.log(`  - fg color: ${currentChartInfo.labelColumn.labelColor}`);
+            console.log(`  - fg color: ${currentChartInfo.labelColumn.rgbFGColor}`);
 
             console.log(`  data cols:`);
             let currentDataCol: ChartColumnDataInfo;
@@ -1162,10 +1215,15 @@ export class SpreadsheetService
                 console.log(`    data col ${j}:`);
                 console.log(`    - ref: ${currentDataCol.dataColumnVarNameRef}`);
                 console.log(`    - bg color: ${currentDataCol.rgbBGColor}`);
-                console.log(`    - fg color: ${currentDataCol.rgbFGColor}`);
             }
 
             console.log(`\n`);
         }
+    }
+
+    public testColMinValue(): void
+    {
+        let minValue = this.getColumnMinNumericValue('stringCol');
+        console.log(`SpreadsheetService: testColMinValue(): ${minValue}`);
     }
 }

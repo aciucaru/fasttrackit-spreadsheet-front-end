@@ -23,8 +23,9 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
                 (click)="spreadsheetService.logChartsInfo()">
                 <img src="assets/icons/drawchart.png" alt="Log charts">
             </button>
-            <button class="dummy04" class="toolbar-button" title="dummy">
-                <img src="assets/icons/hidenote.png" alt="dummy">
+            <button class="col-min-value" class="toolbar-button" title="Test col min value"
+                (click)="spreadsheetService.testColMinValue()">
+                <img src="assets/icons/hidenote.png" alt="Test col min value">
             </button>
             <button class="dummy05" class="toolbar-button" title="dummy">
                 <img src="assets/icons/hidenote.png" alt="dummy">

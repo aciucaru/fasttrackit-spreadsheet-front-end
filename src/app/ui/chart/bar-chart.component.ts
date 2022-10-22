@@ -1,14 +1,17 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 
 import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
-import { ChartInfo } from 'src/app/model/chart';
+import { ChartColumnDataInfo, ChartInfo } from 'src/app/model/chart';
 
 @Component({
     selector: 'app-bar-chart',
     template: `
     <div class="chart-container">
-        <div class="chart-area">chart area</div>
+        <div class="chart-area">
+            chart area<br>
+            <canvas #chartCanvas width="400" height="200"></canvas>
+        </div>
 
         <app-chart-settings class="chart-settings" *ngIf="showChartSettings"
         [chartIndex]="this.chartIndex" [chartInfo]="this.chartInfo">
@@ -30,10 +33,15 @@ import { ChartInfo } from 'src/app/model/chart';
     styles: [],
     styleUrls: ['./chart-general.scss']
 })
-export class BarChartComponent implements OnInit
+export class BarChartComponent implements OnInit, AfterViewInit
 {
+    @ViewChild('chartCanvas', {static: true}) chartCanvas: ElementRef<HTMLCanvasElement>;
+    private renderContext: CanvasRenderingContext2D;
+    
+    // indexul acestui chart (in cadrul sirului de chart-uri din spreadsheet)
     @Input() public chartIndex: number = -1;
-    @Input() public chartInfo?: ChartInfo;
+    // toate informatiile despre acest chart
+    @Input() public chartInfo: ChartInfo;
 
     protected spreadsheet?: EditableSpreadsheet;
 
@@ -44,6 +52,12 @@ export class BarChartComponent implements OnInit
     constructor(protected spreadsheetService: SpreadsheetService) { }
 
     ngOnInit(): void { this.subscribeAsSpreadsheetObserver(); }
+
+    ngAfterViewInit()
+    {
+        this.renderContext = this.chartCanvas.nativeElement.getContext('2d')!;
+        this.drawBarCharts(this.renderContext);
+    }
 
     subscribeAsSpreadsheetObserver(): void
     {
@@ -60,4 +74,20 @@ export class BarChartComponent implements OnInit
 
     protected hideChartSettings(): void
     { this.showChartSettings = false; }
+
+    private drawBarCharts(renderContext: CanvasRenderingContext2D): void
+    {
+        renderContext.clearRect(0, 0, 
+            this.chartCanvas.nativeElement.width,
+            this.chartCanvas.nativeElement.height
+            );
+        renderContext.fillStyle = 'blue';
+        renderContext.fillRect(0, 0, 100, 100);
+
+        let dataColumns: ChartColumnDataInfo[] = this.chartInfo.dataColumns;
+        for(let currentDataCol of dataColumns)
+        {
+            
+        }
+    }
 }
