@@ -325,7 +325,7 @@ export class SpreadsheetService
         console.log('addColToLeft()');
     }
 
-    public addChartDataColumn(chartIndex: number, colInfo: ColumnInfo): void
+    public addEmptyChartDataColumn(chartIndex: number): void
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
@@ -336,7 +336,7 @@ export class SpreadsheetService
         {
             let newChartColumnDataInfo: ChartColumnDataInfo = 
             {
-                dataColumnVarNameRef: colInfo.varName, // numele coloanei cu label-ul chartului
+                dataColumnVarNameRef: "", // numele coloanei cu label-ul chartului
                 rgbBGColor: "#ffffff", // valoare HTML hex a culorii de background
                 rgbFGColor: "#ffffff", // valaore HTML hex a culorii pt. text
                 borderColor: "#ffffff" // valoare HTML hex a culorii a marginilor
@@ -346,7 +346,7 @@ export class SpreadsheetService
 
             // se trimite noul spreadsheet catre toti observatorii sai
             this.spreadsheetSubject.next(spreadsheet);
-            console.log('addChartDataColumn()');
+            console.log(`SpreadsheetService: addEmptyChartDataColumn(${chartIndex})`);
         }
     }
 
@@ -384,7 +384,15 @@ export class SpreadsheetService
                 labelColumnVarNameRef: '', // numele coloanei cu label-ul chartului
                 labelColor: '#15a9f9' // culoarea de display a label-ului
             },
-            dataColumns: []
+            dataColumns:
+            [
+                {
+                    dataColumnVarNameRef: '', // numele coloanei cu label-ul chartului
+                    rgbBGColor: '#15a9f9', // valoare HTML hex a culorii de background
+                    rgbFGColor: '#000000', // valaore HTML hex a culorii pt. text
+                    borderColor: '#000000' // valoare HTML hex a culorii a marginilor
+                }
+            ]
         }
 
         spreadsheet.charts.push(chartInfo);
@@ -512,6 +520,29 @@ export class SpreadsheetService
         }
     }
 
+    public removeChartDataColumn(chartIndex: number, dataColIndex: number): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let charts: ChartInfo[] = spreadsheet.charts;
+
+        if(chartIndex < charts.length)
+        {
+            let dataColumns: ChartColumnDataInfo[] = spreadsheet.charts[chartIndex].dataColumns;
+
+            if(dataColIndex < dataColumns.length)
+            {
+                // se sterge informatia coloanei de date din chart
+                charts[chartIndex].dataColumns.splice(dataColIndex, 1);
+
+                // se trimite noul spreadsheet catre toti observatorii sai
+                this.spreadsheetSubject.next(spreadsheet);
+                console.log(`SpreadsheetService: removeChartDataColumn(${chartIndex}, ${dataColIndex})`);
+            }
+        }
+    }
+
     // seteaza celula titlului de coloana, celula selectata curent
     // aceasta celula este singura ce va fi editabila, restul celulelor vor fi 'read-only'
     public setSelectedTitleCell(colIndex: number): void
@@ -620,14 +651,7 @@ export class SpreadsheetService
 
             if(columnInfoIndex >= 0)
             {
-                let newChartColumnLabelInfo: ChartColumnLabelInfo = 
-                {
-                    labelColumnVarNameRef: colVarName, // numele coloanei cu label-ul chartului
-                    labelColor: "#ffffff" // culoarea de display a label-ului
-                };
-                console.log(`setChartLabelColumn() chartIndex: ${chartIndex}`);
-
-                charts[chartIndex].labelColumn = newChartColumnLabelInfo;
+                charts[chartIndex].labelColumn.labelColumnVarNameRef = colVarName;
     
                 // se trimite noul spreadsheet catre toti observatorii sai
                 this.spreadsheetSubject.next(spreadsheet);
@@ -636,7 +660,7 @@ export class SpreadsheetService
         }
     }
 
-    public setChartDataColumn(chartIndex: number, dataColIndex: number, colInfo: ColumnInfo): void
+    public setChartLabelColumnColor(chartIndex: number, labelColor: string): void
     {
         // se ia spreadsheet-ul curent
         let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
@@ -644,21 +668,62 @@ export class SpreadsheetService
         let charts: ChartInfo[] = spreadsheet.charts;
         let columnInfos: ColumnInfo[] = spreadsheet.columnInfos;
 
-        if(chartIndex < charts.length && dataColIndex < columnInfos.length)
+        if(chartIndex < charts.length)
         {
-            let newChartColumnDataInfo: ChartColumnDataInfo = 
-            {
-                dataColumnVarNameRef: colInfo.varName, // numele coloanei cu label-ul chartului
-                rgbBGColor: "#ffffff", // valoare HTML hex a culorii de background
-                rgbFGColor: "#ffffff", // valaore HTML hex a culorii pt. text
-                borderColor: "#ffffff" // valoare HTML hex a culorii a marginilor
-            };
-
-            charts[chartIndex].dataColumns[dataColIndex] = newChartColumnDataInfo;
+            charts[chartIndex].labelColumn.labelColor = labelColor;
 
             // se trimite noul spreadsheet catre toti observatorii sai
             this.spreadsheetSubject.next(spreadsheet);
-            console.log('setChartDataColumn()');
+            console.log(`SpreadsheetService: setChartLabelColumnColor(${chartIndex}, ${labelColor})`);
+        }
+    }
+
+    public setChartDataColumn(chartIndex: number, dataColIndex: number, colVarName: string): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let charts: ChartInfo[] = spreadsheet.charts;
+
+        if(chartIndex < charts.length)
+        {
+            let dataColumns: ChartColumnDataInfo[] = spreadsheet.charts[chartIndex].dataColumns;
+
+            if(dataColIndex < dataColumns.length)
+            {
+                let columnInfoIndex: number = this.findColumnInfoByVarName(colVarName);
+
+                if(columnInfoIndex >= 0)
+                {
+                    charts[chartIndex].dataColumns[dataColIndex].dataColumnVarNameRef = colVarName;
+    
+                    // se trimite noul spreadsheet catre toti observatorii sai
+                    this.spreadsheetSubject.next(spreadsheet);
+                    console.log('setChartDataColumn()');
+                }
+            }
+        }
+    }
+
+    public setChartDataColumnColor(chartIndex: number, dataColIndex: number, dataColor: string): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let charts: ChartInfo[] = spreadsheet.charts;
+
+        if(chartIndex < charts.length)
+        {
+            let dataColumns: ChartColumnDataInfo[] = spreadsheet.charts[chartIndex].dataColumns;
+
+            if(dataColIndex < dataColumns.length)
+            {
+                charts[chartIndex].dataColumns[dataColIndex].rgbBGColor = dataColor;
+
+                // se trimite noul spreadsheet catre toti observatorii sai
+                this.spreadsheetSubject.next(spreadsheet);
+                console.log(`SpreadsheetService: setChartDataColumnColor(${chartIndex}, ${dataColIndex}, ${dataColor})`);
+            }
         }
     }
 
@@ -1085,15 +1150,16 @@ export class SpreadsheetService
             currentChartInfo = spreadsheet.charts[i];
             console.log(`  type: ${currentChartInfo.chartType}`);
 
-            console.log(`  label col ref: ${currentChartInfo.labelColumn.labelColumnVarNameRef}`);
-            console.log(`  label col fg color: ${currentChartInfo.labelColumn.labelColor}`);
+            console.log(`  label col:`);
+            console.log(`  - ref: ${currentChartInfo.labelColumn.labelColumnVarNameRef}`);
+            console.log(`  - fg color: ${currentChartInfo.labelColumn.labelColor}`);
 
             console.log(`  data cols:`);
             let currentDataCol: ChartColumnDataInfo;
             for(let j = 0; j<currentChartInfo.dataColumns.length; j++)
             {
                 currentDataCol = currentChartInfo.dataColumns[j];
-                console.log(`    data col ${j}`);
+                console.log(`    data col ${j}:`);
                 console.log(`    - ref: ${currentDataCol.dataColumnVarNameRef}`);
                 console.log(`    - bg color: ${currentDataCol.rgbBGColor}`);
                 console.log(`    - fg color: ${currentDataCol.rgbFGColor}`);
