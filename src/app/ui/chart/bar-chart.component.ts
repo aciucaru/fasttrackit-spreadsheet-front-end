@@ -87,7 +87,7 @@ export class BarChartComponent implements OnInit, AfterViewInit
         let dataColumns: ChartColumnDataInfo[] = this.chartInfo.dataColumns;
         for(let currentDataCol of dataColumns)
         {
-            
+
         }
     }
 }

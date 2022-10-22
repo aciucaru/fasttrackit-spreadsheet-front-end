@@ -48,6 +48,11 @@ import { ColumnInfo, ColumnType } from 'src/app/model/column';
             (click)="spreadsheetService.addEmptyChartDataColumn(this.chartIndex)">
             <img src="assets/icons/plus11-5.png" alt="Add data column">
         </button>
+
+        <button class="toolbar-button" title="Log chart min value"
+            (click)="spreadsheetService.getChartMaxValue(this.chartInfo!)">
+            Chart max
+        </button>
     </div>
     `,
     styles: [],

@@ -124,23 +124,52 @@ export class SpreadsheetService
         return minValue;
     }
 
+    public getColumnMaxNumericValue(columnRef: string): number
+    {
+        let maxValue: number = Number.MIN_SAFE_INTEGER;
+
+        let numericDataArray: number[] = this.getColumnNumericData(columnRef);
+        maxValue = Math.max(...numericDataArray);
+
+        console.log(`SpreadsheetService: getColumnMaxNumericValue(${columnRef}): ${maxValue}`);
+
+        return maxValue;
+    }
+
     public getChartMinValue(chartInfo: ChartInfo): number
     {
         let minValue: number = Number.MAX_SAFE_INTEGER;
         let dataColumns: ChartColumnDataInfo[] = chartInfo.dataColumns;
 
-        let currentDataColNumericValues: number[];
         let tempMinValue: number = 0;
         for(let currentDataCol of dataColumns)
         {
-            currentDataColNumericValues = this.getColumnNumericData(currentDataCol.dataColumnVarNameRef);
-            
-            tempMinValue = Math.min(...currentDataColNumericValues);
+            tempMinValue = this.getColumnMinNumericValue(currentDataCol.dataColumnVarNameRef);
             if(minValue > tempMinValue)
                 minValue = tempMinValue;
         }
 
+        console.log(`SpreadsheetService: getChartMinValue(): ${minValue}`);
+
         return minValue;
+    }
+
+    public getChartMaxValue(chartInfo: ChartInfo): number
+    {
+        let maxValue: number = Number.MIN_SAFE_INTEGER;
+        let dataColumns: ChartColumnDataInfo[] = chartInfo.dataColumns;
+
+        let tempMaxValue: number = 0;
+        for(let currentDataCol of dataColumns)
+        {
+            tempMaxValue = this.getColumnMaxNumericValue(currentDataCol.dataColumnVarNameRef);
+            if(maxValue < tempMaxValue)
+                maxValue = tempMaxValue;
+        }
+
+        console.log(`SpreadsheetService: getChartMaxValue(): ${maxValue}`);
+
+        return maxValue;
     }
 
     public findColumnInfoByVarName(varName: string): number
@@ -1225,5 +1254,11 @@ export class SpreadsheetService
     {
         let minValue = this.getColumnMinNumericValue('stringCol');
         console.log(`SpreadsheetService: testColMinValue(): ${minValue}`);
+    }
+
+    public testColMaxValue(): void
+    {
+        let maxValue = this.getColumnMaxNumericValue('stringCol');
+        console.log(`SpreadsheetService: testColMaxValue(): ${maxValue}`);
     }
 }
