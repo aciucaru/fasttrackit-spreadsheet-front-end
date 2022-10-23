@@ -37,6 +37,7 @@ export class BarChartComponent implements OnInit, AfterViewInit
 {
     @ViewChild('chartCanvas', {static: true}) chartCanvas: ElementRef<HTMLCanvasElement>;
     private renderContext: CanvasRenderingContext2D;
+    private canvasInitialized: boolean = false;
     
     // indexul acestui chart (in cadrul sirului de chart-uri din spreadsheet)
     @Input() public chartIndex: number = -1;
@@ -51,12 +52,27 @@ export class BarChartComponent implements OnInit, AfterViewInit
     
     constructor(protected spreadsheetService: SpreadsheetService) { }
 
-    ngOnInit(): void { this.subscribeAsSpreadsheetObserver(); }
+    ngOnChanges()
+    {
+        if(this.canvasInitialized)
+        {
+            this.drawBarCharts(this.renderContext);
+            console.log(`ngOnChanges()`);
+        }
+    }
+
+    ngOnInit(): void
+    { 
+        this.subscribeAsSpreadsheetObserver();
+    }
 
     ngAfterViewInit()
     {
+        this.canvasInitialized = true;
+
         this.renderContext = this.chartCanvas.nativeElement.getContext('2d')!;
         this.drawBarCharts(this.renderContext);
+        console.log(`ngAfterViewInit()`);
     }
 
     subscribeAsSpreadsheetObserver(): void
@@ -66,6 +82,12 @@ export class BarChartComponent implements OnInit, AfterViewInit
             .subscribe( (spreadsheet: EditableSpreadsheet) =>
                 {
                     this.spreadsheet = spreadsheet;
+
+                    if(this.canvasInitialized)
+                    {
+                        this.drawBarCharts(this.renderContext);
+                        console.log(`subscribeAsSpreadsheetObserver()`);
+                    }
                 });
     }
 
@@ -77,17 +99,49 @@ export class BarChartComponent implements OnInit, AfterViewInit
 
     private drawBarCharts(renderContext: CanvasRenderingContext2D): void
     {
+        let chartDataColumnsMinValue = this.spreadsheetService.getChartMinValue(this.chartInfo);
+        let chartDataColumnsMaxValue = this.spreadsheetService.getChartMaxValue(this.chartInfo);
+        let chartBarWidth = 20.0;
+        let chartBarMaxHeight = 200.0;
+        let chartBarHeightRatio = (1.0*chartBarMaxHeight) / (1.0*chartDataColumnsMaxValue);
+        let spaceBetweenBars = 5.0;
+        let spaceBetweenSequences = 10.0;
+
+        let dataColumns: ChartColumnDataInfo[] = this.chartInfo.dataColumns;
+
         renderContext.clearRect(0, 0, 
             this.chartCanvas.nativeElement.width,
             this.chartCanvas.nativeElement.height
             );
+        
+        
         renderContext.fillStyle = 'blue';
-        renderContext.fillRect(0, 0, 100, 100);
+        // renderContext.fillRect(0, 0, 100, 100);
 
-        let dataColumns: ChartColumnDataInfo[] = this.chartInfo.dataColumns;
-        for(let currentDataCol of dataColumns)
+
+        let columnRefs: string[] = this.spreadsheetService.getChartDataColumnRefs(this.chartInfo);
+        let numericData: Array<Array<number>> = this.spreadsheetService.getNumericValuesForChartDataColumns(columnRefs);
+
+        let currentRow: Array<number>;
+        let currentColumnValue: number = 0.0;
+        let currentBarHeight: number = 0.0;
+        let currentBarStartX: number = spaceBetweenBars;
+        let barStartY: number = chartBarMaxHeight + spaceBetweenBars;
+        for(let i=0; i<numericData.length; i++)
         {
+            currentRow = numericData[i];
+            for(let j=0; j<currentRow.length; j++)
+            {
+                currentColumnValue = 1.0*currentRow[j];
+                currentBarHeight = 1.0 - (currentColumnValue * chartBarHeightRatio);
 
+                renderContext.fillRect(currentBarStartX, barStartY, chartBarWidth, currentBarHeight);
+
+                currentBarStartX += chartBarWidth + spaceBetweenBars;
+            }
+            currentBarStartX += spaceBetweenSequences;
         }
+
+
     }
 }

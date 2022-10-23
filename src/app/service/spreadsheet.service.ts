@@ -12,6 +12,7 @@ import { Row } from '../model/row';
 import { ColumnInfo, ColumnType, GeneratingMethod } from '../model/column';
 import { Spreadsheet, EditableSpreadsheet} from '../model/spreadsheet';
 import { ChartColumnDataInfo, ChartColumnLabelInfo, ChartType, ChartInfo } from '../model/chart';
+import { column } from 'mathjs';
 
 @Injectable({
   providedIn: 'root'
@@ -112,6 +113,67 @@ export class SpreadsheetService
         return numericDataArray;
     }
 
+    public getColumnRefIndex(columnRef: string): number
+    {
+        let colIndex = -1;
+
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let notFound = true;
+        let i = 0;
+        while(notFound && i<spreadsheet.columnInfos.length)
+        {
+            if(spreadsheet.columnInfos[i].varName === columnRef)
+            {
+                colIndex = i;
+                notFound = false;
+            }
+
+            i++;
+        }
+
+        return colIndex;
+    }
+
+    public getNumericValuesForChartDataColumns(columnRefs: string[]): Array<Array<number>>
+    {
+        let numericValues: Array<Array<number>> = new Array<Array<number>>();
+
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        // se determina indexii corepunzatori coloanelor 'columnRefs'
+        let columnIndexes: number[] = [];
+        let currentIndex = -1;
+        for(let currentColumnRef of columnRefs)
+        {
+            currentIndex = this.getColumnRefIndex(currentColumnRef);
+            if(currentIndex >= 0)
+                columnIndexes.push(currentIndex);
+            else
+                console.log(`error: SpreadsheetService: getNumericValuesForChartDataColumns(): columnRef nout found`);
+        }
+
+        let currentNumericRow: Array<number>;
+        let currentColumnInfo: ColumnInfo;
+        for(let currentRow of spreadsheet.rows)
+        {
+            currentNumericRow = new Array<number>();
+
+            for(let currentColIndex of columnIndexes)
+            {
+                currentNumericRow.push(currentRow.cells[currentColIndex].numberValue);
+            }
+            numericValues.push(currentNumericRow);
+        }
+
+        console.log(`SpreadsheetService: getNumericValuesForChartDataColumns(): values`);
+        console.table(numericValues);
+
+        return numericValues;
+    }
+
     public getColumnMinNumericValue(columnRef: string): number
     {
         let minValue: number = Number.MAX_SAFE_INTEGER;
@@ -134,6 +196,18 @@ export class SpreadsheetService
         console.log(`SpreadsheetService: getColumnMaxNumericValue(${columnRef}): ${maxValue}`);
 
         return maxValue;
+    }
+
+    public getChartDataColumnRefs(chartInfo: ChartInfo): string[]
+    {
+        let columnRefs: string[] = [];
+
+        for(let currentDataColumn of chartInfo.dataColumns)
+        {
+            columnRefs.push(currentDataColumn.dataColumnVarNameRef);
+        }
+
+        return columnRefs;
     }
 
     public getChartMinValue(chartInfo: ChartInfo): number
