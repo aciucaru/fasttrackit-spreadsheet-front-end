@@ -9,8 +9,7 @@ import { ChartColumnDataInfo, ChartInfo } from 'src/app/model/chart';
     template: `
     <div class="chart-container">
         <div class="chart-area">
-            chart area<br>
-            <canvas #chartCanvas width="400" height="200"></canvas>
+            <canvas #chartCanvas width="300px" height="250px"></canvas>
         </div>
 
         <app-chart-settings class="chart-settings" *ngIf="showChartSettings"
@@ -31,7 +30,11 @@ import { ChartColumnDataInfo, ChartInfo } from 'src/app/model/chart';
     </div>
     `,
     styles: [],
-    styleUrls: ['./chart-general.scss']
+    styleUrls:
+    [
+        './chart-general.scss',
+        './bar-chart.component.scss',
+    ]
 })
 export class BarChartComponent implements OnInit, AfterViewInit
 {
@@ -105,22 +108,34 @@ export class BarChartComponent implements OnInit, AfterViewInit
         let chartBarMaxHeight = 200.0;
         let chartBarHeightRatio = (1.0*chartBarMaxHeight) / (1.0*chartDataColumnsMaxValue);
         let spaceBetweenBars = 5.0;
-        let spaceBetweenSequences = 10.0;
+        let spaceBetweenSequences = 15.0;
 
         let dataColumns: ChartColumnDataInfo[] = this.chartInfo.dataColumns;
+        
+        let columnRefs: string[] = this.spreadsheetService.getChartDataColumnRefs(this.chartInfo);
+        let numericData: Array<Array<number>> = this.spreadsheetService.getNumericValuesForChartDataColumns(columnRefs);
+
+        // prima data se determina lungimea canvas-ului, in functie de cate bare are de desenat
+        let canvasWidth: number = spaceBetweenBars;
+        for(let i=0; i<numericData.length; i++)
+        {   
+            for(let j=0; j<numericData[i].length; j++)
+            {
+                canvasWidth += chartBarWidth + spaceBetweenBars;
+            }
+            
+            canvasWidth += spaceBetweenSequences;
+        }
+
+        // se seteaza lungimea chart-ului
+        this.chartCanvas.nativeElement.width = canvasWidth;
+
+        // apoi se deseneaza:
 
         renderContext.clearRect(0, 0, 
             this.chartCanvas.nativeElement.width,
             this.chartCanvas.nativeElement.height
             );
-        
-        
-        renderContext.fillStyle = 'blue';
-        // renderContext.fillRect(0, 0, 100, 100);
-
-
-        let columnRefs: string[] = this.spreadsheetService.getChartDataColumnRefs(this.chartInfo);
-        let numericData: Array<Array<number>> = this.spreadsheetService.getNumericValuesForChartDataColumns(columnRefs);
 
         let currentRow: Array<number>;
         let currentColumnValue: number = 0.0;
@@ -128,20 +143,28 @@ export class BarChartComponent implements OnInit, AfterViewInit
         let currentBarStartX: number = spaceBetweenBars;
         let barStartY: number = chartBarMaxHeight + spaceBetweenBars;
         for(let i=0; i<numericData.length; i++)
-        {
+        {   
+            renderContext.fillStyle = this.chartInfo.labelColumn.rgbFGColor;
+            renderContext.textBaseline = "bottom";
+            renderContext.font = '14px Arial';
+            renderContext.fillText('Hello world', currentBarStartX - 5, barStartY + 30);
+
             currentRow = numericData[i];
             for(let j=0; j<currentRow.length; j++)
             {
                 currentColumnValue = 1.0*currentRow[j];
                 currentBarHeight = 1.0 - (currentColumnValue * chartBarHeightRatio);
 
+                renderContext.fillStyle = this.chartInfo.dataColumns[j].rgbBGColor;
                 renderContext.fillRect(currentBarStartX, barStartY, chartBarWidth, currentBarHeight);
 
                 currentBarStartX += chartBarWidth + spaceBetweenBars;
             }
+
+            renderContext.fillStyle = "#ffffff";
+            renderContext.fillRect(currentBarStartX-spaceBetweenBars+5, barStartY, (chartBarWidth+spaceBetweenBars)*2, 100);
+            
             currentBarStartX += spaceBetweenSequences;
         }
-
-
     }
 }

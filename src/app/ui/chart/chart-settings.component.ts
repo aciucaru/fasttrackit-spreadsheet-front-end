@@ -20,7 +20,7 @@ import { ColumnInfo, ColumnType } from 'src/app/model/column';
                 </option>
             </select>
             <input #labelFGColor type="color"
-            class="label-col-fg-color-input" name="head" value="#e66465"
+            class="label-col-fg-color-input" name="head" value="#63aeff"
             (change)="spreadsheetService.setChartLabelColumnColor(this.chartIndex, labelFGColor.value)">
 
             <ng-container *ngFor="let currentDataColumn of chartDataColumns; let dataColIndex=index">
@@ -34,7 +34,7 @@ import { ColumnInfo, ColumnType } from 'src/app/model/column';
                     </option>
                 </select>
                 <input #dataBGColor type="color"
-                class="data-col-bg-color-input" name="head" value="#e66465"
+                class="data-col-bg-color-input" name="head" value="#63aeff"
                 (change)="spreadsheetService.setChartDataColumnColor(this.chartIndex, dataColIndex, dataBGColor.value)">
                 
                 <button class="remove-data-column-button" class="toolbar-button" title="Remove data column"

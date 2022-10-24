@@ -497,7 +497,7 @@ export class SpreadsheetService
             let newChartColumnDataInfo: ChartColumnDataInfo = 
             {
                 dataColumnVarNameRef: "", // numele coloanei cu label-ul chartului
-                rgbBGColor: "#ffffff" // valoare HTML hex a culorii de background
+                rgbBGColor: "#63aeff" // valoare HTML hex a culorii de background
             };
 
             charts[chartIndex]?.dataColumns.push(newChartColumnDataInfo);
@@ -546,7 +546,7 @@ export class SpreadsheetService
             [
                 {
                     dataColumnVarNameRef: '', // numele coloanei cu label-ul chartului
-                    rgbBGColor: '#ffffff' // valoare HTML hex a culorii de background
+                    rgbBGColor: '#63aeff' // valoare HTML hex a culorii de background
                 }
             ]
         }
