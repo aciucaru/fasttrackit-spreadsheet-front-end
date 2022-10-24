@@ -174,6 +174,27 @@ export class SpreadsheetService
         return numericValues;
     }
 
+    public getStringValuesForChartLabelColumn(columnRef: string): Array<string>
+    {
+        let stringValues: Array<string> = new Array<string>();
+
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject.getValue();
+
+        // se determina indexul corepunzator coloanei 'columnRef'
+        let labelColumnIndex = this.getColumnRefIndex(columnRef);
+
+        for(let currentRow of spreadsheet.rows)
+        {
+            stringValues.push(currentRow.cells[labelColumnIndex].stringValue);
+        }
+
+        console.log(`SpreadsheetService: getStringValuesForChartLabelColumn(): values`);
+        console.table(stringValues);
+
+        return stringValues;
+    }
+
     public getColumnMinNumericValue(columnRef: string): number
     {
         let minValue: number = Number.MAX_SAFE_INTEGER;
