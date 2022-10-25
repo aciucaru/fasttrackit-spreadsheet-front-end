@@ -1,4 +1,4 @@
-.chart-settings-flex-container
+.xy-chart-settings-flex-container
 {
     flex-grow: 0;
     flex-shrink: 0;
@@ -20,7 +20,7 @@
 }
 
 
-.chart-settings-grid-container
+.xy-chart-settings-grid-container
 {
     flex-grow: 0;
     flex-shrink: 0;
@@ -37,7 +37,7 @@
     border-color: rgb(151, 151, 151);
 }
 
-.label-for-label-column
+.xy-chart-label-column
 {
     grid-row: 1 / 2;
     grid-column: 1 / 2;
@@ -45,13 +45,13 @@
     font-size: 16px;
 }
 
-.label-column-selector
+.xy-chart-label-column-selector
 {
     grid-row: 1 / 2;
     grid-column: 2 / 3;
 }
 
-.label-col-fg-color-input
+.xy-chart-label-col-fg-color-input
 {
     grid-row: 1 / 2;
     grid-column: 3 / 4;
@@ -60,33 +60,41 @@
     height: 24px;
 }
 
-.label-for-data-column
+
+
+.xy-chart-label-x-column
 {
+    grid-row: 2 / 3;
     grid-column: 1 / 2;
 
     font-size: 16px;
 }
 
-.data-column-selector
+.x-data-column-selector
 {
+    grid-row: 2 / 3;
     grid-column: 2 / 3;
 }
 
-.data-col-bg-color-input
+.xy-chart-label-y-column
 {
+    grid-row: 3 / 4;
+    grid-column: 1 / 2;
+
+    font-size: 16px;
+}
+
+.y-data-column-selector
+{
+    grid-row: 3 / 4;
+    grid-column: 2 / 3;
+}
+
+.xy-chart-data-col-bg-color-input
+{
+    grid-row: 2 / 4;
     grid-column: 3 / 4;
 
     width: 24px;
     height: 24px;
-}
-
-.remove-data-column-button
-{
-    grid-column: 4 / 5;
-}
-
-.add-data-column-button
-{
-    flex-grow: 1;
-    flex-shrink: 0;
 }

@@ -579,6 +579,39 @@ export class SpreadsheetService
         console.log('SpreadsheetService: addBarChart()');
     }
 
+    public addEmptyXYChart(): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let chartInfo: ChartInfo =
+        {
+            chartType: ChartType.XY,
+            labelColumn:
+            {
+                labelColumnVarNameRef: '', // numele coloanei cu label-ul chartului
+                rgbFGColor: '#000000' // culoarea de display a label-ului
+            },
+            dataColumns:
+            [
+                {
+                    dataColumnVarNameRef: '', // numele coloanei cu label-ul chartului
+                    rgbBGColor: '#63aeff' // valoare HTML hex a culorii de background
+                },
+                {
+                    dataColumnVarNameRef: '', // numele coloanei cu label-ul chartului
+                    rgbBGColor: '#63aeff' // valoare HTML hex a culorii de background
+                }
+            ]
+        }
+
+        spreadsheet.charts.push(chartInfo);
+
+        // apoi se trimite noul spreadsheet catre toti observatorii sai
+        this.spreadsheetSubject!.next(spreadsheet);
+        console.log('SpreadsheetService: addBarChart()');
+    }
+
     public calculateAllCellsValues(): void
     {
         // se ia spreadsheet-ul curent

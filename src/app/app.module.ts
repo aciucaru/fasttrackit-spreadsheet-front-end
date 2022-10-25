@@ -39,7 +39,9 @@ import { DebugGroupComponent } from './ui/toolbar/debug-group.component';
 import { ChartGroupComponent } from './ui/toolbar/chart-group.component';
 import { BarChartComponent } from './ui/chart/bar-chart.component';
 import { ChartPanelComponent } from './ui/panels/chart-panel.component';
-import { ChartSettingsComponent } from './ui/chart/chart-settings.component';
+import { ChartSettingsComponent } from './ui/chart/bar-chart-settings.component';
+import { XYChartComponent } from './ui/chart/xy-chart.component';
+import { XyChartSettingsComponent } from './ui/chart/xy-chart-settings.component';
 
 @NgModule({
     declarations:
@@ -66,7 +68,9 @@ import { ChartSettingsComponent } from './ui/chart/chart-settings.component';
         ChartGroupComponent,
         BarChartComponent,
         ChartPanelComponent,
-        ChartSettingsComponent
+        ChartSettingsComponent,
+        XYChartComponent,
+        XyChartSettingsComponent
     ],
     imports:
     [

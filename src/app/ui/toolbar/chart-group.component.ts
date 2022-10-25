@@ -13,7 +13,8 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
                 <img src="assets/icons/bar_52x60_v2.png" alt="Bar chart">
             </button>
 
-            <button class="xy-chart" class="toolbar-button" title="XY chart">
+            <button class="xy-chart" class="toolbar-button" title="XY chart"
+                (click)="spreadsheetService.addEmptyXYChart()">
                 <img src="assets/icons/stackdirectboth_52x60_v2.png" alt="XY chart">
             </button>
 
