@@ -102,7 +102,6 @@ export class BarChartComponent implements OnInit, AfterViewInit
 
     private drawBarCharts(renderContext: CanvasRenderingContext2D): void
     {
-        let chartDataColumnsMinValue = this.spreadsheetService.getChartMinValue(this.chartInfo);
         let chartDataColumnsMaxValue = this.spreadsheetService.getChartMaxValue(this.chartInfo);
         let chartBarWidth = 20.0;
         let chartBarMaxHeight = 200.0;
@@ -110,8 +109,6 @@ export class BarChartComponent implements OnInit, AfterViewInit
         let spaceBetweenBars = 5.0;
         let spaceBetweenSequences = 15.0;
         let sequenceWidth = 0;
-
-        let dataColumns: ChartColumnDataInfo[] = this.chartInfo.dataColumns;
         
         let columnRefs: string[] = this.spreadsheetService.getChartDataColumnRefs(this.chartInfo);
         let labelColumnRef: string = this.chartInfo.labelColumn.labelColumnVarNameRef;
@@ -148,8 +145,6 @@ export class BarChartComponent implements OnInit, AfterViewInit
 
             renderContext.fillStyle = "#ffffff";
             renderContext.fillRect(sequenceWidth*(i+1)-spaceBetweenSequences, chartBarMaxHeight + spaceBetweenBars, sequenceWidth*2, 100);
-
-            console.log(`render: ${i}`);
         }
 
         let currentRow: Array<number>;

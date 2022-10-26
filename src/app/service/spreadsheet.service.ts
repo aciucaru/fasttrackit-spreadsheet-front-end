@@ -267,6 +267,20 @@ export class SpreadsheetService
         return maxValue;
     }
 
+    public getXYChartMaxYValue(chartInfo: ChartInfo): number
+    {
+        let maxYValue: number = 0;
+
+        if(chartInfo.chartType === ChartType.XY)
+        {
+            maxYValue = this.getColumnMaxNumericValue(chartInfo.dataColumns[1].dataColumnVarNameRef);
+    
+            console.log(`SpreadsheetService: getXYChartMaxYValue(): ${maxYValue}`);
+        }
+
+        return maxYValue;
+    }
+
     public findColumnInfoByVarName(varName: string): number
     {
         let foundIndex = -1;

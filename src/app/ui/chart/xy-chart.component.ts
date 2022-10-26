@@ -102,32 +102,27 @@ export class XYChartComponent implements OnInit
 
     private drawXYChart(renderContext: CanvasRenderingContext2D): void
     {
-        let chartDataColumnsMinValue = this.spreadsheetService.getChartMinValue(this.chartInfo);
-        let chartDataColumnsMaxValue = this.spreadsheetService.getChartMaxValue(this.chartInfo);
-        let chartBarWidth = 20.0;
-        let chartBarMaxHeight = 200.0;
-        let chartBarHeightRatio = (1.0*chartBarMaxHeight) / (1.0*chartDataColumnsMaxValue);
-        let spaceBetweenBars = 5.0;
-        let spaceBetweenSequences = 15.0;
-        let sequenceWidth = 0;
-
-        let dataColumns: ChartColumnDataInfo[] = this.chartInfo.dataColumns;
+        let chartMaxYValue = this.spreadsheetService.getXYChartMaxYValue(this.chartInfo);
+        let chartMaxHeight = 200.0;
+        let chartHeightRatio = (1.0*chartMaxHeight) / (1.0*chartMaxYValue);
+        let chartLengthRatio = (1.0*chartMaxHeight) / (1.0*chartMaxYValue);
         
         let columnRefs: string[] = this.spreadsheetService.getChartDataColumnRefs(this.chartInfo);
         let labelColumnRef: string = this.chartInfo.labelColumn.labelColumnVarNameRef;
         let labelData: string[] = this.spreadsheetService.getStringValuesForChartLabelColumn(labelColumnRef);
         let numericData: Array<Array<number>> = this.spreadsheetService.getNumericValuesForChartDataColumns(columnRefs);
+        let chartXValues: Array<number> = numericData[0];
+        let chartYValues: Array<number> = numericData[1];
 
         // prima data se determina lungimea canvas-ului, in functie de cate bare are de desenat
-        let canvasWidth: number = spaceBetweenBars;
+        let canvasWidth: number = 1000;
         // sequenceWidth = spaceBetweenBars;
-        for(let j=0; j<numericData[0].length; j++)
-        {
-            sequenceWidth += chartBarWidth + spaceBetweenBars;
-        }
-        sequenceWidth += spaceBetweenSequences;
+        // for(let j=0; j<numericData[0].length; j++)
+        // {
+        //     sequenceWidth += chartBarWidth + spaceBetweenBars;
+        // }
 
-        canvasWidth = sequenceWidth * numericData.length;
+        // canvasWidth = sequenceWidth * numericData.length;
 
         // se seteaza lungimea chart-ului
         this.chartCanvas.nativeElement.width = canvasWidth;
@@ -139,40 +134,15 @@ export class XYChartComponent implements OnInit
             this.chartCanvas.nativeElement.height
             );
 
-        for(let i=0; i<labelData.length; i++)
-        {
-            renderContext.fillStyle = this.chartInfo.labelColumn.rgbFGColor;
-            renderContext.textBaseline = "bottom";
-            renderContext.font = '14px Arial';
-            renderContext.fillText(labelData[i], sequenceWidth*i, chartBarMaxHeight + spaceBetweenBars + 30);
-
-            renderContext.fillStyle = "#ffffff";
-            renderContext.fillRect(sequenceWidth*(i+1)-spaceBetweenSequences, chartBarMaxHeight + spaceBetweenBars, sequenceWidth*2, 100);
-
-            console.log(`render: ${i}`);
-        }
-
-        let currentRow: Array<number>;
-        let currentColumnValue: number = 0.0;
-        let currentBarHeight: number = 0.0;
-        let currentBarStartX: number = spaceBetweenBars;
-        let barStartY: number = chartBarMaxHeight + spaceBetweenBars;
-        for(let i=0; i<numericData.length; i++)
+        renderContext.fillStyle = this.chartInfo.dataColumns[0].rgbBGColor;
+        renderContext.lineWidth = 2;
+        renderContext.beginPath();
+        renderContext.moveTo(chartXValues[0], chartYValues[0]);
+        for(let i=1; i<chartXValues.length; i++)
         {   
-            currentRow = numericData[i];
-            for(let j=0; j<currentRow.length; j++)
-            {
-                currentColumnValue = 1.0*currentRow[j];
-                currentBarHeight = 1.0 - (currentColumnValue * chartBarHeightRatio);
-
-                renderContext.fillStyle = this.chartInfo.dataColumns[j].rgbBGColor;
-                renderContext.fillRect(currentBarStartX, barStartY, chartBarWidth, currentBarHeight);
-
-                currentBarStartX += chartBarWidth + spaceBetweenBars;
-            }
-            
-            currentBarStartX += spaceBetweenSequences;
+            renderContext.lineTo(chartXValues[i], chartYValues[i]);
         }
+        renderContext.stroke();
     }
 
 }
