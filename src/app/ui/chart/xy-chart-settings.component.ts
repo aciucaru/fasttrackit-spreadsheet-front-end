@@ -26,7 +26,7 @@ import { ColumnInfo, ColumnType } from 'src/app/model/column';
 
             <div class="xy-chart-label-x-column">X col</div>
             <select #columnXSelect class="x-data-column-selector"
-                (change)="spreadsheetService.logChartsInfo()">
+                (change)="spreadsheetService.setXYChartXColumn(this.chartIndex, columnXSelect.value)">
                 <option [value]="''">none</option>
                 <option *ngFor="let currentColumn of availableNumericColums; let dataColIndex = index"
                     [value]="currentColumn.varName">
@@ -36,7 +36,7 @@ import { ColumnInfo, ColumnType } from 'src/app/model/column';
 
             <div class="xy-chart-label-y-column">Y col</div>
             <select #columnYSelect class="y-data-column-selector"
-                (change)="spreadsheetService.logChartsInfo()">
+            (change)="spreadsheetService.setXYChartYColumn(this.chartIndex, columnYSelect.value)">
                 <option [value]="''">none</option>
                 <option *ngFor="let currentColumn of availableNumericColums; let dataColIndex = index"
                     [value]="currentColumn.varName">

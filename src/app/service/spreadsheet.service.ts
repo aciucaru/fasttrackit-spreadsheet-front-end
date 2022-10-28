@@ -951,6 +951,50 @@ export class SpreadsheetService
         }
     }
 
+    public setXYChartXColumn(chartIndex: number, colVarName: string): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let charts: ChartInfo[] = spreadsheet.charts;
+
+        if(chartIndex < charts.length)
+        {
+            let columnInfoIndex: number = this.findColumnInfoByVarName(colVarName);
+
+            if(columnInfoIndex >= 0)
+            {
+                charts[chartIndex].dataColumns[0].dataColumnVarNameRef = colVarName;
+
+                // se trimite noul spreadsheet catre toti observatorii sai
+                this.spreadsheetSubject.next(spreadsheet);
+                console.log(`setXYChartXColumn(${chartIndex}, ${colVarName})`);
+            }
+        }
+    }
+
+    public setXYChartYColumn(chartIndex: number, colVarName: string): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let charts: ChartInfo[] = spreadsheet.charts;
+
+        if(chartIndex < charts.length)
+        {
+            let columnInfoIndex: number = this.findColumnInfoByVarName(colVarName);
+
+            if(columnInfoIndex >= 0)
+            {
+                charts[chartIndex].dataColumns[1].dataColumnVarNameRef = colVarName;
+
+                // se trimite noul spreadsheet catre toti observatorii sai
+                this.spreadsheetSubject.next(spreadsheet);
+                console.log(`setXYChartYColumn(${chartIndex}, ${colVarName})`);
+            }
+        }
+    }
+
     // metoda ce modifica tipul de date al coloanei curente
     public changeCurrentColumType(newColType: ColumnType): void
     {

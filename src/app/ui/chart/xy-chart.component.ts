@@ -111,8 +111,6 @@ export class XYChartComponent implements OnInit
         let labelColumnRef: string = this.chartInfo.labelColumn.labelColumnVarNameRef;
         let labelData: string[] = this.spreadsheetService.getStringValuesForChartLabelColumn(labelColumnRef);
         let numericData: Array<Array<number>> = this.spreadsheetService.getNumericValuesForChartDataColumns(columnRefs);
-        let chartXValues: Array<number> = numericData[0];
-        let chartYValues: Array<number> = numericData[1];
 
         // prima data se determina lungimea canvas-ului, in functie de cate bare are de desenat
         let canvasWidth: number = 1000;
@@ -136,13 +134,29 @@ export class XYChartComponent implements OnInit
 
         renderContext.fillStyle = this.chartInfo.dataColumns[0].rgbBGColor;
         renderContext.lineWidth = 2;
+
+        let prevX: number = numericData[0][0];
+        let prevY: number = 100 - numericData[0][1];
+        let currentX: number = 0;
+        let currentY: number = 0;
+
+        renderContext.fillRect(prevX-4, prevY-4, 8, 8);
         renderContext.beginPath();
-        renderContext.moveTo(chartXValues[0], chartYValues[0]);
-        for(let i=1; i<chartXValues.length; i++)
+        renderContext.moveTo(prevX, prevY);
+        for(let i=0; i<numericData.length-1; i++)
         {   
-            renderContext.lineTo(chartXValues[i], chartYValues[i]);
+            prevX = numericData[i][0];
+            prevY = 100 - numericData[i][1];
+            currentX = numericData[i+1][0];
+            currentY = 100 - numericData[i+1][1];
+
+            renderContext.lineTo(currentX, currentY);
+
+            renderContext.fillStyle = this.chartInfo.dataColumns[0].rgbBGColor;
+            renderContext.fillRect(currentX-4, currentY-4, 8, 8);
         }
         renderContext.stroke();
+        // renderContext.stroke();
     }
 
 }

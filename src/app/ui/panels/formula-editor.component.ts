@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CodeModel } from '@ngstack/code-editor';
 
 import { ColumnInfo, GeneratingMethod } from 'src/app/model/column';
 import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
@@ -13,16 +12,6 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
         <div>=</div>
 
         <textarea id="code-editor" [(ngModel)]="formulaCode" (input)="onCodeChanged($event)"></textarea>
-
-        <!-- <div id="code-editor">
-            <ngs-code-editor 
-                [theme]="'vs-dark'"
-                [codeModel]="codeModel"
-                [readOnly]="!isGeneratedByFormula"
-                [options]="options"
-                (valueChanged)="onCodeChanged($event)">
-            </ngs-code-editor>
-        <div> -->
     </div>
     `,
     styles: [],
