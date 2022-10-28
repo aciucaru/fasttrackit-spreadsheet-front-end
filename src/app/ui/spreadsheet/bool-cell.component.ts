@@ -9,7 +9,6 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
   selector: 'app-bool-cell',
   template: `
     <div class="cell-container"
-    (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)"
     [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)">
 
         <input type ="checkbox" style="color:green;"

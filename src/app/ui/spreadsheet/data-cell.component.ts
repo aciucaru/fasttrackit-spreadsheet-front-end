@@ -12,7 +12,8 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     <div class="cell-container"
         [style.background-color]="mainCell?.style?.rgbBGColor"
         [style.color]="mainCell?.style?.rgbFGColor"
-        [style.font-family]="mainCell?.style?.font">
+        [style.font-family]="mainCell?.style?.font"
+        (click)="spreadsheetService.setSelectedDataCell(this.mainCellRowIndex, this.mainCellColIndex)">
 
         <ng-container [ngSwitch]="spreadsheetService.getCellTypeAsString(mainCellColIndex)">
             <app-string-cell *ngSwitchCase="'STRING'" 

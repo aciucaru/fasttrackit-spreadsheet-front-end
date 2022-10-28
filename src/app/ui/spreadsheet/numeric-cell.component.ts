@@ -8,8 +8,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 @Component({
     selector: 'app-numeric-cell',
     template: `
-    <div class="cell-container"
-    (click)="spreadsheetService.setSelectedDataCell(currentRowIndex, currentColIndex)">
+    <div class="cell-container">
 
         <div *ngIf="!spreadsheetService.isThisDataCellSelected(currentRowIndex, currentColIndex)"
             [style.width.px]="spreadsheetService.getCellWitdh(currentColIndex)"
