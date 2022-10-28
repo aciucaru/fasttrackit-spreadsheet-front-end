@@ -18,13 +18,8 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
                 <img src="assets/icons/stackdirectboth_52x60_v2.png" alt="XY chart">
             </button>
 
-            <button class="pie-chart" class="toolbar-button" title="Pie chart">
-                <img src="assets/icons/pie_52x60_v2.png" alt="Pie Chart">
-            </button>
-
             <div id="bar-chart-label">Bar chart</div>
             <div id="xy-chart-label">XY chart</div>
-            <div id="pie-chart-label">Pie chart</div>
 
             <div class="group-label">Chart</div>
         </div>

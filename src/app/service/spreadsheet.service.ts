@@ -186,7 +186,10 @@ export class SpreadsheetService
 
         for(let currentRow of spreadsheet.rows)
         {
-            stringValues.push(currentRow.cells[labelColumnIndex].stringValue);
+            if(labelColumnIndex >= 0)
+                stringValues.push(currentRow.cells[labelColumnIndex].stringValue);
+            else
+                stringValues.push(''); 
         }
 
         console.log(`SpreadsheetService: getStringValuesForChartLabelColumn(): values`);
@@ -574,13 +577,13 @@ export class SpreadsheetService
             chartType: ChartType.BAR,
             labelColumn:
             {
-                labelColumnVarNameRef: '', // numele coloanei cu label-ul chartului
+                labelColumnVarNameRef: "", // numele coloanei cu label-ul chartului
                 rgbFGColor: '#000000' // culoarea de display a label-ului
             },
             dataColumns:
             [
                 {
-                    dataColumnVarNameRef: '', // numele coloanei cu label-ul chartului
+                    dataColumnVarNameRef: "", // numele coloanei cu label-ul chartului
                     rgbBGColor: '#63aeff' // valoare HTML hex a culorii de background
                 }
             ]
@@ -603,17 +606,17 @@ export class SpreadsheetService
             chartType: ChartType.XY,
             labelColumn:
             {
-                labelColumnVarNameRef: '', // numele coloanei cu label-ul chartului
+                labelColumnVarNameRef: "", // numele coloanei cu label-ul chartului
                 rgbFGColor: '#000000' // culoarea de display a label-ului
             },
             dataColumns:
             [
                 {
-                    dataColumnVarNameRef: '', // numele coloanei cu label-ul chartului
+                    dataColumnVarNameRef: "", // numele coloanei cu label-ul chartului
                     rgbBGColor: '#63aeff' // valoare HTML hex a culorii de background
                 },
                 {
-                    dataColumnVarNameRef: '', // numele coloanei cu label-ul chartului
+                    dataColumnVarNameRef: "", // numele coloanei cu label-ul chartului
                     rgbBGColor: '#63aeff' // valoare HTML hex a culorii de background
                 }
             ]

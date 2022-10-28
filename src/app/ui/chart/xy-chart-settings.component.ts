@@ -10,20 +10,6 @@ import { ColumnInfo, ColumnType } from 'src/app/model/column';
     template: `
     <div class="xy-chart-settings-flex-container">
         <div class="xy-chart-settings-grid-container">
-            <div class="xy-chart-label-column">Label col</div>
-            <select #labelColumnSelect class="xy-chart-label-column-selector"
-                (change)="spreadsheetService.setChartLabelColumn(this.chartIndex, labelColumnSelect.value)">
-                <option [value]="''">none</option>
-                <option *ngFor="let currentColumn of spreadsheet?.columnInfos"
-                    [value]="currentColumn.varName">
-                    {{currentColumn.varName}}
-                </option>
-            </select>
-            <input #labelFGColor type="color"
-            class="xy-chart-label-col-fg-color-input" name="head" value="#63aeff"
-            (change)="spreadsheetService.setChartLabelColumnColor(this.chartIndex, labelFGColor.value)">
-
-
             <div class="xy-chart-label-x-column">X col</div>
             <select #columnXSelect class="x-data-column-selector"
                 (change)="spreadsheetService.setXYChartXColumn(this.chartIndex, columnXSelect.value)">
@@ -45,7 +31,7 @@ import { ColumnInfo, ColumnType } from 'src/app/model/column';
             </select>
 
             <input #dataBGColor type="color"
-                class="xy-chart-data-col-bg-color-input" name="head" value="#63aeff">
+                class="xy-chart-data-col-bg-color-input" name="head" value="#000000">
         </div>
     </div>
     `,

@@ -20,7 +20,7 @@ import { ColumnInfo, ColumnType } from 'src/app/model/column';
                 </option>
             </select>
             <input #labelFGColor type="color"
-            class="bar-chart-label-col-fg-color-input" name="head" value="#63aeff"
+            class="bar-chart-label-col-fg-color-input" name="head" value="#000000"
             (change)="spreadsheetService.setChartLabelColumnColor(this.chartIndex, labelFGColor.value)">
 
             <ng-container *ngFor="let currentDataColumn of chartDataColumns; let dataColIndex=index">
