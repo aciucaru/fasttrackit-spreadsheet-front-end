@@ -21,7 +21,7 @@ export class SpreadsheetService
 {
     private oneSpreadsheetUrl = 'http://localhost:8080/sheets/one';
     private spreadsheetSubject: BehaviorSubject<EditableSpreadsheet>
-            = new BehaviorSubject<EditableSpreadsheet>(this.getDummySpreadsheet());
+            = new BehaviorSubject<EditableSpreadsheet>(this.generateSpreadsheet());
 
     constructor(private httpClient: HttpClient)
     {
@@ -755,7 +755,9 @@ export class SpreadsheetService
 
     public newSpreadsheet(): void
     {
-
+        this.spreadsheetSubject.next(this.generateSpreadsheet());
+        
+        console.log(`SpreadsheetService: newSpreadsheet()`);
     }
 
     // metoda ce seteaza celula de date selectata curent
@@ -1322,63 +1324,6 @@ export class SpreadsheetService
         }
 
         return cellMatrix;
-    }
-
-    private getDummySpreadsheet(): EditableSpreadsheet
-    {
-        let spreadsheet: EditableSpreadsheet = 
-        {
-            name: "dummy spreadsheet",
-            columnInfos:
-            [
-                {
-                    title: 'String Col',
-                    colType: ColumnType.STRING,
-                    genMethod:GeneratingMethod.FROM_USER_INPUT,
-                    varName: 'stringCol',
-                    formula: '',
-                    widthPx: 70
-                },
-                {
-                    title: 'Number Col',
-                    colType: ColumnType.NUMBER,
-                    genMethod:GeneratingMethod.FROM_USER_INPUT,
-                    varName: 'numberCol',
-                    formula: '',
-                    widthPx: 70
-                }
-            ],
-            rows:
-            [
-                { cells:
-                    [
-                        {stringValue: "abc", numberValue: 100, boolValue: false, style: this.getDefaultCellStyle()},
-                        {stringValue: "def", numberValue: 200, boolValue: false, style: this.getDefaultCellStyle()}
-                    ]
-                },
-                { cells:
-                    [
-                        {stringValue: "ghi", numberValue: 300, boolValue: true, style: this.getDefaultCellStyle()},
-                        {stringValue: "jkl", numberValue: 400, boolValue: false, style: this.getDefaultCellStyle()}
-                    ]
-                }
-            ],
-            generalRowHeightPx: 20,
-            titleRowHeightPx: 20,
-            indexColWidthPx: 70,
-            charts: new Array<ChartInfo>(),
-
-            selectedCellType: SelectedCellType.DATA_CELL,
-
-            selectedDataCellRow: -1,
-            selectedDataCellCol: -1,
-
-            selectedTitleCellCol: -1,
-            selectedVarNameCellCol: -1,
-            currentOnFocusCol: -1,
-            generatedNewColumns: 0
-        };
-        return spreadsheet;
     }
 
     private generateSpreadsheet(): EditableSpreadsheet
