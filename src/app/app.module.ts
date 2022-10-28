@@ -41,6 +41,7 @@ import { ChartPanelComponent } from './ui/panels/chart-panel.component';
 import { ChartSettingsComponent } from './ui/chart/bar-chart-settings.component';
 import { XYChartComponent } from './ui/chart/xy-chart.component';
 import { XyChartSettingsComponent } from './ui/chart/xy-chart-settings.component';
+import { FileGroupComponent } from './ui/toolbar/file-group.component';
 
 @NgModule({
     declarations:
@@ -69,7 +70,8 @@ import { XyChartSettingsComponent } from './ui/chart/xy-chart-settings.component
         ChartPanelComponent,
         ChartSettingsComponent,
         XYChartComponent,
-        XyChartSettingsComponent
+        XyChartSettingsComponent,
+        FileGroupComponent
     ],
     imports:
     [

@@ -4,24 +4,30 @@ import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
 @Component({
-    selector: 'app-chart-group',
+    selector: 'app-file-group',
     template: `
     <div class="group-container">
-        <div class="formula-group">
-            <button id="bar-chart" class="toolbar-button" title="Bar chart"
-                (click)="spreadsheetService.addEmptyBarChart()">
-                <img src="assets/icons/bar_52x60_v2.png" alt="Bar chart">
+        <div class="file-group">
+            <button id="new-file" class="toolbar-button" title="New file"
+                (click)="spreadsheetService.newSpreadsheet()">
+                <img src="assets/icons/dbnewtable.png" alt="New file">
             </button>
 
-            <button id="xy-chart" class="toolbar-button" title="XY chart"
+            <button id="open-file" class="toolbar-button" title="Open file"
                 (click)="spreadsheetService.addEmptyXYChart()">
-                <img src="assets/icons/stackdirectboth_52x60_v2.png" alt="XY chart">
+                <img src="assets/icons/open.png" alt="Open file">
             </button>
 
-            <div id="bar-chart-label">Bar chart</div>
-            <div id="xy-chart-label">XY chart</div>
+            <button id="save-file" class="toolbar-button" title="Save file"
+                (click)="spreadsheetService.addEmptyXYChart()">
+                <img src="assets/icons/save.png" alt="Save file">
+            </button>
 
-            <div class="group-label">Chart</div>
+            <div id="new-file-label">New</div>
+            <div id="open-file-label">Open</div>
+            <div id="save-file-label">Save</div>
+
+            <div class="group-label">File</div>
         </div>
     </div>
     `,
@@ -29,11 +35,10 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     styleUrls:
     [
         './toolbar-general.scss',
-        './chart-group.scss',
-        './dummy-group.scss'
+        './file-group.scss'
     ]
 })
-export class ChartGroupComponent implements OnInit
+export class FileGroupComponent implements OnInit
 {
     spreadsheet?: EditableSpreadsheet;
     

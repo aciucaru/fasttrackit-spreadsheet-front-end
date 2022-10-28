@@ -1,9 +1,9 @@
-.formula-group
+.file-group
 {
     display: grid;
     row-gap: 0px;
     column-gap: 0px;
-    grid-template-columns: 70px 70px;
+    grid-template-columns: 40px 40px 40px;
     grid-template-rows: 52px 20px 20px;
 
     // background-color: rgb(255, 255, 255);
@@ -11,19 +11,25 @@
     border-color: rgb(151, 151, 151);
 }
 
-#bar-chart
+#new-file
 {
     grid-row: 1 / 2;
     grid-column: 1 / 2;
 }
 
-#xy-chart
+#open-file
 {
     grid-row: 1 / 2;
     grid-column: 2 / 3;
 }
 
-#bar-chart-label
+#save-file
+{
+    grid-row: 1 / 2;
+    grid-column: 3 / 4;
+}
+
+#new-file-label
 {
     grid-row: 2 / 3;
     grid-column: 1 / 2;
@@ -33,10 +39,20 @@
     user-select: none;
 }
 
-#xy-chart-label
+#open-file-label
 {
     grid-row: 2 / 3;
     grid-column: 2 / 3;
+
+    font-size: 14px;
+    text-align: center;
+    user-select: none;
+}
+
+#save-file-label
+{
+    grid-row: 2 / 3;
+    grid-column: 3 / 4;
 
     font-size: 14px;
     text-align: center;

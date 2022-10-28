@@ -30,37 +30,45 @@ export class SpreadsheetService
         this.getCurrentSpreadsheetFromServer(''); // se ia un spreadsheet de pe server
     }
 
+    // public getCurrentSpreadsheetFromServer(spreadsheetName: string): void
+    // {
+    //     this.httpClient.get<Spreadsheet>(this.oneSpreadsheetUrl)
+    //                     .pipe(
+    //                         map(
+    //                             (spreadsheet: Spreadsheet) =>
+    //                                     <EditableSpreadsheet>{
+    //                                         name: spreadsheet.name,
+    //                                         columnInfos: spreadsheet.columnInfos,
+    //                                         rows: spreadsheet.rows,
+    //                                         indexColWidthPx: 70,
+    //                                         generalRowHeightPx: 20,
+    //                                         titleRowHeightPx: 20,
+    //                                         charts: spreadsheet.charts,
+
+    //                                         selectedDataCellRow: -1,
+    //                                         selectedDataCellCol: -1,
+    //                                         selectedTitleCellCol: -1,
+    //                                         selectedVarNameCellCol: -1,
+    //                                         generatedNewColumns: 0
+    //                                     }
+    //                             )
+    //                     )
+    //                     .subscribe( (editableSpreadsheet: EditableSpreadsheet) =>
+    //                         {
+    //                             this.spreadsheetSubject.next(editableSpreadsheet);
+    //                             console.log('got spreadsheet from httpClient');
+    //                             this.logSpreadsheetValues();
+    //                         }
+    //                     );
+    // }
+
     public getCurrentSpreadsheetFromServer(spreadsheetName: string): void
     {
-        this.httpClient.get<Spreadsheet>(this.oneSpreadsheetUrl)
-                        .pipe(
-                            map(
-                                (spreadsheet: Spreadsheet) =>
-                                        <EditableSpreadsheet>{
-                                            name: spreadsheet.name,
-                                            columnInfos: spreadsheet.columnInfos,
-                                            rows: spreadsheet.rows,
-                                            indexColWidthPx: 70,
-                                            generalRowHeightPx: 20,
-                                            titleRowHeightPx: 20,
-                                            charts: spreadsheet.charts,
-
-                                            selectedDataCellRow: -1,
-                                            selectedDataCellCol: -1,
-                                            selectedTitleCellCol: -1,
-                                            selectedVarNameCellCol: -1,
-                                            generatedNewColumns: 0
-                                        }
-                                )
-                        )
-                        .subscribe( (editableSpreadsheet: EditableSpreadsheet) =>
-                            {
-                                this.spreadsheetSubject.next(editableSpreadsheet);
-                                console.log('got spreadsheet from httpClient');
-                                this.logSpreadsheetValues();
-                            }
-                        );
+        this.spreadsheetSubject.next(this.generateSpreadsheet());
+        console.log('generated spreadsheet');
+        this.logSpreadsheetValues();
     }
+ 
  
     // metoda ce returneaza spreadsheet-ul luat de pe server
     // este metoda principala pe care ar trebui sa o foloseasca componentele UI ce au acces la acest service
@@ -722,6 +730,34 @@ export class SpreadsheetService
         console.log(`SpreadsheetService: calculateAllCellsValues()`);
     }
 
+    public removeChartDataColumn(chartIndex: number, dataColIndex: number): void
+    {
+        // se ia spreadsheet-ul curent
+        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+        let charts: ChartInfo[] = spreadsheet.charts;
+
+        if(chartIndex < charts.length)
+        {
+            let dataColumns: ChartColumnDataInfo[] = spreadsheet.charts[chartIndex].dataColumns;
+
+            if(dataColIndex < dataColumns.length)
+            {
+                // se sterge informatia coloanei de date din chart
+                charts[chartIndex].dataColumns.splice(dataColIndex, 1);
+
+                // se trimite noul spreadsheet catre toti observatorii sai
+                this.spreadsheetSubject.next(spreadsheet);
+                console.log(`SpreadsheetService: removeChartDataColumn(${chartIndex}, ${dataColIndex})`);
+            }
+        }
+    }
+
+    public newSpreadsheet(): void
+    {
+
+    }
+
     // metoda ce seteaza celula de date selectata curent
     // aceasta celula este singura ce va fi editabila, restul celulelor vor fi 'read-only'
     public setSelectedDataCell(rowIndex: number, colIndex: number): void
@@ -744,29 +780,6 @@ export class SpreadsheetService
             this.spreadsheetSubject.next(spreadsheet);
 
             console.log(`SpreadsheetService: setSelectedDataCell(${rowIndex}, ${colIndex})`);
-        }
-    }
-
-    public removeChartDataColumn(chartIndex: number, dataColIndex: number): void
-    {
-        // se ia spreadsheet-ul curent
-        let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
-
-        let charts: ChartInfo[] = spreadsheet.charts;
-
-        if(chartIndex < charts.length)
-        {
-            let dataColumns: ChartColumnDataInfo[] = spreadsheet.charts[chartIndex].dataColumns;
-
-            if(dataColIndex < dataColumns.length)
-            {
-                // se sterge informatia coloanei de date din chart
-                charts[chartIndex].dataColumns.splice(dataColIndex, 1);
-
-                // se trimite noul spreadsheet catre toti observatorii sai
-                this.spreadsheetSubject.next(spreadsheet);
-                console.log(`SpreadsheetService: removeChartDataColumn(${chartIndex}, ${dataColIndex})`);
-            }
         }
     }
 
@@ -1365,6 +1378,80 @@ export class SpreadsheetService
             currentOnFocusCol: -1,
             generatedNewColumns: 0
         };
+        return spreadsheet;
+    }
+
+    private generateSpreadsheet(): EditableSpreadsheet
+    {
+        let spreadsheet: EditableSpreadsheet = 
+        {
+            name: "dummy spreadsheet",
+            columnInfos: [],
+            rows: [],
+            generalRowHeightPx: 20,
+            titleRowHeightPx: 20,
+            indexColWidthPx: 40,
+            charts: new Array<ChartInfo>(),
+
+            selectedCellType: SelectedCellType.DATA_CELL,
+
+            selectedDataCellRow: 0,
+            selectedDataCellCol: 0,
+
+            selectedTitleCellCol: -1,
+            selectedVarNameCellCol: -1,
+            currentOnFocusCol: -1,
+            generatedNewColumns: 0
+        };
+
+        let columnCount: number = 10;
+        let rowCount: number = 20;
+
+        let newColumnInfo: ColumnInfo;
+        for(let i=0; i<columnCount; i++)
+        {
+            newColumnInfo =
+            {
+                title: `Col ${i}`, // numele afisat al coloanei (un fel de "header" sau "caption")
+                colType: ColumnType.STRING, // tipul tuturor celulelor coloanei
+                genMethod: GeneratingMethod.FROM_USER_INPUT, // modul in care se genereaza valoarea celulelor coloanei
+                varName: `col${i}`, // numele coloanei folosit in formule
+                formula: '', // formula folosita pt. calculul valorilor celulelor (daca este cazul)
+                widthPx: 70 // latimea in pixeli a coloanei (si a tuturor celuleor din ea)
+            };
+
+            spreadsheet.columnInfos.push(newColumnInfo);
+        }
+
+        let newRow: Row;
+        let currentCell: Cell;
+        for(let i=0; i<rowCount; i++)
+        {
+            newRow = { cells: [] };
+            for(let j=0; j<columnCount; j++)
+            {
+                currentCell =
+                {
+                    stringValue: '',
+                    numberValue: 0,
+                    boolValue: false,
+                    style:
+                    {
+                        rgbBGColor: '#ffffff',
+                        rgbFGColor: '#000000',
+                        borderColor: '#000000',
+                
+                        font: "Arial, sans-serif",
+                        isBold: false,
+                        isItalic: false,
+                    }
+                };
+                newRow.cells.push(currentCell);
+            }
+
+            spreadsheet.rows.push(newRow);
+        }
+
         return spreadsheet;
     }
 

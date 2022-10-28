@@ -7,6 +7,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     selector: 'app-main-toolbar',
     template: `
     <div class="toolbar">
+        <app-file-group></app-file-group>
         <app-rows-and-cols-group></app-rows-and-cols-group>
         <app-column-group></app-column-group>
         <app-formula-group></app-formula-group>
