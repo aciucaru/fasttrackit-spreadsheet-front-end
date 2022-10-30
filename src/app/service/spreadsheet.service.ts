@@ -35,10 +35,11 @@ export class SpreadsheetService
 
     constructor(private httpClient: HttpClient)
     {
-        this.getSpreadsheetListFromServer();
+        // this.getSpreadsheetListFromServer();
+        this.getFirstSpreadsheetFromServer();
 
         // se genereaza un spreadsheet nou si se trimite catre observatorii sai
-        this.spreadsheetSubject.next(this.generateSpreadsheet());
+        // this.spreadsheetSubject.next(this.generateSpreadsheet());
     }
 
     // public getCurrentSpreadsheetFromServer(spreadsheetName: string): void
@@ -101,6 +102,39 @@ export class SpreadsheetService
                     {
                         this.spreadsheetSubject.next(editableSpreadsheet);
                         console.log('got spreadsheet from httpClient');
+                        this.logSpreadsheetValues();
+                    }
+                );
+    }
+
+    public getFirstSpreadsheetFromServer(): void
+    {
+        let spreadsheetUrl: string = 'http://localhost:8080/sheets/one';
+        this.httpClient.get<Spreadsheet>(spreadsheetUrl)
+                .pipe(
+                    map(
+                        (spreadsheet: Spreadsheet) =>
+                                <EditableSpreadsheet>{
+                                    name: spreadsheet.name,
+                                    columnInfos: spreadsheet.columnInfos,
+                                    rows: spreadsheet.rows,
+                                    indexColWidthPx: 70,
+                                    generalRowHeightPx: 20,
+                                    titleRowHeightPx: 20,
+                                    charts: spreadsheet.charts,
+
+                                    selectedDataCellRow: -1,
+                                    selectedDataCellCol: -1,
+                                    selectedTitleCellCol: -1,
+                                    selectedVarNameCellCol: -1,
+                                    generatedNewColumns: 0
+                                }
+                        )
+                )
+                .subscribe( (editableSpreadsheet: EditableSpreadsheet) =>
+                    {
+                        this.spreadsheetSubject.next(editableSpreadsheet);
+                        console.log('got first spreadsheet from httpClient');
                         this.logSpreadsheetValues();
                     }
                 );

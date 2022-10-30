@@ -6,24 +6,26 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
     selector: 'app-document-browser',
     template: `
     <div class="browser-main-ui">
-        <div class="spreadsheet-list" *ngFor="let currentSpreadsheetInfo of spreadsheetList">
-            <div class="spreadsheet-group-container">
-                <div class="spreadsheet-item-title">
-                    {{currentSpreadsheetInfo.name}} <br>
-                    {{currentSpreadsheetInfo.id}}
+        <div class="spreadsheet-list">
+            <div class="list-flex-item" *ngFor="let currentSpreadsheetInfo of spreadsheetList">
+                <div class="spreadsheet-grid-container">
+                    <div class="spreadsheet-item-title">
+                        {{currentSpreadsheetInfo.name}} <br>
+                        {{currentSpreadsheetInfo.id}}
+                    </div>
+
+                    <button class="spreadsheet-item-open" class="toolbar-button" title="Open spreadsheet"
+                        (click)="spreadsheetService.getSpreadsheetFromServer(currentSpreadsheetInfo.id)">
+                        <img src="assets/icons/dbtableopen.png" alt="Open spreadsheet">
+                    </button>
+                    <div class="spreadsheet-item-open-label">Open</div>
+
+                    <button class="spreadsheet-item-delete" class="toolbar-button" title="Delete spreadsheet"
+                        (click)="spreadsheetService.addEmptyBarChart()">
+                        <img src="assets/icons/dbtabledelete.png" alt="Delete spreadsheet">
+                    </button>
+                    <div class="spreadsheet-item-delete-label">Delete</div>
                 </div>
-
-                <button class="spreadsheet-item-open" class="toolbar-button" title="Open spreadsheet"
-                    (click)="spreadsheetService.addEmptyBarChart()">
-                    <img src="assets/icons/dbtableopen.png" alt="Open spreadsheet">
-                </button>
-                <div class="spreadsheet-item-open-label">Open</div>
-
-                <button class="spreadsheet-item-delete" class="toolbar-button" title="Delete spreadsheet"
-                    (click)="spreadsheetService.addEmptyBarChart()">
-                    <img src="assets/icons/dbtabledelete.png" alt="Delete spreadsheet">
-                </button>
-                <div class="spreadsheet-item-delete-label">Delete</div>
             </div>
         </div>
     </div>
