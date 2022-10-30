@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-    selector: 'app-main-ui',
+    selector: 'app-editor',
     template: `
     <div class="main-ui">
         <app-main-toolbar id="main-toolbar"></app-main-toolbar>
@@ -23,9 +23,9 @@ import { Component, OnInit } from '@angular/core';
     </div>
     `,
     styles: [],
-    styleUrls: ['./main-ui.component.scss']
+    styleUrls: ['./editor.component.scss']
 })
-export class MainUiComponent implements OnInit
+export class EditorComponent implements OnInit
 {
     constructor() { }
 

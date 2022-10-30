@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
@@ -14,12 +15,12 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
             </button>
 
             <button id="open-file" class="toolbar-button" title="Open file"
-                (click)="spreadsheetService.addEmptyXYChart()">
+                (click)="this.navigateToBrowsePage()">
                 <img src="assets/icons/open.png" alt="Open file">
             </button>
 
             <button id="save-file" class="toolbar-button" title="Save file"
-                (click)="spreadsheetService.addEmptyXYChart()">
+                (click)="spreadsheetService.saveSpreadsheet()">
                 <img src="assets/icons/save.png" alt="Save file">
             </button>
 
@@ -42,7 +43,7 @@ export class FileGroupComponent implements OnInit
 {
     spreadsheet?: EditableSpreadsheet;
     
-    constructor(protected spreadsheetService: SpreadsheetService) { }
+    constructor(protected spreadsheetService: SpreadsheetService, private router: Router) { }
 
     ngOnInit(): void { this.subscribeAsSpreadsheetObserver(); }
 
@@ -54,5 +55,10 @@ export class FileGroupComponent implements OnInit
                 {
                     this.spreadsheet = spreadsheet;
                 });
+    }
+
+    protected navigateToBrowsePage(): void
+    {
+        this.router.navigateByUrl('/browse');
     }
 }

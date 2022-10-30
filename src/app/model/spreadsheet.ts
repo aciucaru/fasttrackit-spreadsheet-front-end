@@ -2,6 +2,7 @@ import { Cell, SelectedCellType } from './cell';
 import { Row } from './row';
 import { ColumnInfo } from './column';
 import { ChartInfo } from './chart';
+import { string } from 'mathjs';
 
 /* Interfata ce copiaza clasa 'Spreadsheet" de pe back-end.
    Scopul acestei interfete este luarea datelor corect de pe server, adica sa aiba o structura identica
@@ -13,6 +14,12 @@ export interface Spreadsheet
     rows: Array<Row>;
     indexColWidthPx: number;
     charts: Array<ChartInfo>;
+}
+
+export interface SpreadsheetShortInfo
+{
+    id: string;
+    name: string;
 }
 
 /* Clasa ce modeleaza un Spreadsheet editabil. Aceasta clasa contine un obiect de tip 'Spreadsheet' dar

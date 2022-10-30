@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CommonModule } from '@angular/common';
 
+import { Routes, RouterModule } from '@angular/router';
+
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 // import { CdkTableModule } from '@angular/cdk/table';
@@ -26,7 +28,7 @@ import { BoolCellComponent } from './ui/spreadsheet/bool-cell.component';
 import { RowIndexComponent } from './ui/spreadsheet/row-index.component';
 import { VarNameCellComponent } from './ui/spreadsheet/var-name-cell.component';
 import { TitleCellComponent } from './ui/spreadsheet/title-cell.component';
-import { MainUiComponent } from './ui/main/main-ui.component';
+import { EditorComponent } from './ui/main/editor.component';
 import { StatusBarComponent } from './ui/panels/status-bar.component';
 import { FormulaEditorComponent } from './ui/panels/formula-editor.component';
 import { ColTypeSelectComponent } from './ui/controls/col-type-select.component';
@@ -42,6 +44,13 @@ import { ChartSettingsComponent } from './ui/chart/bar-chart-settings.component'
 import { XYChartComponent } from './ui/chart/xy-chart.component';
 import { XyChartSettingsComponent } from './ui/chart/xy-chart-settings.component';
 import { FileGroupComponent } from './ui/toolbar/file-group.component';
+import { DocumentBrowserComponent } from './ui/main/document-browser.component';
+
+const routes: Routes =
+[
+    { path: 'editor', component: EditorComponent },
+    { path: 'browse', component: DocumentBrowserComponent }
+];
 
 @NgModule({
     declarations:
@@ -56,7 +65,7 @@ import { FileGroupComponent } from './ui/toolbar/file-group.component';
         RowIndexComponent,
         VarNameCellComponent,
         TitleCellComponent,
-        MainUiComponent,
+        EditorComponent,
         StatusBarComponent,
         FormulaEditorComponent,
         ColTypeSelectComponent,
@@ -71,7 +80,8 @@ import { FileGroupComponent } from './ui/toolbar/file-group.component';
         ChartSettingsComponent,
         XYChartComponent,
         XyChartSettingsComponent,
-        FileGroupComponent
+        FileGroupComponent,
+        DocumentBrowserComponent
     ],
     imports:
     [
@@ -80,6 +90,8 @@ import { FileGroupComponent } from './ui/toolbar/file-group.component';
         HttpClientModule,
         AppRoutingModule,
         CommonModule,
+
+        RouterModule.forRoot(routes),
 
         NoopAnimationsModule,
         FormsModule,
@@ -92,7 +104,8 @@ import { FileGroupComponent } from './ui/toolbar/file-group.component';
 
         AngularSplitModule
     ],
+    exports: [RouterModule],
     providers: [],
     bootstrap: [ AppComponent ]
 })
-export class AppModule { }
+export class AppModule {}

@@ -10,7 +10,7 @@ import * as mathjs from "mathjs";
 import { Cell, CellStyle, SelectedCellType } from '../model/cell';
 import { Row } from '../model/row';
 import { ColumnInfo, ColumnType, GeneratingMethod } from '../model/column';
-import { Spreadsheet, EditableSpreadsheet} from '../model/spreadsheet';
+import { Spreadsheet, EditableSpreadsheet, SpreadsheetShortInfo} from '../model/spreadsheet';
 import { ChartColumnDataInfo, ChartColumnLabelInfo, ChartType, ChartInfo } from '../model/chart';
 import { column } from 'mathjs';
 
@@ -19,15 +19,26 @@ import { column } from 'mathjs';
 })
 export class SpreadsheetService
 {
-    private oneSpreadsheetUrl = 'http://localhost:8080/sheets/one';
+    // url pt lista de spreadsheet-uri, returneaza un sir de string-uri
+    private spreadsheetListUrl = 'http://localhost:8080/sheets/list';
+    // lista observabila de spreadsheet-uri
+    private listSubject: BehaviorSubject<Array<SpreadsheetShortInfo>>
+            = new BehaviorSubject<Array<SpreadsheetShortInfo>>(new Array<SpreadsheetShortInfo>());
+
+    // url-ul de baza pt. spreadsheet-uri
+    private spreadsheetBaseUrl = 'http://localhost:8080/sheets';
+    // id-ul spreadsheet-ului curent (se concateneaza cu url-ul de dinainte)
+    private currentSpreadsheetId = '';
+    // spreadsheet observabil
     private spreadsheetSubject: BehaviorSubject<EditableSpreadsheet>
             = new BehaviorSubject<EditableSpreadsheet>(this.generateSpreadsheet());
 
     constructor(private httpClient: HttpClient)
     {
-        // aceasta metoda ar trebui apelata la comanda unui component UI
-        // dar momentan este apelata din constructor, pt. a avea un spreadsheet cu care se poate lucra
-        this.getCurrentSpreadsheetFromServer(''); // se ia un spreadsheet de pe server
+        this.getSpreadsheetListFromServer();
+
+        // se genereaza un spreadsheet nou si se trimite catre observatorii sai
+        this.spreadsheetSubject.next(this.generateSpreadsheet());
     }
 
     // public getCurrentSpreadsheetFromServer(spreadsheetName: string): void
@@ -62,14 +73,56 @@ export class SpreadsheetService
     //                     );
     // }
 
-    public getCurrentSpreadsheetFromServer(spreadsheetName: string): void
+    public getSpreadsheetFromServer(spreadsheetId: string): void
     {
-        this.spreadsheetSubject.next(this.generateSpreadsheet());
-        console.log('generated spreadsheet');
-        this.logSpreadsheetValues();
+        let spreadsheetUrl: string = this.spreadsheetBaseUrl.concat(spreadsheetId);
+        this.httpClient.get<Spreadsheet>(spreadsheetUrl)
+                .pipe(
+                    map(
+                        (spreadsheet: Spreadsheet) =>
+                                <EditableSpreadsheet>{
+                                    name: spreadsheet.name,
+                                    columnInfos: spreadsheet.columnInfos,
+                                    rows: spreadsheet.rows,
+                                    indexColWidthPx: 70,
+                                    generalRowHeightPx: 20,
+                                    titleRowHeightPx: 20,
+                                    charts: spreadsheet.charts,
+
+                                    selectedDataCellRow: -1,
+                                    selectedDataCellCol: -1,
+                                    selectedTitleCellCol: -1,
+                                    selectedVarNameCellCol: -1,
+                                    generatedNewColumns: 0
+                                }
+                        )
+                )
+                .subscribe( (editableSpreadsheet: EditableSpreadsheet) =>
+                    {
+                        this.spreadsheetSubject.next(editableSpreadsheet);
+                        console.log('got spreadsheet from httpClient');
+                        this.logSpreadsheetValues();
+                    }
+                );
+    }
+
+    public getSpreadsheetListFromServer(): void
+    {
+        this.httpClient.get<Array<SpreadsheetShortInfo>>(this.spreadsheetListUrl)
+                .pipe()
+                .subscribe( (spreadsheetList: Array<SpreadsheetShortInfo>) =>
+                    {
+                        this.listSubject.next(spreadsheetList);
+                        console.log('got list from httpClient');
+                    }
+                );
     }
  
- 
+    // metoda ce returneaza lista tuturor spreadsheet-urilor de pe server
+    // este metoda principala pe care ar trebui sa o foloseasca componentele UI ce au acces la acest service
+    public getListSubject(): BehaviorSubject<Array<SpreadsheetShortInfo>>
+    { return this.listSubject!; }
+
     // metoda ce returneaza spreadsheet-ul luat de pe server
     // este metoda principala pe care ar trebui sa o foloseasca componentele UI ce au acces la acest service
     public getSpreadsheetSubject(): BehaviorSubject<EditableSpreadsheet>
@@ -756,8 +809,49 @@ export class SpreadsheetService
     public newSpreadsheet(): void
     {
         this.spreadsheetSubject.next(this.generateSpreadsheet());
-        
+
         console.log(`SpreadsheetService: newSpreadsheet()`);
+    }
+
+    public saveSpreadsheet(): void
+    {
+        console.log(`SpreadsheetService: saveSpreadsheet()`);
+    }
+
+    public openSpreadsheetFromServer(spreadsheetName: string): void
+    {
+        // this.httpClient.get<string[]>('http://localhost:8080/sheets')
+        //                 .pipe()
+        //                 .subscribe();
+
+        // this.httpClient.get<Spreadsheet>(this.currentSpreadsheetUrl)
+        //                 .pipe(
+        //                     map(
+        //                         (spreadsheet: Spreadsheet) =>
+        //                                 <EditableSpreadsheet>{
+        //                                     name: spreadsheet.name,
+        //                                     columnInfos: spreadsheet.columnInfos,
+        //                                     rows: spreadsheet.rows,
+        //                                     indexColWidthPx: 70,
+        //                                     generalRowHeightPx: 20,
+        //                                     titleRowHeightPx: 20,
+        //                                     charts: spreadsheet.charts,
+
+        //                                     selectedDataCellRow: -1,
+        //                                     selectedDataCellCol: -1,
+        //                                     selectedTitleCellCol: -1,
+        //                                     selectedVarNameCellCol: -1,
+        //                                     generatedNewColumns: 0
+        //                                 }
+        //                         )
+        //                 )
+        //                 .subscribe( (editableSpreadsheet: EditableSpreadsheet) =>
+        //                     {
+        //                         this.spreadsheetSubject.next(editableSpreadsheet);
+        //                         console.log('got spreadsheet from httpClient');
+        //                         this.logSpreadsheetValues();
+        //                     }
+        //                 );
     }
 
     // metoda ce seteaza celula de date selectata curent
