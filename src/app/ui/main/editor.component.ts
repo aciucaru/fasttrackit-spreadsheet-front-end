@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
     selector: 'app-editor',
     template: `
-    <div class="main-ui">
+    <div class="editor-main-ui">
         <app-main-toolbar id="main-toolbar"></app-main-toolbar>
         <app-formula-editor id="formula-editor"></app-formula-editor>
 
