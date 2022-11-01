@@ -9,6 +9,7 @@ import { string } from 'mathjs';
    cu structura obiectului luat de pe server */
 export interface Spreadsheet
 {
+    id: string;
     name: string;
     columnInfos: Array<ColumnInfo>;
     rows: Array<Row>;
@@ -28,6 +29,7 @@ export interface SpreadsheetShortInfo
 export interface EditableSpreadsheet
 {
     // valori din interfata 'Spreadsheet' folosita in back-end
+    id: string;
     name: string;
     columnInfos: Array<ColumnInfo>;
     rows: Array<Row>;

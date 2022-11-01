@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+
 import { EditableSpreadsheet, SpreadsheetShortInfo } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
@@ -28,6 +29,11 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
                 </div>
             </div>
         </div>
+
+        <mat-dialog-actions>
+            <button mat-button mat-dialog-close>OK</button>
+        </mat-dialog-actions>
+
     </div>
     `,
     styles: [],

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 
 import { Observable, Subject, BehaviorSubject, of, shareReplay, share } from 'rxjs';
-import { catchError, tap } from 'rxjs';
+import { catchError, throwError, tap, retry } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import * as mathjs from "mathjs";
@@ -35,11 +35,11 @@ export class SpreadsheetService
 
     constructor(private httpClient: HttpClient)
     {
-        // this.getSpreadsheetListFromServer();
-        this.getFirstSpreadsheetFromServer();
+        this.getSpreadsheetListFromServer();
+        // this.getFirstSpreadsheetFromServer();
 
         // se genereaza un spreadsheet nou si se trimite catre observatorii sai
-        // this.spreadsheetSubject.next(this.generateSpreadsheet());
+        this.spreadsheetSubject.next(this.generateSpreadsheet());
     }
 
     // public getCurrentSpreadsheetFromServer(spreadsheetName: string): void
@@ -76,7 +76,8 @@ export class SpreadsheetService
 
     public getSpreadsheetFromServer(spreadsheetId: string): void
     {
-        let spreadsheetUrl: string = this.spreadsheetBaseUrl.concat(spreadsheetId);
+        let spreadsheetUrl: string = this.spreadsheetBaseUrl.concat('/').concat(spreadsheetId);
+
         this.httpClient.get<Spreadsheet>(spreadsheetUrl)
                 .pipe(
                     map(
@@ -100,6 +101,7 @@ export class SpreadsheetService
                 )
                 .subscribe( (editableSpreadsheet: EditableSpreadsheet) =>
                     {
+                        this.currentSpreadsheetId = spreadsheetId;
                         this.spreadsheetSubject.next(editableSpreadsheet);
                         console.log('got spreadsheet from httpClient');
                         this.logSpreadsheetValues();
@@ -151,6 +153,67 @@ export class SpreadsheetService
                     }
                 );
     }
+
+    public saveCurrentSpreadsheetToServer(): Observable<EditableSpreadsheet>
+    {
+        const httpOptions =
+        {
+            headers: new HttpHeaders( { 'Content-Type':  'application/json' } )
+        };
+
+        // daca spreadsheet-ul nu are inca id, adica nu a fost salvat nici o data
+        // adica se face POST
+        if(this.currentSpreadsheetId === '')
+        {
+            // se ia spreadsheet-ul curent
+            let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+            console.log(`SpreadsheetService: saveCurrentSpreadsheetToServer(): POST`);
+
+            return this.httpClient.post<EditableSpreadsheet>(this.spreadsheetBaseUrl, spreadsheet, httpOptions);
+                                    // .subscribe(spreadsheet =>
+                                    //                 { this.currentSpreadsheetId = spreadsheet.id; }
+                                    //             );
+            // .pipe(
+            //   catchError(this.handleError('addHero', spreadsheet))
+            // );
+        }
+        // daca spreadsheet-ul are deja id, atunci a fost salvat deja pe server
+        // adica se face PUT
+        else
+        {
+            let spreadsheetUrl: string = this.spreadsheetBaseUrl.concat('/')
+                                                                .concat(this.currentSpreadsheetId);
+            // se ia spreadsheet-ul curent
+            let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+            console.log(`SpreadsheetService: saveCurrentSpreadsheetToServer(): PUT`);
+
+            return this.httpClient.put<EditableSpreadsheet>(spreadsheetUrl, spreadsheet, httpOptions);
+            // .pipe(
+            //   catchError(this.handleError('updateHero', hero))
+            // );
+        }
+    }
+
+    private handleError(error: HttpErrorResponse)
+    {
+        if (error.status === 0)
+        {
+          // A client-side or network error occurred. Handle it accordingly.
+          console.error('An error occurred:', error.error);
+        }
+        else
+        {
+          // The backend returned an unsuccessful response code.
+          // The response body may contain clues as to what went wrong.
+          console.error(`Backend returned code ${error.status}, body was: `, error.error);
+        }
+
+        // Return an observable with a user-facing error message.
+        return throwError(() => new Error('Something bad happened; please try again later.'));
+    }
+
  
     // metoda ce returneaza lista tuturor spreadsheet-urilor de pe server
     // este metoda principala pe care ar trebui sa o foloseasca componentele UI ce au acces la acest service
@@ -842,50 +905,13 @@ export class SpreadsheetService
 
     public newSpreadsheet(): void
     {
+        // se reseteaza id-ul spreadshet-ului curent
+        this.currentSpreadsheetId = '';
+
+        // se genereaza un nou spreadsheet si se trimite catre observatorii sai
         this.spreadsheetSubject.next(this.generateSpreadsheet());
 
         console.log(`SpreadsheetService: newSpreadsheet()`);
-    }
-
-    public saveSpreadsheet(): void
-    {
-        console.log(`SpreadsheetService: saveSpreadsheet()`);
-    }
-
-    public openSpreadsheetFromServer(spreadsheetName: string): void
-    {
-        // this.httpClient.get<string[]>('http://localhost:8080/sheets')
-        //                 .pipe()
-        //                 .subscribe();
-
-        // this.httpClient.get<Spreadsheet>(this.currentSpreadsheetUrl)
-        //                 .pipe(
-        //                     map(
-        //                         (spreadsheet: Spreadsheet) =>
-        //                                 <EditableSpreadsheet>{
-        //                                     name: spreadsheet.name,
-        //                                     columnInfos: spreadsheet.columnInfos,
-        //                                     rows: spreadsheet.rows,
-        //                                     indexColWidthPx: 70,
-        //                                     generalRowHeightPx: 20,
-        //                                     titleRowHeightPx: 20,
-        //                                     charts: spreadsheet.charts,
-
-        //                                     selectedDataCellRow: -1,
-        //                                     selectedDataCellCol: -1,
-        //                                     selectedTitleCellCol: -1,
-        //                                     selectedVarNameCellCol: -1,
-        //                                     generatedNewColumns: 0
-        //                                 }
-        //                         )
-        //                 )
-        //                 .subscribe( (editableSpreadsheet: EditableSpreadsheet) =>
-        //                     {
-        //                         this.spreadsheetSubject.next(editableSpreadsheet);
-        //                         console.log('got spreadsheet from httpClient');
-        //                         this.logSpreadsheetValues();
-        //                     }
-        //                 );
     }
 
     // metoda ce seteaza celula de date selectata curent
@@ -1153,7 +1179,7 @@ export class SpreadsheetService
         // se ia tipul coloanei curente
         let oldColType: ColumnType = spreadsheet.columnInfos[currentColIndex].colType;
 
-        // se seteaza noul tip in infortmatiile despre coloana
+        // se seteaza noul tip in informatiile despre coloana
         // acest lucru nu are nici un efect asupra celulelor coloanei (nu realizeaza si cast)
         spreadsheet.columnInfos[currentColIndex].colType = newColType;
 
@@ -1162,18 +1188,18 @@ export class SpreadsheetService
         if(oldColType === ColumnType.BOOL && newColType === ColumnType.NUMBER)
         {
             // pentru fiecare rand (linie) al spreadsheet-ului
+            let currentCell: Cell;
             for(let currentRow of spreadsheet.rows)
             {
-                // pentru fiecare celula din randul curent
-                for(let currentCell of currentRow.cells)
-                {
-                    if(currentCell.boolValue === true)
-                        // 'true' se converteste in 1
-                        currentCell.numberValue = 1;
-                    else
-                        // 'false' se converteste in 0
-                        currentCell.numberValue = 0;
-                }
+                // celula ce trebuie modificata este de index (coloana) 'currentColIndex'
+                currentCell = currentRow.cells[currentColIndex];
+
+                if(currentCell.boolValue === true)
+                    // 'true' se converteste in 1
+                    currentCell.numberValue = 1;
+                else
+                    // 'false' se converteste in 0
+                    currentCell.numberValue = 0;
             }
         }
 
@@ -1181,18 +1207,18 @@ export class SpreadsheetService
         if(oldColType === ColumnType.BOOL && newColType === ColumnType.STRING)
         {
             // pentru fiecare rand (linie) al spreadsheet-ului
+            let currentCell: Cell;
             for(let currentRow of spreadsheet.rows)
             {
-                // pentru fiecare celula din randul curent
-                for(let currentCell of currentRow.cells)
-                {
-                    if(currentCell.boolValue === true)
-                        // 'true' se converteste in stringul 'true'
-                        currentCell.stringValue = 'true';
-                    else
-                        // 'false' se converteste in stringul 'false'
-                        currentCell.stringValue = 'false';
-                }
+                // celula ce trebuie modificata este de index (coloana) 'currentColIndex'
+                currentCell = currentRow.cells[currentColIndex];
+
+                if(currentCell.boolValue === true)
+                    // 'true' se converteste in stringul 'true'
+                    currentCell.stringValue = 'true';
+                else
+                    // 'false' se converteste in stringul 'false'
+                    currentCell.stringValue = 'false';
             }
         }
 
@@ -1200,21 +1226,21 @@ export class SpreadsheetService
         if(oldColType === ColumnType.NUMBER && newColType === ColumnType.BOOL)
         {
             // pentru fiecare rand (linie) al spreadsheet-ului
+            let currentCell: Cell;
             for(let currentRow of spreadsheet.rows)
             {
-                // pentru fiecare celula din randul curent
-                for(let currentCell of currentRow.cells)
-                {
-                    if(currentCell.numberValue > 0)
-                        // > 0 se converteste in 'true'
-                        currentCell.boolValue = true;
-                    else if(currentCell.numberValue < 0)
-                        // < 0 se converteste in 'true'
-                        currentCell.boolValue = true;
-                    else
-                        // 0 se converteste in 'false'
-                        currentCell.boolValue = false;
-                }
+                // celula ce trebuie modificata este de index (coloana) 'currentColIndex'
+                currentCell = currentRow.cells[currentColIndex];
+
+                if(currentCell.numberValue > 0)
+                    // > 0 se converteste in 'true'
+                    currentCell.boolValue = true;
+                else if(currentCell.numberValue < 0)
+                    // < 0 se converteste in 'true'
+                    currentCell.boolValue = true;
+                else
+                    // 0 se converteste in 'false'
+                    currentCell.boolValue = false;
             }
         }
 
@@ -1222,13 +1248,13 @@ export class SpreadsheetService
         if(oldColType === ColumnType.NUMBER && newColType === ColumnType.STRING)
         {
             // pentru fiecare rand (linie) al spreadsheet-ului
+            let currentCell: Cell;
             for(let currentRow of spreadsheet.rows)
             {
-                // pentru fiecare celula din randul curent
-                for(let currentCell of currentRow.cells)
-                {
-                    currentCell.stringValue = currentCell.numberValue.toString();
-                }
+                // celula ce trebuie modificata este de index (coloana) 'currentColIndex'
+                currentCell = currentRow.cells[currentColIndex];
+
+                currentCell.stringValue = currentCell.numberValue.toString();
             }
         }
 
@@ -1236,18 +1262,18 @@ export class SpreadsheetService
         if(oldColType === ColumnType.STRING && newColType === ColumnType.BOOL)
         {
             // pentru fiecare rand (linie) al spreadsheet-ului
+            let currentCell: Cell;
             for(let currentRow of spreadsheet.rows)
             {
-                // pentru fiecare celula din randul curent
-                for(let currentCell of currentRow.cells)
-                {
-                    if(currentCell.stringValue != '')
-                        // orice string de minim 1 caracter se converteste in 'true'
-                        currentCell.boolValue = true;
-                    else
-                        // altfel se converteste in 'false'
-                        currentCell.boolValue = false;
-                }
+                // celula ce trebuie modificata este de index (coloana) 'currentColIndex'
+                currentCell = currentRow.cells[currentColIndex];
+
+                if(currentCell.stringValue != '')
+                    // orice string de minim 1 caracter se converteste in 'true'
+                    currentCell.boolValue = true;
+                else
+                    // altfel se converteste in 'false'
+                    currentCell.boolValue = false;
             }
         }
 
@@ -1255,18 +1281,18 @@ export class SpreadsheetService
         if(oldColType === ColumnType.STRING && newColType === ColumnType.NUMBER)
         {
             // pentru fiecare rand (linie) al spreadsheet-ului
+            let currentCell: Cell;
             for(let currentRow of spreadsheet.rows)
             {
-                // pentru fiecare celula din randul curent
-                for(let currentCell of currentRow.cells)
-                {
-                    if(currentCell.stringValue != '')
-                        // orice string de minim 1 caracter se converteste in '1'
-                        currentCell.numberValue = 1;
-                    else
-                        // altfel se converteste in '0'
-                        currentCell.numberValue = 0;
-                }
+                // celula ce trebuie modificata este de index (coloana) 'currentColIndex'
+                currentCell = currentRow.cells[currentColIndex];
+
+                if(currentCell.stringValue != '')
+                    // orice string de minim 1 caracter se converteste in '1'
+                    currentCell.numberValue = 1;
+                else
+                    // altfel se converteste in '0'
+                    currentCell.numberValue = 0;
             }
         }
 
@@ -1458,6 +1484,7 @@ export class SpreadsheetService
     {
         let spreadsheet: EditableSpreadsheet = 
         {
+            id: '',
             name: "dummy spreadsheet",
             columnInfos: [],
             rows: [],

@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSelectModule } from '@angular/material/select';
+import {MatDialogModule} from "@angular/material/dialog";
 // import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AngularSplitModule } from 'angular-split';
@@ -101,6 +102,7 @@ const routes: Routes =
         MatTableModule,
         MatTabsModule,
         MatSelectModule,
+        MatDialogModule,
 
         AngularSplitModule
     ],

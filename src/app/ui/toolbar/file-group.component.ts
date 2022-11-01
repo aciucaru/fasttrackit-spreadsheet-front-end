@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 
 import { EditableSpreadsheet } from 'src/app/model/spreadsheet';
 import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
+import { DocumentBrowserComponent } from '../main/document-browser.component';
 
 @Component({
     selector: 'app-file-group',
@@ -15,12 +16,12 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
             </button>
 
             <button id="open-file" class="toolbar-button" title="Open file"
-                (click)="this.navigateToBrowsePage()">
+                (click)="this.openDialog()">
                 <img src="assets/icons/open.png" alt="Open file">
             </button>
 
             <button id="save-file" class="toolbar-button" title="Save file"
-                (click)="spreadsheetService.saveSpreadsheet()">
+                (click)="spreadsheetService.saveCurrentSpreadsheetToServer()">
                 <img src="assets/icons/save.png" alt="Save file">
             </button>
 
@@ -42,8 +43,10 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 export class FileGroupComponent implements OnInit
 {
     spreadsheet?: EditableSpreadsheet;
+    spreadsheetId: string = '';
     
-    constructor(protected spreadsheetService: SpreadsheetService, private router: Router) { }
+    constructor(protected spreadsheetService: SpreadsheetService, 
+                            public dialog: MatDialog) { }
 
     ngOnInit(): void { this.subscribeAsSpreadsheetObserver(); }
 
@@ -57,8 +60,25 @@ export class FileGroupComponent implements OnInit
                 });
     }
 
-    protected navigateToBrowsePage(): void
+    // protected navigateToBrowsePage(): void
+    // {
+    //     this.router.navigateByUrl('/editor');
+    // }
+
+    protected openDialog(): void
     {
-        this.router.navigateByUrl('/browse');
+        const dialogRef = this.dialog.open(DocumentBrowserComponent,
+            {
+                width: '500px',
+                height: '400px',
+                disableClose: true
+            });
+      
+          dialogRef.afterClosed()
+                    .subscribe(result =>
+                                {
+                                    console.log('The dialog was closed');
+                                    this.spreadsheetId = result;
+                                });
     }
 }

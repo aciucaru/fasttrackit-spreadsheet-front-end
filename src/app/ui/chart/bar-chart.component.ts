@@ -7,25 +7,25 @@ import { ChartColumnDataInfo, ChartInfo } from 'src/app/model/chart';
 @Component({
     selector: 'app-bar-chart',
     template: `
-    <div class="chart-container">
-        <div class="chart-area">
+    <div class="bar-chart-container">
+        <div class="bar-chart-area">
             <canvas #chartCanvas width="300px" height="250px"></canvas>
         </div>
 
-        <app-chart-settings class="chart-settings" *ngIf="showChartSettings"
+        <app-chart-settings class="bar-chart-settings" *ngIf="showChartSettings"
         [chartIndex]="this.chartIndex" [chartInfo]="this.chartInfo">
         </app-chart-settings>
 
-        <button class="display-chart-settings-button" *ngIf="!showChartSettings"
+        <button class="bar-display-chart-settings-button" *ngIf="!showChartSettings"
             class="toolbar-button" title="Display chart settings"
             (click)="displayChartSettings()">
             <img src="assets/icons/optionstreedialog.png" alt="Display chart settings">
         </button>
 
-        <button class="hide-chart-settings-button" *ngIf="showChartSettings"
+        <button class="bar-hide-chart-settings-button" *ngIf="showChartSettings"
             class="toolbar-button" title="Hide chart settings"
             (click)="hideChartSettings()">
-            <img src="assets/icons/arrowshapes.right-arrow.png" alt="Hide chart settings">
+            <img src="assets/icons/arrowshapes.left-arrow.png" alt="Hide chart settings">
         </button>
     </div>
     `,

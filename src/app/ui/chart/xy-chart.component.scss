@@ -1,25 +1,36 @@
-.chart-container
+.xy-chart-container
 {
-    font-size: 16px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    row-gap: 0px;
+    column-gap: 0px;
+
+    background-color: rgb(255, 255, 255);
+    // border: solid 1px;
+    // border-color: rgb(200, 200, 200);
 }
 
-.chart-area
+.xy-chart-area
 {
     max-width: 500px;
     overflow: scroll;
 }
 
-.chart-settings
+.xy-chart-settings
 {
     font-size: 16px;
 }
 
-.display-chart-settings-button
+.xy-display-chart-settings-button
 {
     font-size: 16px;
 }
 
-.hide-chart-settings-button
+.xy-hide-chart-settings-button
 {
     font-size: 16px;
 }
