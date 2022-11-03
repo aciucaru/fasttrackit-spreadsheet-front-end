@@ -9,7 +9,6 @@ import { string } from 'mathjs';
    cu structura obiectului luat de pe server */
 export interface Spreadsheet
 {
-    id: string;
     name: string;
     columnInfos: Array<ColumnInfo>;
     rows: Array<Row>;

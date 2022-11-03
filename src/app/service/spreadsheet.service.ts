@@ -154,7 +154,7 @@ export class SpreadsheetService
                 );
     }
 
-    public saveCurrentSpreadsheetToServer(): Observable<Spreadsheet>
+    public saveCurrentSpreadsheetToServer(): void
     {
         const httpOptions =
         {
@@ -172,7 +172,6 @@ export class SpreadsheetService
 
             let spreadsheet: Spreadsheet =
             {
-                id: editableSpreadsheet.id,
                 name: editableSpreadsheet.name,
                 columnInfos: editableSpreadsheet.columnInfos,
                 rows: editableSpreadsheet.rows,
@@ -180,10 +179,13 @@ export class SpreadsheetService
                 charts: editableSpreadsheet.charts
             };
 
-            return this.httpClient.post<Spreadsheet>(this.spreadsheetBaseUrl, spreadsheet, httpOptions);
-                                    // .subscribe(spreadsheet =>
-                                    //                 { this.currentSpreadsheetId = spreadsheet.id; }
-                                    //             );
+            this.httpClient.post<Spreadsheet>(this.spreadsheetBaseUrl, spreadsheet)
+                            .subscribe(currentSpreadsheet =>
+                                            {
+                                                // this.currentSpreadsheetId = currentSpreadsheet.id;
+                                                this.getSpreadsheetListFromServer();
+                                            }
+                                        );
             // .pipe(
             //   catchError(this.handleError('addHero', spreadsheet))
             // );
@@ -201,7 +203,6 @@ export class SpreadsheetService
 
             let spreadsheet: Spreadsheet =
             {
-                id: editableSpreadsheet.id,
                 name: editableSpreadsheet.name,
                 columnInfos: editableSpreadsheet.columnInfos,
                 rows: editableSpreadsheet.rows,
@@ -209,7 +210,13 @@ export class SpreadsheetService
                 charts: editableSpreadsheet.charts
             };
 
-            return this.httpClient.put<Spreadsheet>(spreadsheetUrl, spreadsheet, httpOptions);
+            this.httpClient.put<Spreadsheet>(spreadsheetUrl, spreadsheet)
+                            .subscribe(currentSpreadsheet =>
+                                {
+                                    // this.currentSpreadsheetId = currentSpreadsheet.id;
+                                    this.getSpreadsheetListFromServer();
+                                }
+                            );
             // .pipe(
             //   catchError(this.handleError('updateHero', hero))
             // );
@@ -1505,7 +1512,7 @@ export class SpreadsheetService
         let spreadsheet: EditableSpreadsheet = 
         {
             id: '',
-            name: "dummy spreadsheet",
+            name: "new spreadsheet",
             columnInfos: [],
             rows: [],
             generalRowHeightPx: 20,
