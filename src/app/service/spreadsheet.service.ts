@@ -154,7 +154,7 @@ export class SpreadsheetService
                 );
     }
 
-    public saveCurrentSpreadsheetToServer(): Observable<EditableSpreadsheet>
+    public saveCurrentSpreadsheetToServer(): Observable<Spreadsheet>
     {
         const httpOptions =
         {
@@ -165,12 +165,22 @@ export class SpreadsheetService
         // adica se face POST
         if(this.currentSpreadsheetId === '')
         {
-            // se ia spreadsheet-ul curent
-            let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
-
             console.log(`SpreadsheetService: saveCurrentSpreadsheetToServer(): POST`);
 
-            return this.httpClient.post<EditableSpreadsheet>(this.spreadsheetBaseUrl, spreadsheet, httpOptions);
+            // se ia spreadsheet-ul curent
+            let editableSpreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+
+            let spreadsheet: Spreadsheet =
+            {
+                id: editableSpreadsheet.id,
+                name: editableSpreadsheet.name,
+                columnInfos: editableSpreadsheet.columnInfos,
+                rows: editableSpreadsheet.rows,
+                indexColWidthPx: editableSpreadsheet.indexColWidthPx,
+                charts: editableSpreadsheet.charts
+            };
+
+            return this.httpClient.post<Spreadsheet>(this.spreadsheetBaseUrl, spreadsheet, httpOptions);
                                     // .subscribe(spreadsheet =>
                                     //                 { this.currentSpreadsheetId = spreadsheet.id; }
                                     //             );
@@ -182,14 +192,24 @@ export class SpreadsheetService
         // adica se face PUT
         else
         {
+            console.log(`SpreadsheetService: saveCurrentSpreadsheetToServer(): PUT`);
+
             let spreadsheetUrl: string = this.spreadsheetBaseUrl.concat('/')
                                                                 .concat(this.currentSpreadsheetId);
             // se ia spreadsheet-ul curent
-            let spreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
+            let editableSpreadsheet: EditableSpreadsheet = this.spreadsheetSubject!.getValue();
 
-            console.log(`SpreadsheetService: saveCurrentSpreadsheetToServer(): PUT`);
+            let spreadsheet: Spreadsheet =
+            {
+                id: editableSpreadsheet.id,
+                name: editableSpreadsheet.name,
+                columnInfos: editableSpreadsheet.columnInfos,
+                rows: editableSpreadsheet.rows,
+                indexColWidthPx: editableSpreadsheet.indexColWidthPx,
+                charts: editableSpreadsheet.charts
+            };
 
-            return this.httpClient.put<EditableSpreadsheet>(spreadsheetUrl, spreadsheet, httpOptions);
+            return this.httpClient.put<Spreadsheet>(spreadsheetUrl, spreadsheet, httpOptions);
             // .pipe(
             //   catchError(this.handleError('updateHero', hero))
             // );
