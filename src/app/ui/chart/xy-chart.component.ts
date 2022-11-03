@@ -135,28 +135,26 @@ export class XYChartComponent implements OnInit
         renderContext.fillStyle = this.chartInfo.dataColumns[0].rgbBGColor;
         renderContext.lineWidth = 2;
 
-        let prevX: number = numericData[0][0];
-        let prevY: number = 100 - numericData[0][1];
         let currentX: number = 0;
         let currentY: number = 0;
+        let nextX: number = 0;
+        let nextY: number = 0;
 
-        renderContext.fillRect(prevX-4, prevY-4, 8, 8);
-        renderContext.beginPath();
-        renderContext.moveTo(prevX, prevY);
         for(let i=0; i<numericData.length-1; i++)
         {   
-            prevX = numericData[i][0];
-            prevY = 100 - numericData[i][1];
-            currentX = numericData[i+1][0];
-            currentY = 100 - numericData[i+1][1];
-
-            renderContext.lineTo(currentX, currentY);
+            currentX = numericData[i][0];
+            currentY = 100 - numericData[i][1];
+            nextX = numericData[i+1][0];
+            nextY = 100 - numericData[i+1][1];
 
             renderContext.fillStyle = this.chartInfo.dataColumns[0].rgbBGColor;
             renderContext.fillRect(currentX-4, currentY-4, 8, 8);
+
+            renderContext.beginPath();
+            renderContext.moveTo(currentX, currentY);
+            renderContext.lineTo(nextX, nextY);
+            renderContext.stroke();
         }
-        renderContext.stroke();
-        // renderContext.stroke();
     }
 
 }

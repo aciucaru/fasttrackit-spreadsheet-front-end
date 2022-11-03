@@ -10,7 +10,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
         <app-file-group></app-file-group>
         <app-rows-and-cols-group></app-rows-and-cols-group>
         <app-column-group></app-column-group>
-        <app-formula-group></app-formula-group>
+        <!-- <app-formula-group></app-formula-group> -->
         <app-chart-group></app-chart-group>
         <app-debug-group></app-debug-group>
     </div>

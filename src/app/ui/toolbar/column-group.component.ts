@@ -14,6 +14,12 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
 
             <div id="col-gen-method-select-label">Generation</div>
             <app-gen-method-select id="col-gen-method-select"></app-gen-method-select>
+
+            <button id="calculate-values" class="toolbar-button" title="Apply formula"
+                (click)="spreadsheetService.calculateAllCellsValues()">
+                <img src="assets/icons/toggleformula.png" alt="Apply formula">
+            </button>
+            <!-- <div id="calculate-values-label">Generation</div> -->
             
             <div class="group-label">Column</div>
         </div>

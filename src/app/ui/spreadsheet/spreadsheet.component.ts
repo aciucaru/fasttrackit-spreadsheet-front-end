@@ -13,32 +13,34 @@ import { Observer } from 'rxjs';
 @Component({
   selector: 'app-spreadsheet',
   template: `
-    <table class="spreadsheet">
-        <tr> <!-- rand cu denumirile de variabila a coloanelor -->
-            <td class="general-cell"> <!-- celula header goala pt. celulele de redimensionare a inaltimii liniilor -->
-                <div></div>
-            </td>
-            <td class="general-cell" *ngFor="let currentCol of spreadsheet?.columnInfos; let colIndex = index">
-                <app-var-name-cell [currentColInfo]="currentCol" [currentColIndex]="colIndex"></app-var-name-cell>
-            </td>
-        </tr>
-        <tr> <!-- rand cu titlul coloanelor -->
-            <td class="general-cell"> <!-- celula suplimentara pt. coloana cu indexul randurilor -->
-                <div></div>
-            </td>
-            <td class="general-cell" *ngFor="let currentCol of spreadsheet?.columnInfos; let colIndex = index">
-                <app-title-cell [currentColInfo]="currentCol" [currentColIndex]="colIndex"></app-title-cell>
-            </td>
-        </tr>
-        <!-- randurile cu celulele de date ale spreadshet-ului -->
-        <tr *ngFor="let currentRow of spreadsheet?.rows; let rowIndex = index">
-            <td class="general-cell"> <app-row-index [rowIndex]="rowIndex"></app-row-index> </td>
-            <td class="general-cell" *ngFor="let currentCell of currentRow.cells; let colIndex = index">
-                <app-data-cell [mainCell]="currentCell" [mainCellRowIndex] = "rowIndex" [mainCellColIndex] = "colIndex">
-                </app-data-cell>
-            </td>
-        </tr>
-    </table>
+    <div>
+        <table class="spreadsheet">
+            <tr> <!-- rand cu denumirile de variabila a coloanelor -->
+                <td class="general-cell"> <!-- celula header goala pt. celulele de redimensionare a inaltimii liniilor -->
+                    <div></div>
+                </td>
+                <td class="general-cell" *ngFor="let currentCol of spreadsheet?.columnInfos; let colIndex = index">
+                    <app-var-name-cell [currentColInfo]="currentCol" [currentColIndex]="colIndex"></app-var-name-cell>
+                </td>
+            </tr>
+            <tr> <!-- rand cu titlul coloanelor -->
+                <td class="general-cell"> <!-- celula suplimentara pt. coloana cu indexul randurilor -->
+                    <div></div>
+                </td>
+                <td class="general-cell" *ngFor="let currentCol of spreadsheet?.columnInfos; let colIndex = index">
+                    <app-title-cell [currentColInfo]="currentCol" [currentColIndex]="colIndex"></app-title-cell>
+                </td>
+            </tr>
+            <!-- randurile cu celulele de date ale spreadshet-ului -->
+            <tr *ngFor="let currentRow of spreadsheet?.rows; let rowIndex = index">
+                <td class="general-cell"> <app-row-index [rowIndex]="rowIndex"></app-row-index> </td>
+                <td class="general-cell" *ngFor="let currentCell of currentRow.cells; let colIndex = index">
+                    <app-data-cell [mainCell]="currentCell" [mainCellRowIndex] = "rowIndex" [mainCellColIndex] = "colIndex">
+                    </app-data-cell>
+                </td>
+            </tr>
+        </table>
+    </div>
   `,
     styles: [],
     styleUrls: ['./spreadsheet.scss']
