@@ -575,7 +575,7 @@ export class SpreadsheetService
         for(let columnInfo of spreadsheet.columnInfos)
         {
             // se creeaza o noua celula
-            currentNewCell = { stringValue: 'abc', numberValue: 0, boolValue: false, style: this.getDefaultCellStyle() };
+            currentNewCell = { stringValue: '', numberValue: 0, boolValue: false, style: this.getDefaultCellStyle() };
  
             // celula respectiva se adauga la linia (randul) initial goala
             // in felul acesta, linia se umple treptat cu celule si se formeaza o linie completa
@@ -607,7 +607,7 @@ export class SpreadsheetService
         for(let columnInfo of spreadsheet.columnInfos)
         {
             // se creeaza o noua celula
-            currentNewCell = { stringValue: 'abc', numberValue:0, boolValue: false, style: this.getDefaultCellStyle() };
+            currentNewCell = { stringValue: '', numberValue:0, boolValue: false, style: this.getDefaultCellStyle() };
 
             // celula respectiva se adauga la linia (randul) initial goala
             // in felul acesta, linia se umple treptat cu celule si se formeaza o linie completa
@@ -644,7 +644,7 @@ export class SpreadsheetService
         for(let currentRow of spreadsheet.rows)
         {
             // se creeaza o noua celula de tip STRING (acesta este tipul default al spreadsheet-ului)
-            currentNewCell = { stringValue: 'abc', numberValue: 0, boolValue: false, style: this.getDefaultCellStyle() };
+            currentNewCell = { stringValue: '', numberValue: 0, boolValue: false, style: this.getDefaultCellStyle() };
 
             // se dauga noua celula la linia curenta
             // aici splice() se foloseste pt. a adauga la sir (nu pentru a sterge)
@@ -688,7 +688,7 @@ export class SpreadsheetService
         for(let currentRow of spreadsheet.rows)
         {
             // se creeaza o noua celula de tip STRING (acesta este tipul default al spreadsheet-ului)
-            currentNewCell = { stringValue: 'abc', numberValue: 0, boolValue: false, style: this.getDefaultCellStyle() };
+            currentNewCell = { stringValue: '', numberValue: 0, boolValue: false, style: this.getDefaultCellStyle() };
 
             // se dauga noua celula la linia curenta
             // aici splice() se foloseste pt. a adauga la sir (nu pentru a sterge)
