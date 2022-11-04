@@ -22,7 +22,7 @@ import { SpreadsheetService } from 'src/app/service/spreadsheet.service';
                     <div class="spreadsheet-item-open-label">Open</div>
 
                     <button class="spreadsheet-item-delete" class="toolbar-button" title="Delete spreadsheet"
-                        (click)="spreadsheetService.addEmptyBarChart()">
+                        (click)="spreadsheetService.deleteSpreadsheetFromServer(currentSpreadsheetInfo.id)">
                         <img src="assets/icons/dbtabledelete.png" alt="Delete spreadsheet">
                     </button>
                     <div class="spreadsheet-item-delete-label">Delete</div>

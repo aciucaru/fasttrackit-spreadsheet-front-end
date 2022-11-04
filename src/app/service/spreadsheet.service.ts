@@ -12,7 +12,8 @@ import { Row } from '../model/row';
 import { ColumnInfo, ColumnType, GeneratingMethod } from '../model/column';
 import { Spreadsheet, EditableSpreadsheet, SpreadsheetShortInfo} from '../model/spreadsheet';
 import { ChartColumnDataInfo, ChartColumnLabelInfo, ChartType, ChartInfo } from '../model/chart';
-import { column } from 'mathjs';
+
+import * as uuid from 'uuid';
 
 @Injectable({
   providedIn: 'root'
@@ -221,6 +222,20 @@ export class SpreadsheetService
             //   catchError(this.handleError('updateHero', hero))
             // );
         }
+    }
+
+    public deleteSpreadsheetFromServer(spreadsheetId: string): void
+    {
+        let spreadsheetUrl: string = this.spreadsheetBaseUrl.concat('/').concat(spreadsheetId);
+
+        console.log(`SpreadsheetService: deleteSpreadsheetFromServer(): DELETE`);
+
+        this.httpClient.delete<Spreadsheet>(spreadsheetUrl)
+                .subscribe( (spreadsheet: Spreadsheet) =>
+                    {
+                        this.getSpreadsheetListFromServer();
+                    }
+                );
     }
 
     private handleError(error: HttpErrorResponse)
@@ -1511,7 +1526,7 @@ export class SpreadsheetService
     {
         let spreadsheet: EditableSpreadsheet = 
         {
-            id: '',
+            id: uuid.v4(),
             name: "new spreadsheet",
             columnInfos: [],
             rows: [],
