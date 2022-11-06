@@ -1,0 +1,30 @@
+services:
+  spring-backend:
+    image: ciukrua/spreadsheet_be:1.0
+    build: /mnt/Stocare/Cursuri/Fasttrackit_curs_Java_Full_stack/Teme/Tema_finala/tema-finala-front-end/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongoadmin:secret@mongodb:27017/spreadsheets?authSource=admin
+    container_name: spreadsheet_be
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+    volumes:
+      - /tmp/mongodata:/data/db
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+
+  angular-frontend:
+    image: ciukrua/spreadsheet_fe:1.0
+    build: /mnt/Stocare/Cursuri/Fasttrackit_curs_Java_Full_stack/Teme/Tema_finala/tema-finala-back-end/Dockerfile
+    ports:
+      - "80:80"
+    container_name: spreadsheet_fe
+
