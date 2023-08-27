@@ -8,6 +8,6 @@ This is a homework project that recreates an website similar to Google Sheets, e
 - Math.js - for evaluating formulas
 - @ngstack/code-editor - editor de cod
 - angular-split - splitter
-
+The icons are Colibre icons from LibreOffice
 ![screenshot](spreadsheet.png)
 
