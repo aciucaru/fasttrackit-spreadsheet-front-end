@@ -5,7 +5,7 @@ This is a homework project that recreates an website similar to Google Sheets, e
 - The data is stored in a SpreadsheetService which has RxJS observable properties inside
 - The spreadsheet data can only be modified trough the SpreadsheetService, trough 'setters'
 - When a 'setter' has completed, it also emits e new value for the specific observable, and so, all interested subscribers of that observable get the new value, without using 'store' libraries
-- In this way, the GUI responds immediately to any changes, without the need for clumsy store libraries
+- In this way, the GUI responds immediately to any changes, without the need for clumsy 'store' libraries
 
 # Technologies used
 - TypeScript
